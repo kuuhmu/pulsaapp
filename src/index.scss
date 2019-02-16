@@ -1,0 +1,289 @@
+@import "../node_modules/normalize.css/normalize";
+@import "./scss/screen";
+@import "./scss/universal";
+@import "./scss/form";
+
+/* Page layout */
+
+html
+{
+  position: relative;
+  box-sizing: border-box;
+  min-height: 100%;
+  overflow-y: scroll;
+  vertical-align: middle;
+}
+
+body
+{
+  height: 100%;
+  background: hsl(240, 40%, 98%);
+  padding: 2.5em 0 4.25em 0;
+  font-family: Arial, sans-serif;
+}
+
+header
+{
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 2.5em;
+  box-shadow: 0.1em 0.1em 0.2em 0.1em hsl(0, 0%, 90%);
+  background: white;
+  padding: 0.5em;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+h1
+{
+  display: inline;
+  vertical-align: middle;
+  font-size: 1.25em;
+  font-style: italic;
+  color: hsl(0, 0%, 40%);
+
+  svg {
+    height: 1em;
+    fill: hsl(0, 0%, 40%);
+    transform: skewX(-12deg);
+  }
+}
+
+
+main, noscript
+{
+  display: block;
+  width: 50em;
+  max-width: 100%;
+  margin: auto;
+  padding: 0.5em;
+  overflow: hidden;
+}
+
+footer
+{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 4.25em;
+  border-top: solid 1px hsl(0, 0%, 90%);
+  background: white;
+  text-align: center;
+
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .Icon {
+    display: inline-block;
+    margin: 0.25em 0.75em 0 0.75em;
+
+    svg {
+      height: 2.5em;
+      fill: lightgrey;
+      transition: fill 0.2s ease
+    }
+    &:hover svg {
+      fill: hsl(0, 0%, 40%);
+    }
+  }
+
+  p {
+    line-height: 1.5em;
+    margin: 0;
+    color: hsl(0, 0%, 40%);
+
+    a {
+      color: hsl(0, 0%, 40%);
+
+      &:hover {
+        color: hsl(0, 0%, 40%);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+
+/* Content styling */
+
+p {
+  line-height: 1.4em;
+  vertical-align: baseline;
+}
+
+nav
+{
+  float: right;
+  display: inline-block;
+  height: 1.45em;
+  line-height: 1.45em;
+  text-align: right;
+
+  a {
+    display: inline-block;
+    margin: 0 1rem;
+  }
+}
+
+h2
+{
+  margin: 1rem;
+  font-size: 1.25em;
+  font-weight: normal;
+  text-align: center;
+}
+
+h3
+{
+  margin: 0.5em;
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+}
+
+hr
+{
+  border: 0;
+  height: 0.07em;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), hsl(240, 10%, 90%), rgba(0, 0, 0, 0));
+}
+
+/* Links */
+
+a
+{
+  text-decoration: none;
+  color: hsl(0, 0%, 60%);
+  font-stretch: condensed;
+  transition: 0.2s all ease;
+
+  &:hover, &.selected { color: burlywood; }
+  &:hover:not(.selected) { cursor: pointer; }
+  &.selected { text-decoration: underline; }
+}
+
+/* Containers */
+
+section p
+{
+  padding: 0 1em;
+}
+
+#loading,
+#loginForm,
+section section
+{
+  width: 100%;
+  margin: 1rem 0;
+  box-shadow: 0.1em 0.1em 0.2em hsl(0, 0%, 90%);
+  border: solid 1px hsl(240, 10%, 90%);
+  border-radius: 0.1em;
+  background: hsl(240, 40%, 99%);
+  overflow-x: auto;
+}
+
+.RebalanceTable .order
+{
+  &:hover { text-decoration: underline; }
+}
+
+.note {
+  width: 90%;
+  margin: 1em auto;
+  color: grey;
+  font-style: italic;
+}
+
+.errors:not(:empty) {
+  margin-top: 0.75em;
+  text-align: center;
+}
+
+/* Temporary */
+
+header .TabsSelector
+{
+  float: right;
+  width: 50%;
+  background: white;
+}
+
+main .TabsSelector
+{
+  max-width: 12em;
+  float: right;
+  margin-bottom: 0.2em;
+  box-shadow: 0.1em 0.1em 0.2em hsl(0, 0%, 90%);
+  border: solid 0.05em hsl(240, 10%, 90%);
+  background: hsl(240, 40%, 99%);
+}
+
+main .TabsNav
+{
+  width: 80%;
+}
+
+/* Table */
+
+table
+{
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+}
+
+th, td
+{
+  padding: 0.5em 1em;
+  white-space: nowrap;
+}
+
+th
+{
+  height: 2.5em;
+  border-bottom: solid 1px hsl(240, 10%, 90%);
+  border-right: solid 1px hsl(240, 40%, 92.5%);
+  box-shadow: 0em 0.1em 0.2em hsl(240, 40%, 96%);
+  background: hsl(240, 40%, 95%);
+}
+
+td img
+{
+  height: 1.5em;
+  width: 1.5em;
+  margin-right: 0.75em;
+}
+
+
+tr:hover
+{
+  cursor: pointer;
+}
+
+
+tr:hover, tr.selected
+{
+  background: hsl(240, 40%, 97%);
+}
+
+td .footer
+{
+  font-weight: bold;
+}
+
+/* Generic classes */
+
+.error
+{
+  font-weight: bold;
+  color: tomato;
+}
+
+.info
+{
+  font-weight: bold;
+  color: mediumseagreen;
+}
