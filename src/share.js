@@ -106,7 +106,7 @@ const Share = module.exports = class Share extends Projectable {
   }
 
   hasChanged () {
-    return this.template && this.template !== this.toString()
+    return this.template !== this.toString()
   }
 
   static fromString (string) {
