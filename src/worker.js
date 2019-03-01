@@ -5,7 +5,8 @@ const pkg = require("../package.json")
 
 new ServiceWorker(pkg.name, pkg.version, "verbose")
   .fromCache([
-    // Application
+    // Application"
+    "/",
     "app.js",
     "index.css",
     "index.html",

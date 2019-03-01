@@ -13,7 +13,7 @@ global.project("currency", localStorage)
 
 // Current language
 global.language =
-  localStorage.language || i18n.systemLocale().replace(/-.*/, "")
+  localStorage.language || i18n.systemLocale().replace(/-.*/, "") || "us"
 global.project("language", localStorage)
 
 /// Current user portfolio.
