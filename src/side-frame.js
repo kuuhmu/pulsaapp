@@ -3,6 +3,7 @@
  * Signing Side Frame
  */
 const html = require("@cosmic-plus/jsutils/html")
+const { __ } = require("@cosmic-plus/i18n")
 
 /**
  * Class
@@ -34,7 +35,8 @@ class SideFrame {
     document.body.style.overflow = "hidden"
 
     SideFrame.shadow.onclick = () => this.close()
-    html.show(SideFrame.shadow, this.domNode)
+    SideFrame.close.onclick = () => this.close()
+    html.show(SideFrame.shadow, SideFrame.close, this.domNode)
   }
 
   hide () {
@@ -44,7 +46,7 @@ class SideFrame {
     document.body.style.overflow = this.bodyOverflow
 
     SideFrame.shadow.onclick = null
-    html.hide(SideFrame.shadow, this.domNode)
+    html.hide(SideFrame.shadow, SideFrame.close, this.domNode)
   }
 
   close () {
@@ -83,7 +85,7 @@ window.addEventListener("message", event => {
 
 SideFrame.style = {
   position: "fixed",
-  zIndex: 999,
+  zIndex: 998,
   right: 0,
   top: 0,
   width: "30em",
@@ -98,13 +100,33 @@ SideFrame.style = {
 }
 
 /**
+ * Closing button
+ */
+
+SideFrame.close = html.create("span", { hidden: true }, `× ${__("Close")}`)
+Object.assign(SideFrame.close.style, {
+  position: "fixed",
+  zIndex: 999,
+  top: "0.1em",
+  right: "0.1em",
+  color: "hsl(0, 0%, 40%)",
+  fontSize: "0.9em",
+  fontWeight: "bold",
+  cursor: "pointer",
+  background: "hsl(0, 0%, 95%)",
+  borderBottomLeftRadius: "0.1em",
+  padding: "0.1em 0.3em"
+})
+document.body.insertBefore(SideFrame.close, document.body.firstChild)
+
+/**
  * Shadow Layer
  */
 
 SideFrame.shadow = html.create("div", { hidden: true })
 Object.assign(SideFrame.shadow.style, {
   position: "fixed",
-  zIndex: 998,
+  zIndex: 997,
   top: 0,
   width: "100%",
   height: "100%",
