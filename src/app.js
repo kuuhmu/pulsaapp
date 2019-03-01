@@ -17,6 +17,7 @@ const ActivityGui = require("./activity-gui")
 const PortfolioGui = require("./portfolio-gui")
 const SettingsGui = require("./settings-gui")
 const ShareGui = require("./share-gui")
+const { isOverflowing } = require("./helpers")
 
 require("./footer")
 
@@ -79,7 +80,6 @@ const welcome = new Gui(`
 
   <section><h3>To Be Implemented</h3>
     <ul>
-      <li>Small screen interface</li>
       <li>Interface to add/remove assets</li>
       <li>Portfolio historic value</li>
       <li>Customizable rebalancing periodicity</li>
@@ -109,15 +109,19 @@ const welcome = new Gui(`
 /**
  * Init
  */
-const tabs = global.tabs = new Tabs({
-  nav: html.grab("header"),
-  view: dom.main
-})
+const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
 tabs.add("#welcome", __("Welcome"), welcome)
 tabs.add("#license", __("License"), license)
 tabs.add("#login", __("Login"), dom.loginForm)
 tabs.select(location.hash)
 if (!tabs.selected) tabs.select("#welcome")
+
+tabs.fitScreen = function () {
+  if (isOverflowing(dom.header)) {
+    html.replace(tabs.nav.domNode, tabs.selector.domNode)
+  }
+}
+tabs.fitScreen()
 
 const loginForm = new Form(dom.loginForm).addValidator(login)
 html.show(dom.loginForm)
@@ -183,6 +187,7 @@ function initGui () {
   tabs.add("#logout", __("Logout"), () => {
     location.replace(location.href.replace(/\?.*$/, "#login"))
   })
+  tabs.fitScreen()
 
   tabs.select(selected)
   if (!tabs.selected) tabs.select("#portfolio")

@@ -54,7 +54,7 @@ class PortfolioGui extends Gui {
 PortfolioGui.Summary = class PortfolioSummary extends Gui {
   constructor (parent) {
     const tabs = new Tabs()
-    super(`%selector <section>%view</section>`, tabs)
+    super(`%nav <section>%view</section>`, tabs)
 
     tabs.add("table", __("Table"), new PortfolioGui.Table(parent))
     tabs.add("graph", __("Graph"), () => new PortfolioGui.Graph(parent))

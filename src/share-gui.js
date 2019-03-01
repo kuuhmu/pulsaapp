@@ -193,9 +193,10 @@ class ShareGui extends Gui {
 ShareGui.Setup = class ShareSetup extends Gui {
   constructor (share, parent) {
     super(`
-<section><h3>%assetName</h3>
-  <hr>
+<section>
   <form onsubmit=%close>
+    <h3>%assetName</h3>
+    <hr>
     <label><span>${__("Size")}:</span>
       <input class="half" type="number" step="any" min="0" %max value=%size
        placeholder=%goal onchange=%switchMode>

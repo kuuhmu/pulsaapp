@@ -33,7 +33,25 @@ header
   background: white;
   padding: 0.5em;
   overflow: hidden;
-  vertical-align: middle;
+
+  a {
+    color: hsl(0, 0%, 70%);
+
+    &:hover { text-decoration: none; }
+    &:hover, &.selected { color: burlywood; }
+  }
+
+  select {
+    float: right;
+    width: 50%;
+    height: 1.5em;
+    margin: 0;
+    border: none!important;
+    box-shadow: none!important;
+    background: white;
+    color: hsl(0, 0%, 40%);
+    text-align-last: right;
+  }
 }
 
 h1
@@ -45,9 +63,10 @@ h1
   color: hsl(0, 0%, 40%);
 
   svg {
-    height: 1em;
+    height: 1.1em;
     fill: hsl(0, 0%, 40%);
     transform: skewX(-12deg);
+    vertical-align: text-top;
   }
 }
 
@@ -82,7 +101,7 @@ footer
 
     svg {
       height: 2.5em;
-      fill: lightgrey;
+      fill: hsl(0, 0%, 80%);
       transition: fill 0.2s ease
     }
     &:hover svg {
@@ -94,15 +113,10 @@ footer
     line-height: 1.5em;
     margin: 0;
     color: hsl(0, 0%, 40%);
+  }
 
-    a {
-      color: hsl(0, 0%, 40%);
-
-      &:hover {
-        color: hsl(0, 0%, 40%);
-        text-decoration: underline;
-      }
-    }
+  a {
+    color: hsl(0, 0%, 40%);
   }
 }
 
@@ -147,7 +161,7 @@ h3
 hr
 {
   border: 0;
-  height: 0.07em;
+  height: 1px;
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), hsl(240, 10%, 90%), rgba(0, 0, 0, 0));
 }
 
@@ -156,13 +170,12 @@ hr
 a
 {
   text-decoration: none;
-  color: hsl(0, 0%, 60%);
+  color: hsl(0, 0%, 50%);
   font-stretch: condensed;
   transition: 0.2s all ease;
 
-  &:hover, &.selected { color: burlywood; }
+  &:hover, &.selected { text-decoration: underline }
   &:hover:not(.selected) { cursor: pointer; }
-  &.selected { text-decoration: underline; }
 }
 
 /* Containers */
@@ -193,37 +206,13 @@ section section
 .note {
   width: 90%;
   margin: 1em auto;
-  color: grey;
+  color: hsl(0, 0%, 50%);
   font-style: italic;
 }
 
 .errors:not(:empty) {
   margin-top: 0.75em;
   text-align: center;
-}
-
-/* Temporary */
-
-header .TabsSelector
-{
-  float: right;
-  width: 50%;
-  background: white;
-}
-
-main .TabsSelector
-{
-  max-width: 12em;
-  float: right;
-  margin-bottom: 0.2em;
-  box-shadow: 0.1em 0.1em 0.2em hsl(0, 0%, 90%);
-  border: solid 0.05em hsl(240, 10%, 90%);
-  background: hsl(240, 40%, 99%);
-}
-
-main .TabsNav
-{
-  width: 80%;
 }
 
 /* Table */

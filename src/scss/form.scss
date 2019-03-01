@@ -4,7 +4,7 @@ form
 {
   position: relative;
   clear: both;
-  padding: 0.5em;
+  padding: 0.3em 0.5em;
   text-align: center;
 }
 
@@ -18,7 +18,8 @@ label
   width: 100%;
   height: 1.8em;
   max-width: 35em;
-  padding: 0.2em;
+  margin: 0.2em 0;
+  padding: 0 0.2em;
   overflow: hidden;
   transition: all 0.2s ease;
 }
@@ -38,7 +39,6 @@ input
 button
 {
   background: hsl(240, 40%, 96%);
-  margin: 0.3em;
 }
 
 label
@@ -46,14 +46,15 @@ label
   display: inline-block;
   width: 100%;
   height: 2.4em;
-  padding: 0.3em;
+  white-space: nowrap;
 }
 
 label span,
 label div
 {
   display: inline-block;
-  width: 30%;
+  width: 20%;
+  text-align: left;
   line-height: 1.8em;
 }
 
@@ -62,13 +63,13 @@ label select,
 label button,
 label input
 {
-  width: 66%;
+  width: 76%;
 }
 
 label select.half,
 label input.half
 {
-  width: 33%;
+  width: 38%;
 }
 
 textarea[readonly],
