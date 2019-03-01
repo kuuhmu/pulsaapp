@@ -8,6 +8,7 @@ const Gui = require("@cosmic-plus/jsutils/gui")
 const html = require("@cosmic-plus/jsutils/html")
 const { __ } = require("@cosmic-plus/i18n")
 
+const global = require("./global")
 const SideFrame = require("./side-frame")
 
 const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"
@@ -20,10 +21,10 @@ class Footer extends Gui {
   constructor (icons, links) {
     super(
       `
-      <footer id="footer" class="scrollable">
-        <div class="nobreak">%icons...</div>
-        %links
-      </footer>
+<footer id="footer" class="scrollable">
+  <div class="nobreak">%icons...</div>
+  %links
+</footer>
     `,
       { icons, links }
     )
@@ -159,15 +160,21 @@ const demoConfig = `{"childs":["EUR","CNY","USD",{"size":12.5,"mode":"percentage
  */
 const links = new Gui(
   `
-  <p>
-    <a target="_blank" rel="noopener" href="https://cosmic.plus">${__(
+<p>
+  <a target="_blank" rel="noopener" href="https://cosmic.plus">${__(
     "A Cosmic.Plus Software"
   )}</a>
-    − <a onclick=%displayDemo>Demo</a>
-    − <a target="_blank" rel="noopener" href="https://nucleo.fi/leaderboard/top/?span=3m">Performance</a>
-  </p>
+  − <a onclick=%displayDemo>${__("Demo")}</a>
+  − <a target="_blank" rel="noopener" href="https://nucleo.fi/leaderboard/top/?span=3m">Performance</a>
+  − <a onclick=%displayLicense>${__("License")}</a>
+  − <a onclick=%displayAbout>${__("About")}</a>
+</p>
 `,
-  { displayDemo }
+  {
+    displayDemo,
+    displayLicense: () => global.tabs.select("#license"),
+    displayAbout: () => global.tabs.select("#about")
+  }
 )
 
 /**

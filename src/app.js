@@ -27,7 +27,7 @@ require("./footer")
 
 const license = new Gui(`
 <section><h2>License</h2>
-  <section><h3>MIT Licence</h3>
+  <section><h3>MIT License</h3>
 
   <p>Copyright (c) 2019 Antoine Bodin &lt;<a
   href="mailto:mister.ticot@cosmic.plus">mister.ticot@cosmic.plus</a>&gt;</p>
@@ -111,8 +111,10 @@ const welcome = new Gui(`
  */
 const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
 tabs.add("#welcome", __("Welcome"), welcome)
-tabs.add("#license", __("License"), license)
 tabs.add("#login", __("Login"), dom.loginForm)
+tabs.add("#license", null, license)
+tabs.add("#about", null, welcome)
+
 tabs.select(location.hash)
 if (!tabs.selected) tabs.select("#welcome")
 
@@ -179,7 +181,6 @@ function initGui () {
   const selected = location.hash
   tabs.remove("#welcome")
   tabs.remove("#login")
-  tabs.remove("#license")
   tabs.add("#portfolio", __("Portfolio"), new PortfolioGui(portfolio))
   tabs.add("#rebalance", __("Rebalance"), new ShareGui(portfolio))
   tabs.add("#activity", __("Activity"), new ActivityGui(portfolio))
