@@ -124,6 +124,31 @@ PortfolioGui.Graph = class PortfolioGraph extends Gui {
 
   makePie () {
     if (this.chart) this.chart.destroy()
+
+    // Responsive setup
+    let showInLegend,
+      legend,
+      dataLabels = {
+        enabled: true,
+        style: { fontSize: "14px" }
+      }
+    if (innerWidth > 600) {
+      showInLegend = false
+      legend = null
+      dataLabels.format =
+        "{point.niceAmount} {point.code}<br>({point.percentage:.0f}%)"
+    } else {
+      showInLegend = true
+      legend = {
+        enabled: true,
+        align: "center",
+        verticalAlign: "top",
+        layout: "horizontal"
+      }
+      dataLabels.format = "{point.percentage:.0f}%"
+      dataLabels.distance = -20
+    }
+
     this.chart = Highcharts.chart(this.container, {
       title: "",
       chart: {
@@ -165,19 +190,21 @@ ${__("Price")}: {point.nicePrice} ${global.currency}<br>
           allowPointSelect: true,
           animation: false,
           cursor: "pointer",
-          dataLabels: {
-            enabled: true,
-            format:
-              "{point.niceAmount} {point.code}<br>({point.percentage:.0f}%)",
-            style: { fontSize: "14px" }
-          },
+          showInLegend,
+          legend,
+          dataLabels,
           point: {
             events: {
-              select: x => this.parent.select(x.target.options)
+              select: x => this.parent.select(x.target.options),
+              legendItemClick: x => {
+                this.parent.select(x.target.options)
+                return false
+              }
             }
           }
         }
       },
+
       series: [
         {
           name: __("Amount"),
