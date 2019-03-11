@@ -125,35 +125,20 @@ PortfolioGui.Graph = class PortfolioGraph extends Gui {
   makePie () {
     if (this.chart) this.chart.destroy()
 
-    // Responsive setup
-    let showInLegend,
-      legend,
-      dataLabels = {
-        enabled: true,
-        style: { fontSize: "14px" }
-      }
-    if (innerWidth > 600) {
-      showInLegend = false
-      legend = null
-      dataLabels.format =
-        "{point.niceAmount} {point.code}<br>({point.percentage:.0f}%)"
-    } else {
-      showInLegend = true
-      legend = {
-        enabled: true,
-        align: "center",
-        verticalAlign: "top",
-        layout: "horizontal"
-      }
-      dataLabels.format = "{point.percentage:.0f}%"
-      dataLabels.distance = -20
-    }
-
     this.chart = Highcharts.chart(this.container, {
       title: "",
+      legend: { enabled: false },
       chart: {
         type: "pie",
         backgroundColor: "#fbfbfd"
+      },
+      tooltip: {
+        style: { fontSize: "14px" },
+        pointFormat: `
+${__("Amount")}: {point.amount} {point.code}<br>
+${__("Price")}: {point.price} ${global.currency}<br>
+<b>${__("Value")}: {point.y} ${global.currency}</b>
+`
       },
       colors: [
         "rgba(231,  76,  60, 0.8)",
@@ -177,22 +162,16 @@ PortfolioGui.Graph = class PortfolioGraph extends Gui {
         "rgba(52,  152, 219, 0.4)",
         "rgba(155,  89, 182, 0.4)"
       ],
-      tooltip: {
-        style: { fontSize: "14px" },
-        pointFormat: `
-${__("Amount")}: {point.niceAmount} {point.code}<br>
-${__("Price")}: {point.nicePrice} ${global.currency}<br>
-<b>${__("Value")}: {point.y} ${global.currency}</b>
-`
-      },
+
       plotOptions: {
         pie: {
           allowPointSelect: true,
           animation: false,
           cursor: "pointer",
-          showInLegend,
-          legend,
-          dataLabels,
+          dataLabels: {
+            style: { fontSize: "14px" },
+            format: "{point.amount} {point.code}<br>({point.percentage:.0f}%)"
+          },
           point: {
             events: {
               select: x => this.parent.select(x.target.options),
@@ -213,20 +192,45 @@ ${__("Price")}: {point.nicePrice} ${global.currency}<br>
           data: this.parent.portfolio.assets
             .filter(asset => asset.value)
             .map(makeAssetPoint)
-            .sort((a, b) => b.value - a.value)
+            .sort((a, b) => b.y - a.y)
         }
       ],
-      credits: { enabled: false }
+      credits: { enabled: false },
+
+      responsive: {
+        rules: [
+          {
+            condition: {
+              maxWidth: 500
+            },
+            chartOptions: {
+              legend: { enabled: true },
+              plotOptions: {
+                pie: {
+                  showInLegend: true,
+                  dataLabels: {
+                    format: "{point.percentage:.0f}%",
+                    distance: -20
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
     })
   }
 }
 
 function makeAssetPoint (asset) {
-  const assetPoint = Object.create(asset)
-  assetPoint.y = Number(nice(asset.value, 2))
-  assetPoint.niceAmount = nice(asset.amount)
-  assetPoint.nicePrice = nice(asset.price)
-  return assetPoint
+  return {
+    name: asset.name,
+    code: asset.code,
+    y: +nice(asset.value, 2),
+    amount: nice(asset.amount),
+    price: nice(asset.price),
+    percentage: asset.percentage
+  }
 }
 
 PortfolioGui.Chart = class PortfolioChart extends Gui {
