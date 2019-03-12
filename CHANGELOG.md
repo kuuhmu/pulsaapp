@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Improve portfolio pie chart responsivness
+- Improve price picking for marginal assets
 
 ## [0.2.0] − 2019-03-05
 

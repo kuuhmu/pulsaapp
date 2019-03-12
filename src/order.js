@@ -162,36 +162,75 @@ function operationToOdesc (operation) {
   return odesc
 }
 
-function floorPrice (offer, price) {
-  const refPrice = offer.balance.asset.price
-  const side = offer.side
-  if (side === "bids") return minMax(price, refPrice * 0.975, refPrice)
-  else return minMax(price, refPrice, refPrice * 1.025)
-}
+/**
+ * Create a copy of **offer** with a delta to global market price reduced by
+ * **percentage**.
+ */
+function tightenSpread (offer, percentage = 0.01) {
+  const clone = Object.assign({}, offer)
+  const diff = (offer.balance.asset.price - offer.price) * percentage
 
-function minMax (value, min, max) {
-  return nice(Math.min(Math.max(value, min), max), 7)
+  if (offer.side === "bids") {
+    clone.price = Math.min(offer.price * (1 + percentage), offer.price + diff)
+  } else {
+    clone.price = Math.max(offer.price * (1 - percentage), offer.price + diff)
+  }
+
+  clampOfferPrice(clone)
+  updateOfferPriceR(clone)
+  return clone
 }
 
 /**
- * Create a copy of **offer** with a delta to global price reduced by
- * **percentage**.
+ * Floor/ceil **offer**'s price to maintain a maximum spread of **spread**
+ * against global market price. Offers for which the global market price is
+ * unknown are left unchanged.
+ *
+ * @param {Object} offer offer to price-cap
+ * @param {Number} [spread=0.025] Maximum spread against global market price (in
+ *     percent)
  */
-function tightenSpread (offer, percentage = 1) {
+function clampOfferPrice (offer, spread = 0.025) {
+  const refPrice = offer.balance.asset.globalPrice
+  if (refPrice) {
+    if (offer.side === "bids") {
+      offer.price = clamp(offer.price, refPrice * (1 - spread), refPrice)
+    } else {
+      offer.price = clamp(offer.price, refPrice, refPrice * (1 + spread))
+    }
+  }
+}
+
+/**
+ * Returns a number whose value is limited to the given range.
+ *
+ * @param  {Number} value An arbitrary number
+ * @param  {Number} min Lower boundary
+ * @param  {[type]} max Upper boundary
+ * @return {Number}
+ */
+function clamp (value, min, max) {
+  return Math.min(Math.max(value, min), max)
+}
+
+/**
+ * Set `offer.price_r` according to `offer.price`.
+ *
+ * @param  {Object} offer
+ */
+function updateOfferPriceR (offer) {
   const quote = offer.balance.orderbook.quote
-  const clone = Object.assign({}, offer)
-  const diff = (offer.balance.asset.price - offer.price) / 100 * percentage
-  clone.price = floorPrice(offer, nice(offer.price + diff, { significant: 9 }))
-  clone.price_r = {
-    n: nice(clone.price * 1000000000, 0),
-    d: nice(quote.price * 1000000000, 0)
+
+  offer.price_r = {
+    n: nice(offer.price * 10000000000, 0),
+    d: nice(quote.price * 10000000000, 0)
   }
+
   // Ten characters maximum
-  while (clone.price_r.n > 999999999 || clone.price_r.d > 999999999) {
-    clone.price_r.n = nice(clone.price_r.n / 10, 0)
-    clone.price_r.d = nice(clone.price_r.d / 10, 0)
+  while (offer.price_r.n > 999999999 || offer.price_r.d > 999999999) {
+    offer.price_r.n = nice(offer.price_r.n / 10, 0)
+    offer.price_r.d = nice(offer.price_r.d / 10, 0)
   }
-  return clone
 }
 
 /**
