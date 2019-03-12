@@ -255,6 +255,11 @@ algorithm.balance = function (order, share) {
   if (!orderbook.bids || !orderbook.asks || !share.target) return
   if (!orderbook.bids.length || !orderbook.asks.length) return
 
+  if (share.mode === "amount") {
+    algorithm.limit(order, share.size - asset.amount)
+    return
+  }
+
   const tmp1 = orderbook.findOffer("asks", offer => {
     const ask = tightenSpread(offer)
     const sellAmount = (ask.price * asset.amount - share.target) / ask.price
@@ -280,29 +285,31 @@ algorithm.balance = function (order, share) {
   }
 }
 
-algorithm.limit = function (order, size = order.asset.size) {
-  order.type = "maker"
-  if (!order.offers) return
+algorithm.limit = function (order, size) {
+  if (!size) return
 
-  const offer = order.orderbook.findOffer(this.side)
-  order.addOperation(offer, size)
+  const side = size > 0 ? "bids" : "asks"
+  const offer = order.orderbook.findOffer(side)
+  order.addOperation(tightenSpread(offer), Math.abs(size))
 }
 
-algorithm.market = function (order, size = order.asset.size) {
-  order.type = "taker"
-  if (!order.offers) return
-  const orderbook = order.orderbook
-  const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
-  order.addOperation(offer, size)
-}
+// Outdated code
+//
+// algorithm.market = function (order, size = order.asset.size) {
+//   order.type = "taker"
+//   if (!order.offers) return
+//   const orderbook = order.orderbook
+//   const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
+//   order.addOperation(offer, size)
+// }
 
-algorithm.deepLimit = function (order, size = order.asset.size) {
-  order.type = "maker"
-  if (!order.offers) return
-  const orderbook = order.orderbook
-  const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
-  order.addOperation(offer, size)
-}
+// algorithm.deepLimit = function (order, size = order.asset.size) {
+//   order.type = "maker"
+//   if (!order.offers) return
+//   const orderbook = order.orderbook
+//   const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
+//   order.addOperation(offer, size)
+// }
 
 /**
  * Append algorithms to Order class

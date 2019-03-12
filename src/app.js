@@ -94,10 +94,6 @@ const welcome = new Gui(`
       <li>It is required to "Cancel All" offers between applying a new balance
       setup</li>
 
-      <li>When setting up a position "by amount", the algorithm will not pick
-      the exact amount but will try to make profit by providing small amount of
-      liquidity. (Which is bad)</li>
-
       <li>There may be a delay between validating a rebalancing operation &
       having the interface reflecting it.</li>
 
