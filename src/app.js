@@ -19,88 +19,10 @@ const SettingsGui = require("./settings-gui")
 const ShareGui = require("./share-gui")
 const { isOverflowing } = require("./helpers")
 
+const license = new Gui(require("./html/license.html"))
+const welcome = new Gui(require("./html/welcome.html"))
+
 require("./footer")
-
-/**
- * License
- */
-
-const license = new Gui(`
-<section><h2>License</h2>
-  <section><h3>MIT License</h3>
-
-  <p>Copyright (c) 2019 Antoine Bodin &lt;<a
-  href="mailto:mister.ticot@cosmic.plus">mister.ticot@cosmic.plus</a>&gt;</p>
-
-  <p>Permission is hereby granted, free of charge, to any person obtaining a
-  copy of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:</p>
-
-  <p>The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.</p>
-
-  <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-  FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
-`)
-
-/**
- * Beta 1 Welcome
- */
-
-const welcome = new Gui(`
-<section><h2>February, 16th − Beta 1 Release</h2>
-  <section><h3>Welcome!</h3>
-
-    <p>Equilibre.io is a portfolio balancer for the Stellar Decentralized
-    EXchange. Define how you want to split your portfolio, and it will help you
-    maintaining the balance. (i.e.: 1/4 Bitcoin, 1/4 Lumens, 1/4 US Dollars, 1/4
-    Renmibi)</p>
-
-    <p>Regularly balancing an investment portfolio is known to boost its
-    performances, providing you choose wisely the assets to bet on. Equilibre.io
-    also let you spread your position over several anchors, for a better fund
-    safety.</p>
-
-    <p>Equilibre.io is still under testing & development. If you use it now,
-    I'll ask you to consider yourself as a tester. Please report any bug you
-    could encounter, and double-check transactions before signing them.</p>
-
-    <p>Your feedback matters to me and will be listened to.</p>
-
-    <p>Respectfully, <br>MisterTicot</p>
-
-  </section>
-
-  <section><h3>To Be Implemented</h3>
-    <ul>
-      <li>Interface to add/remove assets</li>
-      <li>Portfolio historic value</li>
-      <li>Customizable rebalancing periodicity</li>
-      <li>Better position spreading over anchors</li>
-      <li>Pie graph for rebalancing tab</li>
-    </ul>
-  </section>
-
-  <section><h3>Known Limitations</h3>
-    <ul>
-
-      <li>It is required to "Cancel All" offers between applying a new balance
-      setup</li>
-
-      <li>There may be a delay between validating a rebalancing operation &
-      having the interface reflecting it.</li>
-
-    </ul>
-  </section>
-</section>
-`)
 
 /**
  * Init

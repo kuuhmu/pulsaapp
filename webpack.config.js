@@ -5,6 +5,10 @@ const config = {
       {
         test: /\.(js)$/,
         loader: "babel-loader"
+      },
+      {
+        test: /\.(html|svg)$/,
+        loader: "raw-loader"
       }
     ]
   }
