@@ -56,7 +56,7 @@ module.exports = class Portfolio extends Projectable {
         .reduce((sum, x) => sum + x.value, 0)
     })
     this.assets.mirror(asset =>
-      asset.trap("value", () => this.compute("total"))
+      asset.trap(["value", "isSupported"], () => this.compute("total"))
     )
 
     this.new = true
