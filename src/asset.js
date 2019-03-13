@@ -100,7 +100,7 @@ Asset.define("liabilities", ["balances", "price"], function () {
 })
 
 Asset.define("isSupported", ["type", "price"], function () {
-  return this.type !== "unknown" || this.price
+  return !!(this.type !== "unknown" || this.price)
 })
 
 /**
