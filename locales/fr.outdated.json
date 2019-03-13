@@ -1,0 +1,19 @@
+{
+  "Loading coins data...": "Chargement des monnaies...",
+  "buy": "achète",
+  "multiple": "plusieurs",
+  "Not enough volume": "Pas assez de volume",
+  "Summary": "Total",
+  "Target": "Objectif",
+  "Threshold": "Seuil",
+  "Type": "Type",
+  "Orders": "Ordres",
+  "Transfers": "Transfers",
+  "Side": "Côté",
+  "Auto": "Automatique",
+  "No": "Non",
+  "Yes": "Oui",
+  "Compound": "Agrégé",
+  "Free software under MIT licence, please use wisely :)": "Logiciel libre sous licence MIT, à utiliser avec sagesse :)",
+  "Anchor prices are from Stellar DEX / Global prices are from %coingecko when available.": "Le prix des ancres vient de l'échange Stellar / Les prix globaux viennent de %%coingecko lorsque disponibles."
+}

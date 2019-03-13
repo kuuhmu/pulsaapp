@@ -10,14 +10,15 @@ const Tabs = require("@cosmic-plus/jsutils/tabs")
 const params = require("@cosmic-plus/jsutils/params")
 const { __ } = require("@cosmic-plus/i18n")
 
+const clickWall = require("./click-wall")
 const global = require("./global")
 const Portfolio = require("./portfolio")
+const { isOverflowing } = require("./helpers")
 
 const ActivityGui = require("./activity-gui")
 const PortfolioGui = require("./portfolio-gui")
 const SettingsGui = require("./settings-gui")
 const ShareGui = require("./share-gui")
-const { isOverflowing } = require("./helpers")
 
 const license = new Gui(require("./html/license.html"))
 const welcome = new Gui(require("./html/welcome.html"))
@@ -83,13 +84,28 @@ async function login (address = dom.loginAddressBox.value) {
 
   loginForm.setInfo(__("Connecting to your account..."))
   params.$set({ address })
+  clickWall.enable()
 
   try {
     global.portfolio = await Portfolio.resolve(address)
-    global.portfolio.listen("open", initGui)
+    loginForm.setInfo(`${__("Fetching market data")}...`)
+    setTimeout(
+      () => loginForm.setInfo(`${__("Sorry, it takes a while (^.^)\"")}...`),
+      10000
+    )
+    setTimeout(() => loginForm.setInfo(`${__("Almost there")}...`), 20000)
+    setTimeout(
+      () => loginForm.setInfo(`${__("I'm running, I'm running")}...`),
+      30000
+    )
+    global.portfolio.listen("open", () => {
+      initGui()
+      clickWall.disable()
+    })
   } catch (error) {
     console.error(error)
     loginForm.setError(error)
+    clickWall.disable()
   }
 }
 

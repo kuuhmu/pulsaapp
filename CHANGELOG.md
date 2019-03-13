@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Show some activity while login in
+
 ### Changed
 
 - Improve portfolio pie chart responsivness
 - Improve price picking for marginal assets
+- Prevent interaction while login in
 
 ### Fixed
 
@@ -31,3 +36,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fix portfolio template saving
+
+## [0.1.0] − 2019-02-17
+
+Beta 1 release
