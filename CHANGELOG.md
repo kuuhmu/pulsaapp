@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 - Fix a case were marginal assets could not be rebalanced
 - Rebalancing by amount now pick the exact required amount
+- Fix a mistake that prevented marginal assets rebalancing setup to be saved
 
 ## [0.2.0] − 2019-03-05
 

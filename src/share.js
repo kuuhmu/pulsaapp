@@ -148,7 +148,8 @@ const Share = module.exports = class Share extends Projectable {
     if (this.mode != null && this.mode !== "equal") template.mode = this.mode
 
     if (this.asset) {
-      template.asset = this.asset.code
+      if (this.asset.type === "unknown") template.asset = this.asset.id
+      else template.asset = this.asset.code
       if (Object.keys(template).length === 1) template = template.asset
     } else if (this.childs) {
       if (this.name) template.group = this.name
