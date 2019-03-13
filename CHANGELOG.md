@@ -16,8 +16,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Rebalancing now works as intended when setting a quantity target for an asset
+- Rebalancing now works as intended when setting asset target to 0
 - Fix a case were marginal assets could not be rebalanced
-- Rebalancing by amount now pick the exact required amount
 - Fix a mistake that prevented marginal assets rebalancing setup to be saved
 
 ## [0.2.0] − 2019-03-05

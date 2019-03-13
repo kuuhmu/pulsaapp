@@ -252,10 +252,9 @@ algorithm.balance = function (order, share) {
     }
   }
 
-  if (!orderbook.bids || !orderbook.asks || !share.target) return
-  if (!orderbook.bids.length || !orderbook.asks.length) return
+  if (!orderbook.bestBid || !orderbook.bestAsk || share.target == null) return
 
-  if (share.mode === "amount") {
+  if (share.mode === "amount" || share.target === 0) {
     algorithm.limit(order, share.size - asset.amount)
     return
   }
