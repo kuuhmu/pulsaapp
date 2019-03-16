@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Next Release]
+
+### Changed
+
+- Assets whose global market price is not known is now is now defined as its bid
+  price at a depth of 10% of user holdings (assumed liquidation price). This is
+  intended to prevent over-valuation of those assets.
+
 ## [0.3.0] - 2019-03-14
 
 ### Added

@@ -115,7 +115,8 @@ Orderbook.define("bestAsk", "asks", function () {
   return this.asks && this.asks[0] && this.asks[0].price
 })
 Orderbook.define("price", ["bestBid", "bestAsk"], function () {
-  return (this.bestBid + this.bestAsk) / 2
+  if (this.base.globalPrice) return (this.bestBid + this.bestAsk) / 2
+  else return this.marketPrice()
 })
 Orderbook.define("spread", ["bestBid", "bestAsk"], function () {
   return this.bestAsk - this.bestBid
@@ -139,7 +140,7 @@ Orderbook.define("spread%", ["spread", "bestAsk"], function () {
  */
 Orderbook.prototype.findOffer = function (side, filter) {
   const offers = this[side]
-  const childsNum = this.childs.length || 1
+  const childsNum = this.childs ? this.childs.length : 1
   const anchors = {}
 
   let last
@@ -161,6 +162,23 @@ Orderbook.prototype.findAsk = function (filter) {
 }
 Orderbook.prototype.findBid = function (filter) {
   return this.findOffer("bids", filter)
+}
+
+/**
+ * Returns the price of asset at **depth** of orderbook's **side**. If **depth**
+ * is not provided, return the price of asset at a depth of 10% of the user
+ * holdings.
+ *
+ * @param  {String} [side="bids"] Either "bids" or "asks"
+ * @param  {Number} [depth] The depth to look at, in term of `global.currency`
+ * @return {Number} Offer price at requested depth
+ */
+Orderbook.prototype.marketPrice = function (side = "bids", depth) {
+  const offer = this.findOffer(side, offer => {
+    if (depth) return offer.volume > depth
+    else return offer.volume > this.base.amount * offer.price / 10
+  })
+  return offer ? offer.price : 0
 }
 
 /**
@@ -197,7 +215,7 @@ function updateOffersPrices (offers, quote) {
     else row.amount = +nice(row.baseAmount / row.basePrice, 7)
     row.cumul = cumul += +row.amount
     row.price = +nice(row.basePrice * quote.price, 7)
-    row.volume = volume += +nice(+row.amount * row.price, 7)
+    row.volume = volume += +nice(row.amount * row.price, 7)
   })
   return offers
 }
