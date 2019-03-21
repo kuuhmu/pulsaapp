@@ -168,36 +168,30 @@ function operationToOdesc (operation) {
  */
 function tightenSpread (offer, percentage = 0.01) {
   const clone = Object.assign({}, offer)
-  const diff = (offer.balance.asset.price - offer.price) * percentage
+  const diff = percentage * offer.balance.asset.orderbook["spread%"] / 100
 
-  if (offer.side === "bids") {
-    clone.price = Math.min(offer.price * (1 + percentage), offer.price + diff)
-  } else {
-    clone.price = Math.max(offer.price * (1 - percentage), offer.price + diff)
-  }
+  if (offer.side === "bids") clone.price = offer.price * (1 + diff)
+  else clone.price = offer.price * (1 - diff)
 
-  clampOfferPrice(clone)
+  if (offer.balance.asset.globalPrice) clampOfferPrice(clone)
   updateOfferPriceR(clone)
+
   return clone
 }
 
 /**
  * Floor/ceil **offer**'s price to maintain a maximum spread of **spread**
- * against global market price. Offers for which the global market price is
- * unknown are left unchanged.
+ * from its price.
  *
  * @param {Object} offer offer to price-cap
- * @param {Number} [spread=0.025] Maximum spread against global market price (in
- *     percent)
+ * @param {Number} [spread=0.025] Maximum spread from asset price (in percent)
  */
 function clampOfferPrice (offer, spread = 0.025) {
-  const refPrice = offer.balance.asset.globalPrice
-  if (refPrice) {
-    if (offer.side === "bids") {
-      offer.price = clamp(offer.price, refPrice * (1 - spread), refPrice)
-    } else {
-      offer.price = clamp(offer.price, refPrice, refPrice * (1 + spread))
-    }
+  const refPrice = offer.balance.asset.price
+  if (offer.side === "bids") {
+    offer.price = clamp(offer.price, refPrice * (1 - spread), refPrice)
+  } else {
+    offer.price = clamp(offer.price, refPrice, refPrice * (1 + spread))
   }
 }
 
