@@ -115,6 +115,7 @@ PortfolioGui.Graph = class PortfolioGraph extends Gui {
   constructor (parent) {
     super(`<div -ref=%container align="center"></div>`)
     this.parent = parent
+
     this.listen("destroy", () => this.chart && this.chart.destroy())
     parent.portfolio.trap("total", () => {
       // For some unknow reason the timeout makes the chart draw better.
@@ -174,11 +175,8 @@ ${__("Price")}: {point.price} ${global.currency}<br>
           },
           point: {
             events: {
-              select: x => this.parent.select(x.target.options),
-              legendItemClick: x => {
-                this.parent.select(x.target.options)
-                return false
-              }
+              select: x => this.parent.select(x.target.options.asset),
+              legendItemClick: () => false
             }
           }
         }
@@ -226,6 +224,7 @@ function makeAssetPoint (asset) {
   return {
     name: asset.name,
     code: asset.code,
+    asset: asset,
     y: +nice(asset.value, 2),
     amount: nice(asset.amount),
     price: nice(asset.price),

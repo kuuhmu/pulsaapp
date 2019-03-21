@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
   price at a depth of 10% of user holdings (assumed liquidation price). This is
   intended to prevent over-valuation of those assets.
 
+### Fixed
+
+- Fix chart display when pie slice is selected.
+
 ## [0.3.0] - 2019-03-14
 
 ### Added
