@@ -6,34 +6,62 @@
 const Highcharts = require("highcharts")
 
 Highcharts.theme = {
+  chart: { backgroundColor: "#fbfbfd" },
+  tooltip: { style: { fontSize: "14px" } },
+  credits: { enabled: false },
+
+  plotOptions: {
+    pie: {
+      allowPointSelect: true,
+      animation: false,
+      cursor: "pointer",
+      dataLabels: { style: { fontSize: "14px" } }
+    }
+  },
+
+  responsive: {
+    rules: [
+      {
+        condition: {
+          maxWidth: 500
+        },
+        chartOptions: {
+          legend: { enabled: true },
+          plotOptions: {
+            pie: {
+              showInLegend: true,
+              dataLabels: {
+                format: "{point.percentage:.0f}%",
+                distance: -20
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+
   colors: [
-    "rgba(255, 206, 86, 1)",
-    "rgba(75, 192, 192, 1)",
-    "rgba(153, 102, 255, 1)",
-    "rgba(255, 159, 64, 1)",
-    "rgba(255, 99, 132, 1)",
-    "rgba(54, 162, 235, 1)",
+    "rgba(231,  76,  60, 0.8)",
+    "rgba(230, 126,  34, 0.8)",
+    "rgba(242, 202,  39, 0.8)",
+    "rgba(46,  204, 112, 0.8)",
+    "rgba(52,  152, 219, 0.8)",
+    "rgba(155,  89, 182, 0.8)",
 
-    "rgba(255, 206, 86, 0.75)",
-    "rgba(75, 192, 192, 0.75)",
-    "rgba(153, 102, 255, 0.75)",
-    "rgba(255, 159, 64, 0.75)",
-    "rgba(255, 99, 132, 0.75)",
-    "rgba(54, 162, 235, 0.75)",
+    "rgba(231,  76,  60, 0.6)",
+    "rgba(230, 126,  34, 0.6)",
+    "rgba(242, 202,  39, 0.6)",
+    "rgba(46,  204, 112, 0.6)",
+    "rgba(52,  152, 219, 0.6)",
+    "rgba(155,  89, 182, 0.6)",
 
-    "rgba(255, 206, 86, 0.5)",
-    "rgba(75, 192, 192, 0.5)",
-    "rgba(153, 102, 255, 0.5)",
-    "rgba(255, 159, 64, 0.5)",
-    "rgba(255, 99, 132, 0.5)",
-    "rgba(54, 162, 235, 0.5)",
-
-    "rgba(255, 206, 86, 0.25)",
-    "rgba(75, 192, 192, 0.25)",
-    "rgba(153, 102, 255, 0.25)",
-    "rgba(255, 159, 64, 0.25)",
-    "rgba(255, 99, 132, 0.25)",
-    "rgba(54, 162, 235, 0.25)"
+    "rgba(231,  76,  60, 0.4)",
+    "rgba(230, 126,  34, 0.4)",
+    "rgba(242, 202,  39, 0.4)",
+    "rgba(46,  204, 112, 0.4)",
+    "rgba(52,  152, 219, 0.4)",
+    "rgba(155,  89, 182, 0.4)"
   ]
 }
 
