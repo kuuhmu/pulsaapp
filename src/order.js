@@ -236,10 +236,9 @@ const algorithm = {}
 algorithm.balance = function (order, share) {
   const asset = share.asset
   const orderbook = asset.orderbook
-  const offers = asset.offers
 
   if (asset.liabilities) {
-    const currentOffers = offers.filter(offer => !offer.outdated)
+    const currentOffers = asset.offers.filter(offer => !offer.outdated)
     if (currentOffers.length) {
       order.description = [__("Rebalancing...")]
       return
@@ -251,30 +250,31 @@ algorithm.balance = function (order, share) {
   if (share.mode === "amount" || share.target === 0) {
     algorithm.limit(order, share.size - asset.amount)
     return
+  } else if (share.delta > 0) {
+    rebalanceSide("asks", order, share)
+  } else if (share.delta < 0) {
+    rebalanceSide("bids", order, share)
   }
+}
 
-  const tmp1 = orderbook.findOffer("asks", offer => {
-    const ask = tightenSpread(offer)
-    const sellAmount = (ask.price * asset.amount - share.target) / ask.price
-    return ask.balance.amount > sellAmount && offer.amount > sellAmount * 0.01
+function rebalanceSide (side, order, share) {
+  const orderbook = share.asset.orderbook
+  const direction = side === "asks" ? "selling" : "buying"
+  const targetAmount = nice(Math.abs(share.delta) / share.asset.price, 7)
+
+  const offer = orderbook.findOffer(side, offer => {
+    return (
+      offer.volume > targetAmount / 10
+      && (side === "bids" || offer.balance.amount > targetAmount)
+    )
   })
 
-  if (tmp1) {
-    const ask = tightenSpread(tmp1)
-    const sellAmount = (ask.price * asset.amount - share.target) / ask.price
-    const replace = offers.find(offer => offer.selling.asset_code)
-    ask.id = replace && replace.id
-    if (sellAmount * ask.basePrice > 1) order.addOperation(ask, sellAmount)
-  }
-
-  const tmp2 = orderbook.findOffer("bids")
-  const bid = tightenSpread(tmp2)
-  if (bid.price * asset.amount < share.target) {
-    // TODO: don't let buyAmount exceed its share of XLM
-    const buyAmount = (share.target - bid.price * asset.amount) / bid.price
-    const replace = offers.find(offer => offer.buying.asset_code)
-    bid.id = replace && replace.id
-    if (buyAmount * bid.basePrice > 1) order.addOperation(bid, buyAmount)
+  if (offer) {
+    const prev = share.asset.offers.find(offer => offer[direction].asset_code)
+    offer.id = prev && prev.id
+    if (targetAmount * offer.basePrice > 1) {
+      order.addOperation(tightenSpread(offer), targetAmount)
+    }
   }
 }
 

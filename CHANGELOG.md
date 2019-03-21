@@ -6,9 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Fine-tuning of offer price picking.
 - Assets whose global market price is not known is now is now defined as its bid
   price at a depth of 50XLM (assumed liquidation price). This is intended to
   prevent over-valuation of those assets.
+
+### Removed
+
+- Liquidity providing feature has been removed from rebalancing algorithm. This
+  feature had a negative effect on portfolio performance in case of important
+  price moves.
 
 ### Fixed
 
