@@ -165,19 +165,14 @@ Orderbook.prototype.findBid = function (filter) {
 }
 
 /**
- * Returns the price of asset at **depth** of orderbook's **side**. If **depth**
- * is not provided, return the price of asset at a depth of 10% of the user
- * holdings.
+ * Returns the price of asset at **depth** XLM of orderbook's **side**.
  *
  * @param  {String} [side="bids"] Either "bids" or "asks"
- * @param  {Number} [depth] The depth to look at, in term of `global.currency`
+ * @param  {Number} [depth] The depth to look at, in term of XLM
  * @return {Number} Offer price at requested depth
  */
-Orderbook.prototype.marketPrice = function (side = "bids", depth) {
-  const offer = this.findOffer(side, offer => {
-    if (depth) return offer.volume > depth
-    else return offer.volume > this.base.amount * offer.price / 10
-  })
+Orderbook.prototype.marketPrice = function (side = "bids", depth = 50) {
+  const offer = this.findOffer(side, offer => offer.quoteVolume > depth)
   return offer ? offer.price : 0
 }
 
@@ -198,9 +193,10 @@ function areOffersEquals (array1, array2) {
 function normalizeOffers (offers, quote, balance, side) {
   offers.forEach(row => {
     row.volume = undefined
-    row.cumul = undefined
-    row.baseAmount = +row.amount
+    row.baseVolume = undefined
     row.basePrice = +row.price
+    row.quoteAmount = +row.amount
+    row.quoteVolume = undefined
     row.balance = balance
     row.side = side
   })
@@ -208,14 +204,19 @@ function normalizeOffers (offers, quote, balance, side) {
 }
 
 function updateOffersPrices (offers, quote) {
-  let cumul = 0,
-    volume = 0
+  let volume = 0,
+    quoteVolume = 0,
+    baseVolume = 0
   offers.forEach(row => {
-    if (row.side === "asks") row.amount = row.baseAmount
-    else row.amount = +nice(row.baseAmount / row.basePrice, 7)
-    row.cumul = cumul += +row.amount
-    row.price = +nice(row.basePrice * quote.price, 7)
+    if (row.side === "asks") {
+      row.quoteAmount = +nice(row.amount * row.basePrice, 7)
+    } else {
+      row.amount = +nice(row.quoteAmount / row.basePrice, 7)
+    }
     row.volume = volume += +nice(row.amount * row.price, 7)
+    row.baseVolume = baseVolume += +row.amount
+    row.quoteVolume = quoteVolume += +row.quoteAmount
+    row.price = +nice(row.basePrice * quote.price, 7)
   })
   return offers
 }

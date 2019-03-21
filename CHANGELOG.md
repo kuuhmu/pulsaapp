@@ -7,8 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Assets whose global market price is not known is now is now defined as its bid
-  price at a depth of 10% of user holdings (assumed liquidation price). This is
-  intended to prevent over-valuation of those assets.
+  price at a depth of 50XLM (assumed liquidation price). This is intended to
+  prevent over-valuation of those assets.
 
 ### Fixed
 
