@@ -87,15 +87,17 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
         ? (a, b) => b.price - a.price
         : (a, b) => a.price - b.price
 
-    /// Update cumulative properties
-    let cumul = 0,
-      volume = 0
+    /// Update volumes.
+    let volume = 0,
+      baseVolume = 0,
+      quoteVolume = 0
     this.set(
       type,
       merged.sort(sortOffers).map(row => {
         const mergedRow = Object.assign({}, row)
-        mergedRow.cumul = cumul += +row.amount
-        mergedRow.volume = volume += +row.amount * row.price
+        mergedRow.volume = volume += +nice(row.amount * row.price, 7)
+        mergedRow.baseVolume = baseVolume += +row.amount
+        mergedRow.quoteVolume = quoteVolume += +row.quoteAmount
         return mergedRow
       })
     )
@@ -213,10 +215,10 @@ function updateOffersPrices (offers, quote) {
     } else {
       row.amount = +nice(row.quoteAmount / row.basePrice, 7)
     }
+    row.price = +nice(row.basePrice * quote.price, 7)
     row.volume = volume += +nice(row.amount * row.price, 7)
     row.baseVolume = baseVolume += +row.amount
     row.quoteVolume = quoteVolume += +row.quoteAmount
-    row.price = +nice(row.basePrice * quote.price, 7)
   })
   return offers
 }
