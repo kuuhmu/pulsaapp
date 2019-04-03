@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Rebalancing orders are now properly computed right after login.
+- Fix a memory leak in portfolio pie chart widget.
 
 ## 0.4.1 - 2019-03-21
 
