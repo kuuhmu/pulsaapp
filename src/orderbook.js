@@ -67,23 +67,23 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
     }
   }
 
-  mergeOffers (type) {
+  mergeOffers (side) {
     if (this.childs.length < 2) {
-      this.set(type, this.childs[0] && this.childs[0][type])
+      this.set(side, this.childs[0] && this.childs[0][side])
       return
     }
 
     /// Merge order books
-    const merged = this.childs.reduce((arr, x) => {
-      return x[type] ? arr.concat(x[type]) : arr
+    const merged = this.childs.reduce((merged, child) => {
+      return child[side] ? merged.concat(child[side]) : merged
     }, [])
     if (!merged.length) {
-      this[type] = null
+      this[side] = null
       return
     }
 
     const sortOffers =
-      type === "bids"
+      side === "bids"
         ? (a, b) => b.price - a.price
         : (a, b) => a.price - b.price
 
@@ -92,7 +92,7 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
       baseVolume = 0,
       quoteVolume = 0
     this.set(
-      type,
+      side,
       merged.sort(sortOffers).map(row => {
         const mergedRow = Object.assign({}, row)
         mergedRow.volume = volume += +nice(row.amount * row.price, 7)
