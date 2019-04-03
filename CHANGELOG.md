@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Rebalancing orders are now properly computed right after login.
+
 ## 0.4.1 - 2019-03-21
 
 ## Fixed

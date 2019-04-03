@@ -33,6 +33,7 @@
   "Equal Share": "Part égale",
   "Equilibre.io runs on donation.": "Equilibre.io est financé par donation.",
   "Fetching market data": "Obtention des données de marché",
+  "Fetching orderbook...": "Chargement du carnet d'ordres...",
   "For your comfort, prices are displayed in their %%globalCurrency equivalent.": "Pour votre confort, les prix sont affichés en équivalent %%globalCurrency.",
   "General Settings": "Paramètres généraux",
   "Global prices are from %%coingecko when available.": "Les prix globaux viennent de %%coingecko lorsque cela est possible.",

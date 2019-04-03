@@ -21,8 +21,11 @@ const Order = module.exports = class Order extends Projectable {
       share.asset.orderbook,
       share
     )
+
     share.trap(["value", "target"], () => order.refresh())
-    share.asset.trap("liabilities", () => order.refresh())
+    share.asset.trap("liabilities", () => order.refresh(), order)
+    share.asset.orderbook.trap(["bids", "asks"], () => order.refresh(), order)
+
     return order
   }
 
@@ -237,6 +240,15 @@ algorithm.balance = function (order, share) {
   const asset = share.asset
   const orderbook = asset.orderbook
 
+  // Requirements
+
+  if (share.target === null) return
+
+  if (!orderbook.bestBid || !orderbook.bestAsk) {
+    order.description = [__("Fetching orderbook...")]
+    return
+  }
+
   if (asset.liabilities) {
     const currentOffers = asset.offers.filter(offer => !offer.outdated)
     if (currentOffers.length) {
@@ -245,7 +257,7 @@ algorithm.balance = function (order, share) {
     }
   }
 
-  if (!orderbook.bestBid || !orderbook.bestAsk || share.target == null) return
+  // Rebalancing
 
   if (share.mode === "amount" || share.target === 0) {
     algorithm.limit(order, share.size - asset.amount)
