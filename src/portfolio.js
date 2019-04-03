@@ -23,7 +23,7 @@ module.exports = class Portfolio extends Projectable {
     const portfolio = new Portfolio()
     portfolio.address = cosmicLib.config.source = address
 
-    await testNetwork()
+    await checkNetwork()
 
     const destination = await cosmicLib.resolve.address(address)
     if (destination.memo)
@@ -99,7 +99,7 @@ Asset.define("share", "value", function () {
  * Helpers
  */
 
-async function testNetwork () {
+async function checkNetwork () {
   const horizon = cosmicLib.resolve.horizon()
   try {
     await axios.get(horizon)
