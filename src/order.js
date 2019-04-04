@@ -276,7 +276,7 @@ function rebalanceSide (side, order, share) {
 
   const offer = orderbook.findOffer(side, offer => {
     return (
-      offer.volume > targetAmount / 10
+      offer.baseVolume > targetAmount / 10
       && (side === "bids" || offer.balance.amount > targetAmount)
     )
   })

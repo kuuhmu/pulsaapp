@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Fix a regression introduced in 0.4.2 that prevented optimal offer price to be
+  properly computed.
+
 ## 0.4.2 - 2019-04-03
 
 ### Fixed
