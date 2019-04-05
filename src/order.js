@@ -36,7 +36,6 @@ const Order = module.exports = class Order extends Projectable {
     this.orderbook = orderbook
     this.parameters = parameters
 
-    this.orderbook.listen("update", () => this.refresh())
     this.operations.listen("update", () =>
       this.compute(["cosmicLink", "description"])
     )
