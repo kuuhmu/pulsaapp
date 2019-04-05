@@ -7,45 +7,67 @@ const cosmicLib = require("cosmic-lib")
 const nice = require("@cosmic-plus/jsutils/nice")
 const Projectable = require("@cosmic-plus/jsutils/projectable")
 const StellarSdk = require("@cosmic-plus/base/stellar-sdk")
+const { timeout } = require("@cosmic-plus/jsutils/misc")
 const { __ } = require("@cosmic-plus/i18n")
 
 const Orderbook = module.exports = class Orderbook extends Projectable {
   static forBalance (balance, quote) {
     if (balance.asset === quote) return
-    const orderbook = new Orderbook(balance.asset, quote)
+
+    const orderbook = new Orderbook({ balance, quote })
+    orderbook.streamOffers()
+
     balance.orderbook = orderbook
     balance.asset.addOrderbook(orderbook)
-    orderbook.balance = balance
-
-    const baseAsset = new StellarSdk.Asset(balance.code, balance.anchor.address)
-    const quoteAsset = StellarSdk.Asset.native()
-
-    const server = cosmicLib.resolve.server()
-    const callBuilder = server.orderbook(baseAsset, quoteAsset)
-    const streamOptions = { onmessage: offers => orderbook.ingest(offers) }
-    this.close = callBuilder.stream(streamOptions)
 
     return orderbook
   }
 
   static forAsset (asset) {
-    return new Orderbook(asset)
+    return new Orderbook({ asset })
   }
 
-  constructor (base, quote) {
+  constructor (params) {
     super()
 
-    this.base = base
-    this.quote = quote
-
-    if (quote) {
+    if (params.balance) {
       this.type = "native"
-      this.name = `${base.code}/${quote.code}`
+      this.balance = params.balance
+      this.base = params.balance.asset
+      this.quote = params.quote
+      this.name = `${this.base.code}/${this.quote.code}`
+      this.offersCallBuilder = Orderbook.offersCallBuilder(this.balance)
+
       this.quote.trap("price", () => this.updateOffersPrices())
-    } else {
+    } else if (params.asset) {
       this.type = "agregated"
-      this.name = `${base.code} (${__("Agregated")})`
+      this.base = params.asset
+      this.name = `${this.base.code} (${__("Agregated")})`
       this.childs = []
+    }
+  }
+
+  static offersCallBuilder (balance) {
+    const baseAsset = new StellarSdk.Asset(balance.code, balance.anchor.address)
+    const quoteAsset = StellarSdk.Asset.native()
+    const server = cosmicLib.resolve.server()
+    return server.orderbook(baseAsset, quoteAsset)
+  }
+
+  async streamOffers () {
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      await this.getOffers()
+      await timeout(15000)
+    }
+  }
+
+  async getOffers () {
+    try {
+      const offers = await this.offersCallBuilder.call()
+      this.ingest(offers)
+    } catch (error) {
+      console.error(error)
     }
   }
 

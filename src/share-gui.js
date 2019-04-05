@@ -172,8 +172,8 @@ class ShareGui extends Gui {
 
     this.share = share
 
-    this.image = share.asset.image
     this.name = share.name || share.asset && share.asset.code
+    share.asset.project("image", this)
     share.project("goal", this, x => nice(x, 2))
     share.project("divergence", this, x => {
       return x == null ? "-" : nice(x * 100, 2) + "%"

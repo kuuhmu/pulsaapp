@@ -40,12 +40,12 @@ class AssetGui extends Gui {
 
     this.asset = asset
 
-    this.image = asset.image
     this.name = asset.code
     this.anchors = asset.balances.mirror(x => cell(x.anchor, "name"))
     this.amounts = asset.balances.mirror(x => cell(x, "amount", nice))
     this.prices = asset.balances.mirror(x => priceCell(x, "price", nice))
     this.values = asset.balances.mirror(x => cell(x, "value", x => nice(x, 2)))
+    asset.link("image", this)
     asset.link("amount", this, "amountTotal", nice)
     asset.link("price", this, "priceTotal", nice)
     asset.link("value", this, "valueTotal", x => nice(x, 2))
