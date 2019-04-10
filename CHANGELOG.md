@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - Fix a 0.4.4 regression which sometimes causes coin image to not display under
   activity tab.
+- Fix a 0.4.4 regression which caused displayed anchor prices to be incorrect
+  until first price refresh.
 
 ## 0.4.4 - 2019-04-05
 

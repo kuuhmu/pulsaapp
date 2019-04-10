@@ -45,6 +45,8 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
       this.name = `${this.base.code} (${__("Agregated")})`
       this.childs = []
     }
+
+    this.base.trap("globalPrice", () => this.compute("price"))
   }
 
   static offersCallBuilder (balance) {
