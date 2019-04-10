@@ -118,11 +118,11 @@ ActivityGui.Offer = class ActivityOffer extends Gui {
 
     this.offer = offer
 
-    this.image = offer.asset.image
     this.name = offer.asset.code
     this.side = offer.side === "buy" ? __("Buy") : __("Sell")
     this.anchor = offer.balance.anchor.name
     this.date = new Date(offer.last_modified_time).toLocaleDateString()
+    offer.asset.link("image", this)
   }
 
   nice (number) {

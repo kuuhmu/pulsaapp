@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- Fix a 0.4.4 regression which sometimes causes coin image to not display under
+  activity tab.
+
 ## 0.4.4 - 2019-04-05
 
 ### Changed
