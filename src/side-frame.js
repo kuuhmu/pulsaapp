@@ -3,14 +3,17 @@
  * Signing Side Frame
  */
 const html = require("@cosmic-plus/jsutils/html")
+const Observable = require("@cosmic-plus/jsutils/observable")
 const { __ } = require("@cosmic-plus/i18n")
 
 /**
  * Class
  */
 
-class SideFrame {
+class SideFrame extends Observable {
   constructor (url) {
+    super()
+
     if (SideFrame.current) SideFrame.current.close()
     SideFrame.current = this
 
@@ -37,6 +40,8 @@ class SideFrame {
     SideFrame.shadow.onclick = () => this.close()
     SideFrame.close.onclick = () => this.close()
     html.show(SideFrame.shadow, SideFrame.close, this.domNode)
+
+    this.trigger("show")
   }
 
   hide () {
@@ -47,12 +52,16 @@ class SideFrame {
 
     SideFrame.shadow.onclick = null
     html.hide(SideFrame.shadow, SideFrame.close, this.domNode)
+
+    this.trigger("hide")
   }
 
   close () {
     SideFrame.current = null
     this.hide()
     html.destroy(this.domNode)
+    this.trigger("close")
+    this.destroy()
   }
 }
 

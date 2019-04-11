@@ -104,7 +104,13 @@ class RebalanceGui extends Gui {
       remaining.forEach(offer => {
         cosmicLink.addOperation("manageOffer", { amount: 0, offerId: offer.id })
       })
-      if (cosmicLink) new SideFrame(cosmicLink.uri)
+      if (cosmicLink) {
+        const sideFrame = new SideFrame(cosmicLink.uri)
+        sideFrame.listen("destroy", () => {
+          this.portfolio.getAccount()
+          this.portfolio.offers.get()
+        })
+      }
     } catch (error) {
       console.error(error)
     }

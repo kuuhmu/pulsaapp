@@ -94,7 +94,11 @@ ActivityGui.Offers = class ActivityOffers extends Gui {
     })
 
     const cosmicLink = new CosmicLink({ memo, network, source, operations })
-    new SideFrame(cosmicLink.uri)
+    const sideFrame = new SideFrame(cosmicLink.uri)
+    sideFrame.listen("destroy", () => {
+      this.portfolio.getAccount()
+      this.portfolio.offers.get()
+    })
   }
 }
 

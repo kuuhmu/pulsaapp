@@ -37,7 +37,7 @@ class Offers extends Mirrorable {
     return server.offers("accounts", accountId)
   }
 
-  async stream (delay = 5000) {
+  async stream (delay = 15000) {
     // Resolves after first get().
     return this.get().then(() => setTimeout(() => this.stream(), delay))
   }

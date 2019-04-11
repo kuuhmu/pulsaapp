@@ -6,8 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Rebalancing & activity tabs now refresh faster after validating rebalancing
-  operations.
+- Rebalancing & activity tabs now refresh immediately after validating
+  rebalancing operations.
 
 ### Fixed
 
