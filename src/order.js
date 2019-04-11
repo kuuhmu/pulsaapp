@@ -25,6 +25,7 @@ const Order = module.exports = class Order extends Projectable {
     share.trap(["value", "target"], () => order.refresh())
     share.asset.trap("liabilities", () => order.refresh(), order)
     share.asset.orderbook.trap(["bids", "asks"], () => order.refresh(), order)
+    share.asset.offers.listen("change", () => order.refresh())
 
     return order
   }

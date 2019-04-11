@@ -4,12 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Rebalancing & activity tabs now refresh faster after validating rebalancing
+  operations.
+
 ### Fixed
 
 - Fix a 0.4.4 regression which sometimes causes coin image to not display under
   activity tab.
 - Fix a 0.4.4 regression which caused displayed anchor prices to be incorrect
   until first price refresh.
+- Fix a bug that would cause rebalancing to fail when performed immediately
+  after canceling offers - thanks
+  [@ddombrowsy](https://github.com/ddombrowsky).
 
 ## 0.4.4 - 2019-04-05
 
