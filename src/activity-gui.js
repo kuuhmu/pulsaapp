@@ -54,7 +54,7 @@ ActivityGui.Offers = class ActivityOffers extends Gui {
       <th>${__("Asset")}</th>
       <th>${__("Direction")}</th>
       <th>${__("Amount")}</th>
-      <th>${__("Price")} (${global.currency})</th>
+      <th>${__("Price")} (%globalCurrency)</th>
     </tr>
     %formatOffer:offers...
     <tr><td colspan="5" align="center" onclick=%cancelOffers>
@@ -104,8 +104,7 @@ ActivityGui.Offers = class ActivityOffers extends Gui {
 
 ActivityGui.Offer = class ActivityOffer extends Gui {
   constructor (offer) {
-    super(
-      `
+    super(`
 <tr>
   <td>%formatDate:last_modified_time</td>
   <td>
@@ -116,16 +115,14 @@ ActivityGui.Offer = class ActivityOffer extends Gui {
   <td align="right">%nice:amount</td>
   <td align="right">%nice:price</td>
 </tr>
-    `,
-      offer
-    )
+    `)
 
     this.offer = offer
+    offer.project(["last_modified_time", "amount", "price"], this)
 
     this.name = offer.asset.code
     this.side = offer.side === "buy" ? __("Buy") : __("Sell")
     this.anchor = offer.balance.anchor.name
-    this.date = new Date(offer.last_modified_time).toLocaleDateString()
     offer.asset.link("image", this)
   }
 
@@ -139,47 +136,49 @@ ActivityGui.Offer = class ActivityOffer extends Gui {
   }
 }
 
-ActivityGui.Orders = class ActivityOrders extends Gui {
-  constructor (portfolio) {
-    super(`
-<table>
-  <tr>
-    <th>${__("Date")}</th>
-    <th>${__("Asset")}</th>
-    <th>${__("Direction")}</th>
-    <th>${__("Amount")}</th>
-    <th>${__("Price")}</th>
-  </tr>
-  <tr>
-    <td colspan="6"><h3><i18n>${__("Open Orders")}</i18n></h3></td>
-  </tr>
-  %openOrders...
-  <tr>
-    <td colspan="6"><h3><i18n>${__("Completed Orders")}</i18n></h3></td>
-  </tr>
-  %completedOrders...
-</table>
-    `)
-    this.portfolio = portfolio
-  }
-}
+// ## Unused code
+//
+// ActivityGui.Orders = class ActivityOrders extends Gui {
+//   constructor (portfolio) {
+//     super(`
+// <table>
+//   <tr>
+//     <th>${__("Date")}</th>
+//     <th>${__("Asset")}</th>
+//     <th>${__("Direction")}</th>
+//     <th>${__("Amount")}</th>
+//     <th>${__("Price")}</th>
+//   </tr>
+//   <tr>
+//     <td colspan="6"><h3><i18n>${__("Open Orders")}</i18n></h3></td>
+//   </tr>
+//   %openOrders...
+//   <tr>
+//     <td colspan="6"><h3><i18n>${__("Completed Orders")}</i18n></h3></td>
+//   </tr>
+//   %completedOrders...
+// </table>
+//     `)
+//     this.portfolio = portfolio
+//   }
+// }
 
-ActivityGui.Transfers = class ActivityTransfers extends Gui {
-  constructor (portfolio) {
-    super(`
-<table>
-  <tr>
-    <th>${__("Date")}</th>
-    <th>${__("Asset")}</th>
-    <th>${__("With")}</th>
-    <th>${__("Amount")}</th>
-  </tr>
-  %transfers...
-</table>
-    `)
-    this.portfolio = portfolio
-  }
-}
+// ActivityGui.Transfers = class ActivityTransfers extends Gui {
+//   constructor (portfolio) {
+//     super(`
+// <table>
+//   <tr>
+//     <th>${__("Date")}</th>
+//     <th>${__("Asset")}</th>
+//     <th>${__("With")}</th>
+//     <th>${__("Amount")}</th>
+//   </tr>
+//   %transfers...
+// </table>
+//     `)
+//     this.portfolio = portfolio
+//   }
+// }
 
 /**
  * Export
