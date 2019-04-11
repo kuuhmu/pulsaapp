@@ -8,6 +8,7 @@ const loopcall = require("@cosmic-plus/loopcall")
 const Mirrorable = require("@cosmic-plus/jsutils/mirrorable")
 const nice = require("@cosmic-plus/jsutils/nice")
 const Projectable = require("@cosmic-plus/jsutils/projectable")
+const hiddenKey = require("@cosmic-plus/jsutils/misc").setHiddenProperty
 const { day } = require("@cosmic-plus/jsutils/misc")
 
 const Asset = require("./asset")
@@ -17,39 +18,79 @@ const Balance = require("./balance")
  * Class
  */
 
-class Offer extends Projectable {
-  static async forPortfolio (portfolio) {
-    const offers = new Mirrorable()
-    const server = cosmicLib.resolve.server()
-    const callBuilder = server.offers("accounts", portfolio.accountId)
-    await Offer.update(callBuilder, offers)
-    setInterval(() => Offer.update(callBuilder, offers), 5000)
+class Offers extends Mirrorable {
+  static forPortfolio (portfolio) {
+    const offers = Offers.forAccount(portfolio.accountId)
+    hiddenKey(offers, "portfolio", portfolio)
     return offers
   }
 
-  static async update (callBuilder, offers) {
-    offers.forEach(offer => offer.opened = false)
-    await loopcall(callBuilder).then(records => {
-      records.forEach(record => Offer.ingest(record, offers))
-    })
-    offers.filter(offer => !offer.opened).forEach(offer => offer.destroy())
+  static forAccount (accountId) {
+    const offers = new Offers()
+    hiddenKey(offers, "accountId", accountId)
+    hiddenKey(offers, "callBuilder", Offers.callBuilder(accountId))
+    return offers
   }
 
-  static async ingest (record, offers) {
-    const offer = Offer.table[recordToId(record)]
+  static callBuilder (accountId) {
+    const server = cosmicLib.resolve.server()
+    return server.offers("accounts", accountId)
+  }
+
+  async stream (delay = 5000) {
+    // Resolves after first get().
+    return this.get().then(() => setTimeout(() => this.stream(), delay))
+  }
+
+  async get () {
+    try {
+      const records = await loopcall(this.callBuilder, { limit: 200 })
+      this.ingest(records)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  ingest (records) {
+    this.forEach(offer => offer.alive = false)
+    const offers = records.map(record => Offer.ingest(record)).filter(x => x)
+    this.splice(0, 0, ...offers)
+    this.clean()
+  }
+
+  clean () {
+    for (let index = this.length - 1; index > -1; index--) {
+      const offer = this[index]
+      if (!offer.alive) {
+        this.splice(index, 1)
+        offer.destroy()
+      }
+    }
+  }
+}
+
+class Offer extends Projectable {
+  static resolve (record) {
+    return Offer.table[recordToId(record)]
+  }
+
+  static ingest (record) {
+    const offer = Offer.resolve(record)
     if (offer) offer.update(record)
-    else new Offer(record, offers)
+    else return new Offer(record)
   }
 
-  constructor (record, offers) {
+  constructor (record) {
     super()
+
+    this.intern = recordToId(record)
+    Offer.table[this.intern] = this
 
     const quote = Asset.resolve("XLM")
     const asset = record.buying.asset_code ? record.buying : record.selling
     this.balance = Balance.resolve(asset.asset_code, asset.asset_issuer)
     this.asset = this.balance.asset
     this.side = record.buying.asset_code ? "buy" : "sell"
-    this.intern = recordToId(record)
 
     this.define(
       "price",
@@ -64,20 +105,18 @@ class Offer extends Projectable {
 
     this.balance.offers.push(this)
     this.asset.offers.push(this)
-    if (offers) offers.push(this)
-    Offer.table[this.intern] = this
 
     this.listen("destroy", () => {
+      delete Offer.table[this.intern]
       this.balance.offers.splice(this.balance.offers.indexOf(this), 1)
       this.asset.offers.splice(this.asset.offers.indexOf(this), 1)
-      if (offers) offers.splice(offers.indexOf(this), 1)
-      delete Offer.table[this.intern]
     })
   }
 
   update (record) {
-    this.opened = true
     Object.assign(this, record)
+    this.alive = true
+
     this.rawPrice = record.price
     this.compute("price")
     this.rawAmount = record.amount
@@ -97,17 +136,11 @@ Offer.table = {}
  */
 
 function recordToId (record) {
-  return `${record.id}/${assetToId(record.buying)}/${assetToId(record.selling)}`
-}
-
-function assetToId (asset) {
-  return asset.asset_issuer
-    ? `${asset.asset_code}:${asset.asset_issuer}`
-    : "XLM"
+  return `${record.id}-${record.last_modified_ledger}`
 }
 
 /**
  * Export
  */
 
-module.exports = Offer
+module.exports = Offers

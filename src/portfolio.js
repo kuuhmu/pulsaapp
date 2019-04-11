@@ -99,7 +99,8 @@ module.exports = class Portfolio extends Projectable {
     if (this.new) {
       delete this.new
       await Asset.refreshPrices()
-      this.offers = await Offers.forPortfolio(this)
+      this.offers = Offers.forPortfolio(this)
+      await this.offers.stream()
       this.trigger("open")
     }
   }
