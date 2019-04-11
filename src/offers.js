@@ -99,7 +99,7 @@ class Offer extends Projectable {
         ? () => quote.price * this.rawPrice
         : () => quote.price / this.rawPrice
     )
-    quote.trap("price", () => this.compute("price"))
+    this.watch(quote, "price", () => this.compute("price"))
 
     this.update(record)
 

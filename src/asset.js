@@ -57,15 +57,17 @@ const Asset = module.exports = class Asset extends Projectable {
 
     this.balances.mirror(balance => {
       this.anchors.push(balance.anchor)
-      balance.trap("amount", () => this.compute("amount"))
-      balance.trap(["buying", "selling"], () => this.compute("liabilities"))
+      this.watch(balance, "amount", () => this.compute("amount"))
+      this.watch(balance, ["buying", "selling"], () => {
+        this.compute("liabilities")
+      })
     })
 
     this.orderbook = Orderbook.forAsset(this)
     this.define("price", "globalPrice", () => {
       return this.globalPrice || this.orderbook.price
     })
-    this.orderbook.trap("price", () => this.compute("price"))
+    this.watch(this.orderbook, "price", () => this.compute("price"))
   }
 
   async getInfo () {

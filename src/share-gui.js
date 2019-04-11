@@ -185,7 +185,7 @@ class ShareGui extends Gui {
       return x == null ? "-" : nice(x * 100, 2) + "%"
     })
 
-    share.trap("order", () => {
+    this.watch(share, "order", () => {
       if (!share.order) {
         this.cosmicLink = this.description = null
       } else {

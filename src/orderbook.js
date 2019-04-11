@@ -38,7 +38,7 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
       this.name = `${this.base.code}/${this.quote.code}`
       this.offersCallBuilder = Orderbook.offersCallBuilder(this.balance)
 
-      this.quote.trap("price", () => this.updateOffersPrices())
+      this.watch(this.quote, "price", () => this.updateOffersPrices())
     } else if (params.asset) {
       this.type = "agregated"
       this.base = params.asset
@@ -46,7 +46,7 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
       this.childs = []
     }
 
-    this.base.trap("globalPrice", () => this.compute("price"))
+    this.watch(this.base, "globalPrice", () => this.compute("price"))
   }
 
   static offersCallBuilder (balance) {
@@ -129,8 +129,8 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
 
   addChild (orderbook) {
     this.childs.push(orderbook)
-    orderbook.trap("bids", () => this.mergeOffers("bids"))
-    orderbook.trap("asks", () => this.mergeOffers("asks"))
+    this.watch(orderbook, "bids", () => this.mergeOffers("bids"))
+    this.watch(orderbook, "asks", () => this.mergeOffers("asks"))
   }
 }
 

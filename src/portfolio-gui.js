@@ -88,7 +88,7 @@ PortfolioGui.Table = class PortfolioTable extends Gui {
       return assetGui
     })
 
-    parent.portfolio.trap("total", () => this.sort(), this)
+    this.watch(parent.portfolio, "total", () => this.sort())
   }
 
   sort () {
@@ -119,11 +119,10 @@ PortfolioGui.Graph = class PortfolioGraph extends Gui {
     this.parent = parent
 
     this.listen("destroy", () => this.chart && this.chart.destroy())
-    parent.portfolio.trap("total", () => {
+    this.watch(parent.portfolio, "total", () => {
       // For some unknow reason the timeout makes the chart draw better.
       setTimeout(() => this.makePie(), 1)
-    }),
-    this
+    })
   }
 
   makePie () {

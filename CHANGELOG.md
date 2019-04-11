@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Rebalancing & activity tabs now refresh immediately after validating
   rebalancing operations.
+- Improve memory management.
 
 ### Fixed
 

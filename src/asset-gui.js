@@ -51,14 +51,11 @@ class AssetGui extends Gui {
     asset.link("value", this, "valueTotal", x => nice(x, 2))
     asset.anchors.feed(this, "anchorHeader", anchorName)
 
-    this.priceDetails = ""
     const orderbook = this.asset.orderbook
-    if (orderbook) {
-      orderbook.trap(
-        ["bestAsk", "bestBid", "spread%"],
-        () => this.priceDetails = priceDetails(orderbook)
-      )
-    }
+    this.define("priceDetails", "orderbook", () => priceDetails(orderbook))
+    this.watch(orderbook, ["bestAsk", "bestBid", "spread%"], () => {
+      this.compute("priceDetails")
+    })
 
     this.simpleView()
   }
@@ -100,11 +97,11 @@ function cell (object, key, func) {
 function priceCell (object, key, func) {
   const node = cell(object, "price", func)
   object.trap("orderbook", () => {
-    if (object.orderbook)
-      object.orderbook.trap(
-        ["bestAsk", "bestBid", "spread%"],
-        () => node.title = priceDetails(object.orderbook)
-      )
+    if (object.orderbook) {
+      object.orderbook.trap(["bestAsk", "bestBid", "spread%"], () => {
+        node.title = priceDetails(object.orderbook)
+      })
+    }
   })
   return node
 }

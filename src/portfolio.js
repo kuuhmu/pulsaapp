@@ -53,7 +53,7 @@ module.exports = class Portfolio extends Projectable {
         .reduce((sum, x) => sum + x.value, 0)
     })
     this.assets.mirror(asset =>
-      asset.trap(["value", "isSupported"], () => this.compute("total"))
+      this.watch(asset, ["value", "isSupported"], () => this.compute("total"))
     )
 
     this.new = true
@@ -86,11 +86,13 @@ module.exports = class Portfolio extends Projectable {
 
     for (let index in account.balances) {
       const balance = Balance.ingest(account.balances[index])
-      if (this.assets.indexOf(balance.asset) === -1) {
-        this.assets.push(balance.asset)
+      const asset = balance.asset
+
+      if (this.assets.indexOf(asset) === -1) {
+        this.assets.push(asset)
         this.balances.push(balance)
-        this.trap("total", () => balance.asset.compute("share"))
-        balance.asset.getInfo()
+        asset.watch(this, "total", () => asset.compute("share"))
+        asset.getInfo()
       } else if (this.balances.indexOf(balance) === -1) {
         this.balances.push(balance)
       }

@@ -34,7 +34,7 @@ const Share = module.exports = class Share extends Projectable {
     share.goal = 100
 
     portfolio.share = share
-    portfolio.trap("total", () => share.compute(portfolio.total))
+    share.watch(portfolio, "total", () => share.compute(portfolio.total))
 
     // Add/Remove assets after trustline change.
     portfolio.assets.forEach(asset => {
