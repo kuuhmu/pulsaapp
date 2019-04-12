@@ -2,13 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## 0.4.5 - 2019-04-12
 
 ### Changed
 
 - Rebalancing & activity tabs now refresh immediately after validating
   rebalancing operations.
 - Improve memory management.
+- Update [cosmic-lib] to 1.2.10.
 
 ### Fixed
 
@@ -17,8 +18,7 @@ All notable changes to this project will be documented in this file.
 - Fix a 0.4.4 regression which caused displayed anchor prices to be incorrect
   until first price refresh.
 - Fix a bug that would cause rebalancing to fail when performed immediately
-  after canceling offers - thanks
-  [@ddombrowsy](https://github.com/ddombrowsky).
+  after canceling offers - thanks [@ddombrowsy].
 
 ## 0.4.4 - 2019-04-05
 
@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Rebalancing orders are now computed right after login, as intended.
-- Fix a memory leak in portfolio pie chart widget - thanks [@pawelfus](https://github.com/pawelfus).
+- Fix a memory leak in portfolio pie chart widget - thanks [@pawelfus].
 
 ## 0.4.1 - 2019-03-21
 
@@ -109,3 +109,8 @@ All notable changes to this project will be documented in this file.
 ## 0.1.0 − 2019-02-17
 
 Beta 1 release
+
+[cosmic-lib]: https://github.com/cosmic-plus/node-cosmic-lib/blob/master/CHANGELOG.md
+
+[@ddombrowsy](https://github.com/ddombrowsky)
+[@pawelfus](https://github.com/pawelfus)
