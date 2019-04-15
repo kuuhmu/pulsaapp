@@ -16,6 +16,9 @@ new ServiceWorker(pkg.name, pkg.version, "verbose")
     "vendors~app.js",
     "vendors~ledger.js",
 
+    // Images
+    "images/cosmic-link.svg",
+
     // Vendor configuration
     "browserconfig.xml",
     "manifest.json",
