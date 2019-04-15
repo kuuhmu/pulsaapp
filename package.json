@@ -16,8 +16,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "get": "git submodule update -i --recursive",
-    "prettier": "prettier --write --no-semi '**.js' 'src/**.js' '**.json' '**.md'",
-    "eslint": "eslint --fix '**.js' 'src/**.js'",
+    "prettier": "prettier --write --no-semi '*.js' '*.json' '*.md' 'src/**/*.js'",
+    "eslint": "eslint --fix '*.js' 'src/**/*.js'",
     "lint": "npm run prettier && npm run eslint",
     "build-i18n": "i18n-extractor",
     "build-js": "webpack -p && cp -f node_modules/stellar-sdk/dist/stellar-sdk.min.js web/stellar-sdk.js",
