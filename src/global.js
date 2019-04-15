@@ -22,8 +22,19 @@ global.portfolio = undefined
 /// Order type to use when rebalancing
 global.rebalancingStrategy = "balance"
 
-/// Rebalancing threshold
-global.threshold = 0.01
+/// Minimum offer value to setup a rebalancing operation (in Lumens).
+global.minOfferSize = 1
+
+// Maximum spread for pairs (percentage).
+global.maxSpread = 0.05
+
+// Price shift to put our offer in first position... (percentage of pair
+// spread).
+global.spreadTightening = 0.01
+
+// ... But don't try to be ahead of offers whose cumulative volume is lower than
+// (percentage of offer amount).
+global.skipMarginalOffers = 0.1
 
 /// Main navigation
 global.tabs = null

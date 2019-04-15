@@ -12,6 +12,10 @@ const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")
 
+/**
+ * Class
+ */
+
 const Order = module.exports = class Order extends Projectable {
   static rebalance (share) {
     if (share.asset.code === "XLM") return
@@ -169,7 +173,7 @@ function operationToOdesc (operation) {
  * Create a copy of **offer** with a delta to global market price reduced by
  * **percentage**.
  */
-function tightenSpread (offer, percentage = 0.01) {
+function tightenSpread (offer, percentage = global.spreadTightening) {
   const clone = Object.assign({}, offer)
   const diff = percentage * offer.balance.asset.orderbook["spread%"] / 100
 
@@ -189,7 +193,7 @@ function tightenSpread (offer, percentage = 0.01) {
  * @param {Object} offer offer to price-cap
  * @param {Number} [spread=0.025] Maximum spread from asset price (in percent)
  */
-function clampOfferPrice (offer, spread = 0.025) {
+function clampOfferPrice (offer, spread = global.maxSpread / 2) {
   const refPrice = offer.balance.asset.price
   if (offer.side === "bids") {
     offer.price = clamp(offer.price, refPrice * (1 - spread), refPrice)
@@ -276,7 +280,7 @@ function rebalanceSide (side, order, share) {
 
   const offer = orderbook.findOffer(side, offer => {
     return (
-      offer.baseVolume > targetAmount / 10
+      offer.baseVolume > targetAmount * global.skipMarginalOffers
       && (side === "bids" || offer.balance.amount > targetAmount)
     )
   })
@@ -284,7 +288,7 @@ function rebalanceSide (side, order, share) {
   if (offer) {
     const prev = share.asset.offers.find(offer => offer[direction].asset_code)
     offer.id = prev && prev.id
-    if (targetAmount * offer.basePrice > 1) {
+    if (targetAmount * offer.basePrice > global.minOfferSize) {
       order.addOperation(tightenSpread(offer), targetAmount)
     }
   }
