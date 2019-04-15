@@ -20,12 +20,7 @@ const Order = module.exports = class Order extends Projectable {
   static rebalance (share) {
     if (share.asset.code === "XLM") return
 
-    const order = new Order(
-      global.rebalancingStrategy,
-      share.asset.orderbook,
-      share
-    )
-
+    const order = new Order("balance", share.asset.orderbook, share)
     order.watch(share, ["value", "target"], () => order.refresh())
     order.watch(share.asset, "liabilities", () => order.refresh())
     order.watch(share.asset.orderbook, ["bids", "asks"], () => order.refresh())
@@ -34,16 +29,17 @@ const Order = module.exports = class Order extends Projectable {
     return order
   }
 
-  constructor (method, orderbook, ...parameters) {
+  constructor (type, orderbook, ...parameters) {
     super()
-    this.algorithm = algorithm[method]
+    this.type = type
+    this.method = Order.type[this.type]
     this.operations = new Mirrorable()
     this.orderbook = orderbook
     this.parameters = parameters
 
-    this.operations.listen("update", () =>
+    this.operations.listen("update", () => {
       this.compute(["cosmicLink", "description"])
-    )
+    })
 
     this.refresh()
   }
@@ -51,9 +47,7 @@ const Order = module.exports = class Order extends Projectable {
   refresh () {
     this.operations.splice(0, this.operations.length)
     this.operations.trigger("update")
-    this.type = ""
-    this.compute("offers")
-    this.algorithm(this, ...this.parameters)
+    this.method(this, ...this.parameters)
     this.trigger("refresh")
   }
 
@@ -170,6 +164,96 @@ function operationToOdesc (operation) {
 }
 
 /**
+ * Orders types
+ */
+
+Order.type = {}
+
+Order.type.limit = function (order, size) {
+  if (!size) return
+
+  const side = size > 0 ? "bids" : "asks"
+  const offer = order.orderbook.findOffer(side)
+  order.addOperation(tightenSpread(offer), Math.abs(size))
+}
+
+// Outdated code
+//
+// Order.type.market = function (order, size = order.asset.size) {
+//   order.type = "taker"
+//   if (!order.offers) return
+//   const orderbook = order.orderbook
+//   const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
+//   order.addOperation(offer, size)
+// }
+
+// Order.type.deepLimit = function (order, size = order.asset.size) {
+//   order.type = "maker"
+//   if (!order.offers) return
+//   const orderbook = order.orderbook
+//   const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
+//   order.addOperation(offer, size)
+// }
+
+/**
+ * Rebalancing
+ */
+
+Order.type.balance = function (order, share) {
+  const asset = share.asset
+  const orderbook = asset.orderbook
+
+  // Requirements
+
+  if (share.target === null) return
+
+  if (!orderbook.bestBid || !orderbook.bestAsk) {
+    order.description = [__("Fetching orderbook...")]
+    return
+  }
+
+  if (asset.liabilities) {
+    const currentOffers = asset.offers.filter(offer => !offer.outdated)
+    if (currentOffers.length) {
+      order.description = [__("Rebalancing...")]
+      return
+    }
+  }
+
+  // Rebalancing
+
+  if (share.mode === "amount" || share.target === 0) {
+    Order.type.limit(order, share.size - asset.amount)
+    return
+  } else if (share.delta > 0) {
+    rebalanceSide("asks", order, share)
+  } else if (share.delta < 0) {
+    rebalanceSide("bids", order, share)
+  }
+}
+
+function rebalanceSide (side, order, share) {
+  const orderbook = share.asset.orderbook
+  const direction = side === "asks" ? "selling" : "buying"
+  const targetAmount = nice(Math.abs(share.delta) / share.asset.price, 7)
+
+  const offer = orderbook.findOffer(side, offer => {
+    return (
+      offer.baseVolume > targetAmount * global.skipMarginalOffers
+      && (side === "bids" || offer.balance.amount > targetAmount)
+    )
+  })
+
+  if (offer) {
+    const prev = share.asset.offers.find(offer => offer[direction].asset_code)
+    offer.id = prev && prev.id
+    if (targetAmount * offer.basePrice > global.minOfferSize) {
+      order.addOperation(tightenSpread(offer), targetAmount)
+    }
+  }
+}
+
+/**
  * Create a copy of **offer** with a delta to global market price reduced by
  * **percentage**.
  */
@@ -235,95 +319,9 @@ function updateOfferPriceR (offer) {
 }
 
 /**
- * Orders types
+ * Append Order.type to Order class
  */
 
-const algorithm = {}
-
-algorithm.balance = function (order, share) {
-  const asset = share.asset
-  const orderbook = asset.orderbook
-
-  // Requirements
-
-  if (share.target === null) return
-
-  if (!orderbook.bestBid || !orderbook.bestAsk) {
-    order.description = [__("Fetching orderbook...")]
-    return
-  }
-
-  if (asset.liabilities) {
-    const currentOffers = asset.offers.filter(offer => !offer.outdated)
-    if (currentOffers.length) {
-      order.description = [__("Rebalancing...")]
-      return
-    }
-  }
-
-  // Rebalancing
-
-  if (share.mode === "amount" || share.target === 0) {
-    algorithm.limit(order, share.size - asset.amount)
-    return
-  } else if (share.delta > 0) {
-    rebalanceSide("asks", order, share)
-  } else if (share.delta < 0) {
-    rebalanceSide("bids", order, share)
-  }
-}
-
-function rebalanceSide (side, order, share) {
-  const orderbook = share.asset.orderbook
-  const direction = side === "asks" ? "selling" : "buying"
-  const targetAmount = nice(Math.abs(share.delta) / share.asset.price, 7)
-
-  const offer = orderbook.findOffer(side, offer => {
-    return (
-      offer.baseVolume > targetAmount * global.skipMarginalOffers
-      && (side === "bids" || offer.balance.amount > targetAmount)
-    )
-  })
-
-  if (offer) {
-    const prev = share.asset.offers.find(offer => offer[direction].asset_code)
-    offer.id = prev && prev.id
-    if (targetAmount * offer.basePrice > global.minOfferSize) {
-      order.addOperation(tightenSpread(offer), targetAmount)
-    }
-  }
-}
-
-algorithm.limit = function (order, size) {
-  if (!size) return
-
-  const side = size > 0 ? "bids" : "asks"
-  const offer = order.orderbook.findOffer(side)
-  order.addOperation(tightenSpread(offer), Math.abs(size))
-}
-
-// Outdated code
-//
-// algorithm.market = function (order, size = order.asset.size) {
-//   order.type = "taker"
-//   if (!order.offers) return
-//   const orderbook = order.orderbook
-//   const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
-//   order.addOperation(offer, size)
-// }
-
-// algorithm.deepLimit = function (order, size = order.asset.size) {
-//   order.type = "maker"
-//   if (!order.offers) return
-//   const orderbook = order.orderbook
-//   const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
-//   order.addOperation(offer, size)
-// }
-
-/**
- * Append algorithms to Order class
- */
-
-for (let key in algorithm) {
+for (let key in Order.type) {
   if (!Order[key]) Order[key] = (...parameters) => new Order(key, ...parameters)
 }

@@ -19,9 +19,6 @@ global.project("language", localStorage)
 /// Current user portfolio.
 global.portfolio = undefined
 
-/// Order type to use when rebalancing
-global.rebalancingStrategy = "balance"
-
 /// Minimum offer value to setup a rebalancing operation (in Lumens).
 global.minOfferSize = 1
 
