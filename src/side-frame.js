@@ -4,6 +4,7 @@
  */
 const html = require("@cosmic-plus/jsutils/html")
 const Observable = require("@cosmic-plus/jsutils/observable")
+const { timeout } = require("@cosmic-plus/jsutils/misc")
 const { __ } = require("@cosmic-plus/i18n")
 
 /**
@@ -19,6 +20,7 @@ class SideFrame extends Observable {
 
     this.domNode = html.create("iframe", {
       title: "Signing Frame",
+      className: "animated",
       src: url,
       sandbox: "allow-same-origin allow-scripts allow-forms allow-popups",
       hidden: true
@@ -37,11 +39,15 @@ class SideFrame extends Observable {
     document.documentElement.style.overflow = "hidden"
     document.body.style.overflow = "hidden"
 
-    SideFrame.shadow.onclick = () => this.close()
-    SideFrame.close.onclick = () => this.close()
     html.show(SideFrame.shadow, SideFrame.close, this.domNode)
+    this.domNode.style.animationName = "slideInRight"
+    SideFrame.shadow.style.background = "rgba(0,0,0,0.3)"
 
-    this.trigger("show")
+    return timeout(400).then(() => {
+      SideFrame.shadow.onclick = () => this.close()
+      SideFrame.close.onclick = () => this.close()
+      this.trigger("show")
+    })
   }
 
   hide () {
@@ -51,17 +57,24 @@ class SideFrame extends Observable {
     document.body.style.overflow = this.bodyOverflow
 
     SideFrame.shadow.onclick = null
-    html.hide(SideFrame.shadow, SideFrame.close, this.domNode)
+    html.hide(SideFrame.close)
 
-    this.trigger("hide")
+    this.domNode.style.animationName = "slideOutRight"
+    SideFrame.shadow.style.background = "transparent"
+
+    return timeout(400).then(() => {
+      html.hide(SideFrame.shadow, SideFrame.close, this.domNode)
+      this.trigger("hide")
+    })
   }
 
   close () {
     SideFrame.current = null
-    this.hide()
-    html.destroy(this.domNode)
-    this.trigger("close")
-    this.destroy()
+    this.hide().then(() => {
+      html.destroy(this.domNode)
+      this.trigger("close")
+      this.destroy()
+    })
   }
 }
 
@@ -140,7 +153,8 @@ Object.assign(SideFrame.shadow.style, {
   top: 0,
   width: "100%",
   height: "100%",
-  background: "rgba(0,0,0,0.2)"
+  background: "transparent",
+  transition: "background 0.4s"
 })
 document.body.insertBefore(SideFrame.shadow, document.body.firstChild)
 

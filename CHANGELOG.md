@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Animate transaction signing frame.
+
 ### Fixed
 
 - Fix background image of transaction signing frame.
