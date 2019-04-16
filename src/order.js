@@ -169,6 +169,17 @@ function operationToOdesc (operation) {
 
 Order.type = {}
 
+Order.type.market = function (order, size) {
+  if (!size) return
+
+  const side = size > 0 ? "asks" : "bids"
+  const amount = Math.abs(size)
+  const offer = order.orderbook.findOffer(side, offer => {
+    return offer.baseVolume > amount
+  })
+  order.addOperation(offer, amount)
+}
+
 Order.type.limit = function (order, size, offerFilter) {
   if (!size) return
 
@@ -176,24 +187,6 @@ Order.type.limit = function (order, size, offerFilter) {
   const offer = order.orderbook.findOffer(side, offerFilter)
   order.addOperation(tightenSpread(offer), Math.abs(size))
 }
-
-// Outdated code
-//
-// Order.type.market = function (order, size = order.asset.size) {
-//   order.type = "taker"
-//   if (!order.offers) return
-//   const orderbook = order.orderbook
-//   const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
-//   order.addOperation(offer, size)
-// }
-
-// Order.type.deepLimit = function (order, size = order.asset.size) {
-//   order.type = "maker"
-//   if (!order.offers) return
-//   const orderbook = order.orderbook
-//   const offer = orderbook.findOffer(this.side, offer => offer.cumul > size)
-//   order.addOperation(offer, size)
-// }
 
 /**
  * Rebalancing
