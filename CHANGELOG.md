@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Apply price picking optimizations when rebalancing assets with quantity
+  targets.
 - Animate transaction signing frame.
 
 ### Fixed

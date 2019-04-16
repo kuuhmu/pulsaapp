@@ -169,11 +169,11 @@ function operationToOdesc (operation) {
 
 Order.type = {}
 
-Order.type.limit = function (order, size) {
+Order.type.limit = function (order, size, offerFilter) {
   if (!size) return
 
   const side = size > 0 ? "bids" : "asks"
-  const offer = order.orderbook.findOffer(side)
+  const offer = order.orderbook.findOffer(side, offerFilter)
   order.addOperation(tightenSpread(offer), Math.abs(size))
 }
 
@@ -223,12 +223,21 @@ Order.type.balance = function (order, share) {
   // Rebalancing
 
   if (share.mode === "amount" || share.target === 0) {
-    Order.type.limit(order, share.size - asset.amount)
-    return
+    const size = share.size - asset.amount
+    Order.type.limit(order, size, makeOfferFilter(Math.abs(size)))
   } else if (share.delta > 0) {
     rebalanceSide("asks", order, share)
   } else if (share.delta < 0) {
     rebalanceSide("bids", order, share)
+  }
+}
+
+function makeOfferFilter (targetAmount) {
+  return offer => {
+    return (
+      offer.baseVolume > targetAmount * global.skipMarginalOffers
+      && (offer.side === "bids" || offer.balance.amount > targetAmount)
+    )
   }
 }
 
@@ -237,13 +246,7 @@ function rebalanceSide (side, order, share) {
   const direction = side === "asks" ? "selling" : "buying"
   const targetAmount = nice(Math.abs(share.delta) / share.asset.price, 7)
 
-  const offer = orderbook.findOffer(side, offer => {
-    return (
-      offer.baseVolume > targetAmount * global.skipMarginalOffers
-      && (side === "bids" || offer.balance.amount > targetAmount)
-    )
-  })
-
+  const offer = orderbook.findOffer(side, makeOfferFilter(targetAmount))
   if (offer) {
     const prev = share.asset.offers.find(offer => offer[direction].asset_code)
     offer.id = prev && prev.id
