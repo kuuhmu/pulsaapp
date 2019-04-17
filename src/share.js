@@ -166,6 +166,15 @@ Share.define("delta", ["value", "target"], function () {
 Share.define("divergence", ["delta", "target"], function () {
   return this.target ? this.delta / this.target : null
 })
+Share.define("amount", ["target"], function () {
+  return +nice(this.target / this.asset.price, 7)
+})
+Share.define("amountDiff", ["amount"], function () {
+  return +nice(this.amount - this.asset.amount, 7)
+})
+Share.define("amountDelta", ["amountDiff"], function () {
+  return Math.abs(this.amountDiff)
+})
 
 /*
 [

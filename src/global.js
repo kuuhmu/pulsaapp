@@ -19,8 +19,11 @@ global.project("language", localStorage)
 /// Current user portfolio.
 global.portfolio = undefined
 
+// How much a balance can deviate from its allocated share (percentage).
+global.balanceShareDeviation = 0.2
+
 /// Minimum offer value to setup a rebalancing operation (in Lumens).
-global.minOfferSize = 1
+global.minOfferValue = 1
 
 // Maximum spread for pairs (percentage).
 global.maxSpread = 0.05
