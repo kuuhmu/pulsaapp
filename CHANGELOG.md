@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Logic for orders that need to take place over multiple anchors, such as
+  position entries and exits.
 - Equilibre.io will now tend to spread the position equally over asset multiple
   anchors.
 - Apply price picking optimizations when rebalancing assets with quantity

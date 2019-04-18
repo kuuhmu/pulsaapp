@@ -216,7 +216,11 @@ Order.type.balance = function (order, share) {
   // Rebalancing
 
   setBalancesLimits(share)
-  addBalancingOperation(share, orderbook, share.amountDiff)
+  if (isOneOperationEnough(share)) {
+    addBalancingOperation(share, orderbook, share.amountDiff)
+  } else {
+    addSplitTrade(share)
+  }
 }
 
 /**
@@ -244,12 +248,43 @@ function setBalancesLimits (share, deviation = global.balanceShareDeviation) {
 }
 
 /**
+ * Returns whether or not it is possible meet **share** rebalancing target in
+ * one operation.
+ */
+function isOneOperationEnough (share) {
+  const balances = share.asset.balances
+  return !!filterTradableBalances(balances, share.amountDelta).length
+}
+
+/**
+ * Return the **balances** that can be traded for **amountTraded**.
+ */
+function filterTradableBalances (balances, amountTraded = 0) {
+  return balances.filter(balance => balance.amountTradable >= amountTraded)
+}
+
+/**
  * Adds an operation to `share.order` that trades **size** `share.asset` on
  * **orderbook**.
  */
 function addBalancingOperation (share, orderbook, size) {
   const filter = makeOfferFilter(share, Math.abs(size))
   Order.type.limit(share.order, size, { orderbook, filter })
+}
+
+/**
+ * Split a trade over multiple anchors.
+ */
+function addSplitTrade (share) {
+  const tradableBalances = filterTradableBalances(share.asset.balances)
+  const tradableAmounts = tradableBalances.map(x => x.amountTradable)
+  const tradableTotal = tradableAmounts.reduce((x, sum) => x + sum, 0)
+  const tradeShares = tradableAmounts.map(x => x / tradableTotal)
+  const tradeAmounts = tradeShares.map(x => +nice(x * share.amountDiff, 7))
+
+  tradableBalances.forEach((balance, index) => {
+    addBalancingOperation(share, balance.orderbook, tradeAmounts[index])
+  })
 }
 
 /**
