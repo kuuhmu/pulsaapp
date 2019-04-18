@@ -56,7 +56,7 @@ const Order = module.exports = class Order extends Projectable {
    */
 
   getOperation (offer, make) {
-    const id = `${offer.balance.anchor.id}:${make ? offer.price : "take"}`
+    const id = `${offer.balance.anchor.name}:${make ? offer.price : "take"}`
     const operation = this.operations.find(x => x.id === id)
     if (operation) {
       return operation
