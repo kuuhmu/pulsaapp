@@ -94,6 +94,7 @@ Order.define("description", "operations", function () {
 Order.operationsToCosmicLink = function (operations = []) {
   const cosmicLink = new CosmicLink({
     memo: "Equilibre.io",
+    maxTime: "+5",
     source: global.portfolio.accountId
   })
   operations.forEach(operation => {

@@ -86,14 +86,18 @@ ActivityGui.Offers = class ActivityOffers extends Gui {
   cancelOffers () {
     if (!this.offers.length) return
 
-    const memo = "Equilibre.io"
-    const network = "public"
-    const source = this.portfolio.accountId
-    const operations = this.offers.map(offer => {
-      return { type: "manageOffer", offerId: offer.id, amount: 0 }
+    const txParams = {
+      memo: "Equilibre.io",
+      network: "public",
+      maxTime: "+5",
+      source: this.portfolio.accountId
+    }
+
+    const cosmicLink = new CosmicLink(txParams)
+    this.offers.forEach(offer => {
+      cosmicLink.addOperation("manageOffer", { offerId: offer.id, amount: 0 })
     })
 
-    const cosmicLink = new CosmicLink({ memo, network, source, operations })
     const sideFrame = new SideFrame(cosmicLink.uri)
     sideFrame.listen("destroy", () => {
       this.portfolio.getAccount()

@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
   anchors.
 - Apply price picking optimizations when rebalancing assets with quantity
   targets.
+- Validity span of 5 minutes for transactions.
 - Animate transaction signing frame.
 
 ### Fixed
