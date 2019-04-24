@@ -129,5 +129,5 @@ Beta 1 release
 
 [cosmic-lib]: https://github.com/cosmic-plus/node-cosmic-lib/blob/master/CHANGELOG.md
 
-[@ddombrowsy](https://github.com/ddombrowsky)
-[@pawelfus](https://github.com/pawelfus)
+[@ddombrowsy]: https://github.com/ddombrowsky
+[@pawelfus]: https://github.com/pawelfus
