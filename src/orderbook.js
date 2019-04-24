@@ -4,10 +4,10 @@
  */
 
 const cosmicLib = require("cosmic-lib")
-const nice = require("@cosmic-plus/jsutils/nice")
-const Projectable = require("@cosmic-plus/jsutils/projectable")
-const StellarSdk = require("@cosmic-plus/base/stellar-sdk")
-const { timeout } = require("@cosmic-plus/jsutils/misc")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
+const StellarSdk = require("@cosmic-plus/base/es5/stellar-sdk")
+const { timeout } = require("@cosmic-plus/jsutils/es5/misc")
 const { __ } = require("@cosmic-plus/i18n")
 
 const Orderbook = module.exports = class Orderbook extends Projectable {

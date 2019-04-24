@@ -2,10 +2,10 @@
 /**
  * Application initialization
  */
-const dom = require("@cosmic-plus/jsutils/dom")
-const html = require("@cosmic-plus/jsutils/html")
+const dom = require("@cosmic-plus/domutils/es5/dom")
+const html = require("@cosmic-plus/domutils/es5/html")
 const i18n = require("@cosmic-plus/i18n")
-const load = require("@cosmic-plus/jsutils/load")
+const load = require("@cosmic-plus/domutils/es5/load")
 
 const global = require("./global")
 

@@ -4,6 +4,7 @@ const config = {
     rules: [
       {
         test: /\.(js)$/,
+        exclude: /node_modules/,
         loader: "babel-loader"
       },
       {
@@ -17,7 +18,7 @@ const config = {
 const library = Object.assign({}, config, {
   entry: "./src/index.js",
   output: {
-    path: __dirname + "/web/",
+    path: __dirname + "/web",
     filename: "index.js",
     chunkFilename: "[name].js"
   }

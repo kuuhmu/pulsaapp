@@ -2,7 +2,7 @@
 /**
  * Global variables
  */
-const Projectable = require("@cosmic-plus/jsutils/projectable")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 const i18n = require("@cosmic-plus/i18n")
 
 const global = module.exports = new Projectable()

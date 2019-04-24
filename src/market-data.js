@@ -6,9 +6,9 @@
  */
 const marketData = exports
 
-const axios = require("@cosmic-plus/base/axios")
-const nice = require("@cosmic-plus/jsutils/nice")
-const { day } = require("@cosmic-plus/jsutils/misc")
+const axios = require("@cosmic-plus/base/es5/axios")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
+const { day } = require("@cosmic-plus/jsutils/es5/misc")
 
 const global = require("./global")
 

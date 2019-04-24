@@ -2,12 +2,12 @@
 /**
  * Login interface
  */
-const dom = require("@cosmic-plus/jsutils/dom")
-const Form = require("@cosmic-plus/jsutils/form")
-const Gui = require("@cosmic-plus/jsutils/gui")
-const html = require("@cosmic-plus/jsutils/html")
-const Tabs = require("@cosmic-plus/jsutils/tabs")
-const params = require("@cosmic-plus/jsutils/params")
+const dom = require("@cosmic-plus/domutils/es5/dom")
+const Form = require("@cosmic-plus/domutils/es5/form")
+const Gui = require("@cosmic-plus/domutils/es5/gui")
+const html = require("@cosmic-plus/domutils/es5/html")
+const Tabs = require("@cosmic-plus/domutils/es5/tabs")
+const params = require("@cosmic-plus/domutils/es5/params")
 const { __ } = require("@cosmic-plus/i18n")
 
 const clickWall = require("./click-wall")
@@ -133,7 +133,7 @@ function initGui () {
  */
 
 function getLedgerModule () {
-  return import(/* webpackChunkName: "ledger" */ "@cosmic-plus/ledger-wallet").then(
-    ledger => ledger.default
-  )
+  return import(
+    /* webpackChunkName: "ledger" */ "@cosmic-plus/ledger-wallet"
+  ).then(ledger => ledger.default)
 }

@@ -4,8 +4,8 @@
  */
 const { CosmicLink } = require("cosmic-lib")
 
-const Gui = require("@cosmic-plus/jsutils/gui")
-const html = require("@cosmic-plus/jsutils/html")
+const Gui = require("@cosmic-plus/domutils/es5/gui")
+const html = require("@cosmic-plus/domutils/es5/html")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")

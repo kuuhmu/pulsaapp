@@ -5,9 +5,9 @@
 
 const cosmicLib = require("cosmic-lib")
 const CosmicLink = cosmicLib.CosmicLink
-const Mirrorable = require("@cosmic-plus/jsutils/mirrorable")
-const nice = require("@cosmic-plus/jsutils/nice")
-const Projectable = require("@cosmic-plus/jsutils/projectable")
+const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")

@@ -9,8 +9,8 @@ const FIAT_PRICES_REFRESH_DELAY = 60 * 60 * 1000
 const FIAT_BASEURL = "https://www.xe.com/themes/xe/images/flags/svg/"
 const FIAT_IMAGEFORMAT = ".svg"
 
-const Mirrorable = require("@cosmic-plus/jsutils/mirrorable")
-const Projectable = require("@cosmic-plus/jsutils/projectable")
+const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
 const global = require("./global")
 const marketData = require("./market-data")

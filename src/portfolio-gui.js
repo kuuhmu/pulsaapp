@@ -6,9 +6,9 @@ const Highcharts = require("highcharts")
 const Highstock = require("highcharts/highstock")
 require("./highcharts-theme")
 
-const Gui = require("@cosmic-plus/jsutils/gui")
-const nice = require("@cosmic-plus/jsutils/nice")
-const Tabs = require("@cosmic-plus/jsutils/tabs")
+const Gui = require("@cosmic-plus/domutils/es5/gui")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
+const Tabs = require("@cosmic-plus/domutils/es5/tabs")
 const { __ } = require("@cosmic-plus/i18n")
 
 const AssetGui = require("./asset-gui")

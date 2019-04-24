@@ -2,10 +2,10 @@
 /**
  * Share Graphical User Interface
  */
-const Gui = require("@cosmic-plus/jsutils/gui")
+const Gui = require("@cosmic-plus/domutils/es5/gui")
 const i18n = require("@cosmic-plus/i18n")
-const html = require("@cosmic-plus/jsutils/html")
-const nice = require("@cosmic-plus/jsutils/nice")
+const html = require("@cosmic-plus/domutils/es5/html")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { __ } = i18n
 
 const SideFrame = require("./side-frame")

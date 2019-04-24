@@ -2,7 +2,7 @@
 /**
  * Settings Graphical User Interface
  */
-const Gui = require("@cosmic-plus/jsutils/gui")
+const Gui = require("@cosmic-plus/domutils/es5/gui")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")

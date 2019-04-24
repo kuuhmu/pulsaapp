@@ -5,11 +5,11 @@
 
 const cosmicLib = require("cosmic-lib")
 const loopcall = require("@cosmic-plus/loopcall")
-const Mirrorable = require("@cosmic-plus/jsutils/mirrorable")
-const nice = require("@cosmic-plus/jsutils/nice")
-const Projectable = require("@cosmic-plus/jsutils/projectable")
-const hiddenKey = require("@cosmic-plus/jsutils/misc").setHiddenProperty
-const { day } = require("@cosmic-plus/jsutils/misc")
+const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
+const hiddenKey = require("@cosmic-plus/jsutils/es5/misc").setHiddenProperty
+const { day } = require("@cosmic-plus/jsutils/es5/misc")
 
 const Asset = require("./asset")
 const Balance = require("./balance")

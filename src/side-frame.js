@@ -2,9 +2,9 @@
 /**
  * Signing Side Frame
  */
-const html = require("@cosmic-plus/jsutils/html")
-const Observable = require("@cosmic-plus/jsutils/observable")
-const { timeout } = require("@cosmic-plus/jsutils/misc")
+const html = require("@cosmic-plus/domutils/es5/html")
+const Observable = require("@cosmic-plus/jsutils/es5/observable")
+const { timeout } = require("@cosmic-plus/jsutils/es5/misc")
 const { __ } = require("@cosmic-plus/i18n")
 
 /**

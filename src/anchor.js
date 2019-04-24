@@ -2,9 +2,9 @@
 /**
  * Anchor class
  */
-const aliases = require("@cosmic-plus/base/aliases")
-const helpers = require("@cosmic-plus/jsutils/misc")
-const Projectable = require("@cosmic-plus/jsutils/projectable")
+const aliases = require("@cosmic-plus/base/es5/aliases")
+const helpers = require("@cosmic-plus/jsutils/es5/misc")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
 /**
  * Class

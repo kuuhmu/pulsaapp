@@ -3,7 +3,7 @@
  * Queue - Delaying data fetching
  */
 
-const { timeout, setHiddenProperty } = require("@cosmic-plus/jsutils/misc")
+const { timeout, setHiddenProperty } = require("@cosmic-plus/jsutils/es5/misc")
 
 module.exports = class Queue extends Array {
   constructor (timeout) {

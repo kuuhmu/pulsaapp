@@ -2,11 +2,11 @@
 /**
  * Compute portfolio data from Account object.
  */
-const axios = require("@cosmic-plus/base/axios")
+const axios = require("@cosmic-plus/base/es5/axios")
 const cosmicLib = require("cosmic-lib")
-const Mirrorable = require("@cosmic-plus/jsutils/mirrorable")
-const Projectable = require("@cosmic-plus/jsutils/projectable")
-const { timeout } = require("@cosmic-plus/jsutils/misc")
+const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
+const { timeout } = require("@cosmic-plus/jsutils/es5/misc")
 const { __ } = require("@cosmic-plus/i18n")
 
 const Asset = require("./asset")

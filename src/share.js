@@ -9,9 +9,9 @@
  * A Share may be composed by several Share subentries, in such a way that the
  * complete portfolio balancing target ends up being a tree made of Shares.
  */
-const Mirrorable = require("@cosmic-plus/jsutils/mirrorable")
-const nice = require("@cosmic-plus/jsutils/nice")
-const Projectable = require("@cosmic-plus/jsutils/projectable")
+const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
 const Asset = require("./asset")
 const Order = require("./order")

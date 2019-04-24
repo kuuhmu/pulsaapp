@@ -2,8 +2,8 @@
 /**
  * Balance entry
  */
-const Mirrorable = require("@cosmic-plus/jsutils/mirrorable")
-const Projectable = require("@cosmic-plus/jsutils/projectable")
+const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
+const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
 const Anchor = require("./anchor")
 const Asset = require("./asset")

@@ -2,9 +2,9 @@
 /**
  * Asset GUI
  */
-const Gui = require("@cosmic-plus/jsutils/gui")
-const html = require("@cosmic-plus/jsutils/html")
-const nice = require("@cosmic-plus/jsutils/nice")
+const Gui = require("@cosmic-plus/domutils/es5/gui")
+const html = require("@cosmic-plus/domutils/es5/html")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
 const msg = require("@cosmic-plus/i18n").__
 
 /**
