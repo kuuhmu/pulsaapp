@@ -18,7 +18,7 @@ const { isOverflowing } = require("./helpers")
 const ActivityGui = require("./activity-gui")
 const PortfolioGui = require("./portfolio-gui")
 const SettingsGui = require("./settings-gui")
-const ShareGui = require("./share-gui")
+const TargetGui = require("./target-gui")
 
 const license = new Gui(require("./html/license.html"))
 const welcome = new Gui(require("./html/welcome.html"))
@@ -116,7 +116,7 @@ function initGui () {
   tabs.remove("#welcome")
   tabs.remove("#login")
   tabs.add("#portfolio", __("Portfolio"), new PortfolioGui(portfolio))
-  tabs.add("#rebalance", __("Rebalance"), new ShareGui(portfolio))
+  tabs.add("#rebalance", __("Rebalance"), new TargetGui(portfolio))
   tabs.add("#activity", __("Activity"), new ActivityGui(portfolio))
   tabs.add("#settings", __("Settings"), new SettingsGui())
   tabs.add("#logout", __("Logout"), () => {

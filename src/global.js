@@ -19,8 +19,8 @@ global.project("language", localStorage)
 /// Current user portfolio.
 global.portfolio = undefined
 
-// How much a balance can deviate from its allocated share (percentage).
-global.balanceShareDeviation = 0.2
+// How much a balance can deviate from its allocated target (percentage).
+global.balanceTargetDeviation = 0.2
 
 /// Minimum offer value to setup a rebalancing operation (in Lumens).
 global.minOfferValue = 1

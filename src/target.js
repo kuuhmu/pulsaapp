@@ -1,13 +1,13 @@
 "use_strict"
 /**
- * Share class.
+ * Target class.
  *
- * A (portfolio) Share object represents a statically or dynamically allocated
- * share of the user portfolio. It is a theoric goal that the rebalancing
+ * A (portfolio) Target object represents a statically or dynamically allocated
+ * target slice of the user portfolio. It is a theoric goal that the rebalancing
  * process aims to reach as much as possible.
  *
- * A Share may be composed by several Share subentries, in such a way that the
- * complete portfolio balancing target ends up being a tree made of Shares.
+ * A Target may be composed by several Target subentries, in such a way that the
+ * complete portfolio balancing target ends up being a tree made of Targets.
  */
 const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
@@ -18,7 +18,7 @@ const Order = require("./order")
 const strategy = require("./strategy")
 
 /**
- * Share sizing attributes:
+ * Target sizing attributes:
  * size, sizeMin, sizeMax, sizeLock
  * amountMin, amountMax, amountLock
  *
@@ -26,40 +26,40 @@ const strategy = require("./strategy")
  * Filters: change30d, RSI
  */
 
-const Share = module.exports = class Share extends Projectable {
+const Target = module.exports = class Target extends Projectable {
   static forPortfolio (portfolio, template) {
-    const share = template ? Share.fromString(template) : new Share()
-    share.portfolio = portfolio
-    share.errors = new Mirrorable()
-    share.goal = 100
+    const target = template ? Target.fromString(template) : new Target()
+    target.portfolio = portfolio
+    target.errors = new Mirrorable()
+    target.goal = 100
 
-    portfolio.share = share
-    share.watch(portfolio, "total", () => share.compute(portfolio.total))
+    portfolio.target = target
+    target.watch(portfolio, "total", () => target.compute(portfolio.total))
 
     // Add/Remove assets after trustline change.
     portfolio.assets.forEach(asset => {
       if (
-        !share.childs.find(child => asset === child.asset)
+        !target.childs.find(child => asset === child.asset)
         && asset.isSupported
       )
-        share.childs.push(new Share(asset))
+        target.childs.push(new Target(asset))
     })
-    share.childs.forEach((child, index) => {
+    target.childs.forEach((child, index) => {
       if (
         !portfolio.assets.find(asset => asset === child.asset)
         || !child.asset.isSupported
       )
-        share.childs.splice(index, 1)
+        target.childs.splice(index, 1)
     })
     portfolio.assets.listen("add", asset => {
-      if (asset.isValid) share.childs.push(new Share(asset))
+      if (asset.isValid) target.childs.push(new Target(asset))
     })
     portfolio.assets.listen("remove", asset => {
-      const index = share.childs.findIndex(child => child.asset === asset)
-      share.childs.splice(index, 1)
+      const index = target.childs.findIndex(child => child.asset === asset)
+      target.childs.splice(index, 1)
     })
 
-    return share
+    return target
   }
 
   constructor (asset) {
@@ -70,7 +70,7 @@ const Share = module.exports = class Share extends Projectable {
       this.mode = "amount"
       this.size = asset.amount
       this.order = Order.rebalance(this)
-      asset.shares.push(this)
+      asset.targets.push(this)
       asset.project("value", this)
     } else {
       this.childs = new Mirrorable()
@@ -111,29 +111,29 @@ const Share = module.exports = class Share extends Projectable {
 
   static fromString (string) {
     const template = JSON.parse(string)
-    const share = Share.fromTemplate(template)
-    share.template = string
-    return share
+    const target = Target.fromTemplate(template)
+    target.template = string
+    return target
   }
 
   static fromTemplate (template) {
     if (typeof template === "string") template = { asset: template }
 
-    const share = template.asset
-      ? new Share(Asset.resolve(template.asset))
-      : new Share()
+    const target = template.asset
+      ? new Target(Asset.resolve(template.asset))
+      : new Target()
 
-    share.size = template.size
-    share.mode = template.mode
+    target.size = template.size
+    target.mode = template.mode
 
     if (!template.asset) {
-      share.name = template.group
+      target.name = template.group
       template.childs.forEach(entry =>
-        share.childs.push(Share.fromTemplate(entry))
+        target.childs.push(Target.fromTemplate(entry))
       )
     }
 
-    return share
+    return target
   }
 
   toString (beautify) {
@@ -153,26 +153,26 @@ const Share = module.exports = class Share extends Projectable {
       if (Object.keys(template).length === 1) template = template.asset
     } else if (this.childs) {
       if (this.name) template.group = this.name
-      template.childs = this.childs.map(share => share.toTemplate())
+      template.childs = this.childs.map(target => target.toTemplate())
     }
 
     return template
   }
 }
 
-Share.define("delta", ["value", "target"], function () {
+Target.define("delta", ["value", "target"], function () {
   return +nice(this.value - this.target, 7)
 })
-Share.define("divergence", ["delta", "target"], function () {
+Target.define("divergence", ["delta", "target"], function () {
   return this.target ? this.delta / this.target : null
 })
-Share.define("amount", ["target"], function () {
+Target.define("amount", ["target"], function () {
   return +nice(this.target / this.asset.price, 7)
 })
-Share.define("amountDiff", ["amount"], function () {
+Target.define("amountDiff", ["amount"], function () {
   return +nice(this.amount - this.asset.amount, 7)
 })
-Share.define("amountDelta", ["amountDiff"], function () {
+Target.define("amountDelta", ["amountDiff"], function () {
   return Math.abs(this.amountDiff)
 })
 

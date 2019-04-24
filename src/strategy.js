@@ -6,15 +6,15 @@ const strategy = exports
 
 const { __ } = require("@cosmic-plus/i18n")
 
-strategy.apply = function (share, total) {
-  if (!share.childs) return share.target = total
+strategy.apply = function (target, total) {
+  if (!target.childs) return target.target = total
 
   let used = 0
   const computed = []
   const remaining = []
-  const strat = share.mode || "equal"
+  const strat = target.mode || "equal"
 
-  share.childs.forEach(child => {
+  target.childs.forEach(child => {
     if (child.mode === "skip" || child.mode === "amount") {
       child.target =
         child.size != null
@@ -40,7 +40,7 @@ strategy.apply = function (share, total) {
 
   if (used > 100 || used !== 100 && !remaining.length) {
     makeTotal100(computed, used)
-    remaining.forEach(share => share.goal = 0)
+    remaining.forEach(target => target.goal = 0)
   } else if (remaining.length) {
     method[strat](remaining, 100 - used)
   }
@@ -61,7 +61,7 @@ function makeTotal100 (targets, used) {
 
 const method = {}
 
-method.equal = function (shares, space) {
-  const goal = space / shares.length
-  shares.forEach(share => share.goal = goal)
+method.equal = function (targets, space) {
+  const goal = space / targets.length
+  targets.forEach(target => target.goal = goal)
 }

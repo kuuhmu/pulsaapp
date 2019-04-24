@@ -1,6 +1,6 @@
 "use_strict"
 /**
- * Share Graphical User Interface
+ * Target Graphical User Interface
  */
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const i18n = require("@cosmic-plus/i18n")
@@ -11,7 +11,7 @@ const { __ } = i18n
 const SideFrame = require("./side-frame")
 const global = require("./global")
 const Order = require("./order")
-const Share = require("./share")
+const Target = require("./target")
 
 /**
  * Class
@@ -39,13 +39,13 @@ class RebalanceGui extends Gui {
 
     this.portfolio = portfolio
     const template = localStorage[`target:${portfolio.account.id}`]
-    this.share = Share.forPortfolio(portfolio, template)
+    this.target = Target.forPortfolio(portfolio, template)
 
     this.table = new RebalanceGui.Table(this)
     this.table.project("selected", this)
     this.project("selected", this.table)
 
-    this.errors = this.share.errors
+    this.errors = this.target.errors
     this.errors.feed(this, "block", errors => !!errors.length)
 
     this.define("hideRebalance", ["selected", "modified"], () => {
@@ -58,11 +58,11 @@ class RebalanceGui extends Gui {
       return this.hideRebalance && this.hideApply
     })
 
-    this.share.project("modified", this)
+    this.target.project("modified", this)
 
     this.define("setupGui", "selected", () => {
       if (this.setupGui) this.setupGui.destroy()
-      return this.selected && new ShareGui.Setup(this.selected, this)
+      return this.selected && new TargetGui.Setup(this.selected, this)
     })
   }
 
@@ -80,8 +80,8 @@ class RebalanceGui extends Gui {
       const accountId = this.portfolio.account.id
       localStorage[
         `target:${accountId}`
-      ] = this.share.template = this.share.toString()
-      this.share.modified = false
+      ] = this.target.template = this.target.toString()
+      this.target.modified = false
     } catch (error) {
       console.error(error)
     }
@@ -90,7 +90,7 @@ class RebalanceGui extends Gui {
 
   rebalance () {
     try {
-      const operations = listOperations(this.share)
+      const operations = listOperations(this.target)
       const outdated = this.portfolio.offers.filter(offer => offer.outdated)
       const remaining = outdated.filter(offer => {
         return !operations.find(op => op.offer.id === offer.id)
@@ -118,9 +118,9 @@ class RebalanceGui extends Gui {
   }
 }
 
-function listOperations (share) {
+function listOperations (target) {
   let operations = []
-  share.childs.forEach(child => {
+  target.childs.forEach(child => {
     if (child.order) operations = operations.concat(child.order.operations)
   })
   return operations
@@ -137,7 +137,7 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
       <th>${__("Divergence")}</th>
       <th>${__("Operation")}</th>
     </tr>
-    %formatShare:shares...
+    %formatTarget:targets...
     <tr hidden=true>
       <td align="center" colspan="4"><h3>${__("Add Asset")}</h3></td>
     </tr>
@@ -146,26 +146,26 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
     `)
 
     this.selected = undefined
-    this.shares = parent.share.childs
-    this.sortShares(this.shares)
-    parent.share.listen("update", () => this.sortShares(this.shares))
+    this.targets = parent.target.childs
+    this.sortTargets(this.targets)
+    parent.target.listen("update", () => this.sortTargets(this.targets))
   }
 
-  formatShare (share) {
-    const shareGui = new ShareGui(share)
-    shareGui.domNode.onclick = () => this.selected = share
-    return shareGui
+  formatTarget (target) {
+    const targetGui = new TargetGui(target)
+    targetGui.domNode.onclick = () => this.selected = target
+    return targetGui
   }
 
-  sortShares (array) {
+  sortTargets (array) {
     return array.sort((a, b) => b.goal - a.goal || a.globalPrice)
   }
 }
 
-class ShareGui extends Gui {
-  constructor (share) {
+class TargetGui extends Gui {
+  constructor (target) {
     super(`
-<tr class="ShareGui">
+<tr class="TargetGui">
   <td align="left">
     <img src=%image alt="">
     <span>%name</span>
@@ -176,28 +176,28 @@ class ShareGui extends Gui {
 </tr>
     `)
 
-    this.share = share
+    this.target = target
 
-    this.name = share.name || share.asset && share.asset.code
-    share.asset.project("image", this)
-    share.project("goal", this, x => nice(x, 2))
-    share.project("divergence", this, x => {
+    this.name = target.name || target.asset && target.asset.code
+    target.asset.project("image", this)
+    target.project("goal", this, x => nice(x, 2))
+    target.project("divergence", this, x => {
       return x == null ? "-" : nice(x * 100, 2) + "%"
     })
 
-    this.watch(share, "order", () => {
-      if (!share.order) {
+    this.watch(target, "order", () => {
+      if (!target.order) {
         this.cosmicLink = this.description = null
       } else {
-        share.order.project("cosmicLink", this)
-        share.order.project("description", this, descriptionToList)
+        target.order.project("cosmicLink", this)
+        target.order.project("description", this, descriptionToList)
       }
     })
   }
 }
 
-ShareGui.Setup = class ShareSetup extends Gui {
-  constructor (share, parent) {
+TargetGui.Setup = class TargetSetup extends Gui {
+  constructor (target, parent) {
     super(`
 <section>
   <form onsubmit=%close>
@@ -221,17 +221,17 @@ ShareGui.Setup = class ShareSetup extends Gui {
     `)
 
     this.parent = parent
-    this.share = share
+    this.target = target
 
-    this.assetName = share.asset.name
+    this.assetName = target.asset.name
 
-    share.project("goal", this, x => nice(x, 2))
+    target.project("goal", this, x => nice(x, 2))
 
-    share.project("size", this)
-    this.project("size", share, x => x != null ? Number(x) : null)
+    target.project("size", this)
+    this.project("size", target, x => x != null ? Number(x) : null)
 
-    share.project("mode", this, mode => mode || "equal")
-    this.project("mode", share)
+    target.project("mode", this, mode => mode || "equal")
+    this.project("mode", target)
   }
 
   switchMode () {
@@ -244,11 +244,11 @@ ShareGui.Setup = class ShareSetup extends Gui {
       this.size = null
       break
     case "percentage":
-      this.size = +nice(100 * this.share.value / global.portfolio.total, 2)
+      this.size = +nice(100 * this.target.value / global.portfolio.total, 2)
       this.max = 100
       break
     case "amount":
-      this.size = this.share.asset.amount
+      this.size = this.target.asset.amount
       this.max = null
       break
     }
