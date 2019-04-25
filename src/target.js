@@ -18,50 +18,10 @@ const Order = require("./order")
 const strategy = require("./strategy")
 
 /**
- * Target sizing attributes:
- * size, sizeMin, sizeMax, sizeLock
- * amountMin, amountMax, amountLock
- *
- * Strategies: equal, marketCap,... (inertia, change7D, RSI)
- * Filters: change30d, RSI
+ * Definition
  */
 
-const Target = module.exports = class Target extends Projectable {
-  static forPortfolio (portfolio, template) {
-    const target = template ? Target.fromString(template) : new Target()
-    target.portfolio = portfolio
-    target.errors = new Mirrorable()
-    target.goal = 100
-
-    portfolio.target = target
-    target.watch(portfolio, "total", () => target.compute(portfolio.total))
-
-    // Add/Remove assets after trustline change.
-    portfolio.assets.forEach(asset => {
-      if (
-        !target.childs.find(child => asset === child.asset)
-        && asset.isSupported
-      )
-        target.childs.push(new Target(asset))
-    })
-    target.childs.forEach((child, index) => {
-      if (
-        !portfolio.assets.find(asset => asset === child.asset)
-        || !child.asset.isSupported
-      )
-        target.childs.splice(index, 1)
-    })
-    portfolio.assets.listen("add", asset => {
-      if (asset.isValid) target.childs.push(new Target(asset))
-    })
-    portfolio.assets.listen("remove", asset => {
-      const index = target.childs.findIndex(child => child.asset === asset)
-      target.childs.splice(index, 1)
-    })
-
-    return target
-  }
-
+class Target extends Projectable {
   constructor (asset) {
     super()
 
@@ -94,70 +54,6 @@ const Target = module.exports = class Target extends Projectable {
     if (this.parent) return this.parent.root
     else return this
   }
-
-  compute () {
-    if (this.parent) {
-      this.parent.compute()
-    } else if (this.portfolio && this.portfolio.total) {
-      this.errors.splice(0, this.errors.length)
-      this.modified = this.hasChanged()
-      strategy.apply(this, this.portfolio.total)
-    }
-  }
-
-  hasChanged () {
-    return this.template !== this.toString()
-  }
-
-  static fromString (string) {
-    const template = JSON.parse(string)
-    const target = Target.fromTemplate(template)
-    target.template = string
-    return target
-  }
-
-  static fromTemplate (template) {
-    if (typeof template === "string") template = { asset: template }
-
-    const target = template.asset
-      ? new Target(Asset.resolve(template.asset))
-      : new Target()
-
-    target.size = template.size
-    target.mode = template.mode
-
-    if (!template.asset) {
-      target.name = template.group
-      template.childs.forEach(entry =>
-        target.childs.push(Target.fromTemplate(entry))
-      )
-    }
-
-    return target
-  }
-
-  toString (beautify) {
-    const template = this.toTemplate()
-    return JSON.stringify(template, null, beautify && 2)
-  }
-
-  toTemplate () {
-    let template = {}
-
-    if (this.size != null) template.size = this.size
-    if (this.mode != null && this.mode !== "equal") template.mode = this.mode
-
-    if (this.asset) {
-      if (this.asset.type === "unknown") template.asset = this.asset.id
-      else template.asset = this.asset.code
-      if (Object.keys(template).length === 1) template = template.asset
-    } else if (this.childs) {
-      if (this.name) template.group = this.name
-      template.childs = this.childs.map(target => target.toTemplate())
-    }
-
-    return template
-  }
 }
 
 Target.define("valueDiff", ["value", "asset"], function () {
@@ -175,6 +71,128 @@ Target.define("amountDiff", ["amount"], function () {
 Target.define("amountDelta", ["amountDiff"], function () {
   return Math.abs(this.amountDiff)
 })
+
+/**
+ * Actions
+ */
+
+Target.prototype.compute = function () {
+  if (this.parent) {
+    this.root.compute()
+  } else if (this.portfolio && this.portfolio.total) {
+    this.errors.splice(0, this.errors.length)
+    this.modified = this.hasChanged()
+    strategy.apply(this, this.portfolio.total)
+  }
+}
+
+/**
+ * Source: Portfolio
+ */
+
+Target.forPortfolio = function (portfolio, json) {
+  const target = json ? Target.fromJson(json) : new Target()
+  target.portfolio = portfolio
+  target.errors = new Mirrorable()
+  target.goal = 100
+
+  portfolio.target = target
+  target.watch(portfolio, "total", () => target.compute(portfolio.total))
+
+  // Add/Remove assets after trustline change.
+  portfolio.assets.forEach(asset => {
+    if (
+      !target.childs.find(child => asset === child.asset)
+      && asset.isSupported
+    )
+      target.childs.push(new Target(asset))
+  })
+  target.childs.forEach((child, index) => {
+    if (
+      !portfolio.assets.find(asset => asset === child.asset)
+      || !child.asset.isSupported
+    )
+      target.childs.splice(index, 1)
+  })
+  portfolio.assets.listen("add", asset => {
+    if (asset.isValid) target.childs.push(new Target(asset))
+  })
+  portfolio.assets.listen("remove", asset => {
+    const index = target.childs.findIndex(child => child.asset === asset)
+    target.childs.splice(index, 1)
+  })
+
+  return target
+}
+
+/**
+ * Format: JSON
+ */
+
+Target.fromJson = function (json) {
+  const object = JSON.parse(json)
+  const target = Target.fromObject(object)
+  target.json = json
+  return target
+}
+
+Target.prototype.toJson = function (beautifyFlag) {
+  const object = this.toObject()
+  return JSON.stringify(object, null, beautifyFlag && 2)
+}
+
+Target.prototype.hasChanged = function () {
+  return this.json && this.json !== this.toJson()
+}
+
+/**
+ * Format: Object
+ */
+
+Target.fromObject = function (object) {
+  if (typeof object === "string") object = { asset: object }
+
+  const target = new Target(object.asset && Asset.resolve(object.asset))
+  target.size = object.size
+  target.mode = object.mode
+
+  if (!object.asset) {
+    target.group = object.group
+    object.childs.forEach(entry => {
+      return target.childs.push(Target.fromObject(entry))
+    })
+  }
+
+  return target
+}
+
+Target.prototype.toObject = function () {
+  let object = {}
+
+  if (this.size != null) object.size = this.size
+  if (this.mode != null && this.mode !== "equal") object.mode = this.mode
+
+  if (this.asset) {
+    if (this.asset.type === "unknown") object.asset = this.asset.id
+    else object.asset = this.asset.code
+    if (Object.keys(object).length === 1) object = object.asset
+  } else if (this.childs) {
+    if (this.group) object.group = this.group
+    object.childs = this.childs.map(target => target.toObject())
+  }
+
+  return object
+}
+
+/**
+ * Export
+ */
+
+module.exports = Target
+
+/**
+ * Example
+ */
 
 /*
 [

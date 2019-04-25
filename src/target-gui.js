@@ -9,7 +9,6 @@ const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { __ } = i18n
 
 const SideFrame = require("./side-frame")
-const global = require("./global")
 const Order = require("./order")
 const Target = require("./target")
 
@@ -80,7 +79,7 @@ class RebalanceGui extends Gui {
       const accountId = this.portfolio.account.id
       localStorage[
         `target:${accountId}`
-      ] = this.target.template = this.target.toString()
+      ] = this.target.template = this.target.toJson()
       this.target.modified = false
     } catch (error) {
       console.error(error)
