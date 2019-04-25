@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Improve loading message spacing.
+
 ## 0.5.0 - 2019-04-19
 
 ### Added
@@ -128,6 +134,5 @@ All notable changes to this project will be documented in this file.
 Beta 1 release
 
 [cosmic-lib]: https://github.com/cosmic-plus/node-cosmic-lib/blob/master/CHANGELOG.md
-
 [@ddombrowsy]: https://github.com/ddombrowsky
 [@pawelfus]: https://github.com/pawelfus
