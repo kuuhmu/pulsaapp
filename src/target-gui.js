@@ -171,7 +171,7 @@ class TargetGui extends Gui {
     <span>%name</span>
   </td>
   <td align="right">%goal%</td>
-  <td align="right">%divergence</td>
+  <td align="right">%valueDiffP%</td>
   <td align="right">%description...</td>
 </tr>
     `)
@@ -181,8 +181,8 @@ class TargetGui extends Gui {
     this.name = target.name || target.asset && target.asset.code
     target.asset.project("image", this)
     target.project("goal", this, x => nice(x, 2))
-    target.project("divergence", this, x => {
-      return x == null ? "-" : nice(x * 100, 2) + "%"
+    target.project("valueDiffP", this, x => {
+      return x == null ? "-" : nice(x * 100, 2)
     })
 
     this.watch(target, "order", () => {
@@ -244,7 +244,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
       this.size = null
       break
     case "percentage":
-      this.size = +nice(100 * this.target.value / global.portfolio.total, 2)
+      this.size = +nice(this.target.asset.share, 2)
       this.max = 100
       break
     case "amount":

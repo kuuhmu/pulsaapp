@@ -7,7 +7,7 @@ const strategy = exports
 const { __ } = require("@cosmic-plus/i18n")
 
 strategy.apply = function (target, total) {
-  if (!target.childs) return target.target = total
+  if (!target.childs) return target.value = total
 
   let used = 0
   const computed = []
@@ -16,11 +16,11 @@ strategy.apply = function (target, total) {
 
   target.childs.forEach(child => {
     if (child.mode === "skip" || child.mode === "amount") {
-      child.target =
+      child.value =
         child.size != null
           ? child.asset.price * child.size
           : child.asset.price * child.asset.amount
-      child.goal = 100 * child.target / total
+      child.goal = 100 * child.value / total
       if (child.goal > 100) {
         child.root.errors.push(
           `${child.asset.code}: ${__("Order over portfolio total")}`

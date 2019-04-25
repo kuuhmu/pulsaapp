@@ -71,7 +71,7 @@ const Target = module.exports = class Target extends Projectable {
       this.size = asset.amount
       this.order = Order.rebalance(this)
       asset.targets.push(this)
-      asset.project("value", this)
+      this.watch(asset, "value", () => this.compute("valueDiff"))
     } else {
       this.childs = new Mirrorable()
       this.childs.listen("add", child => {
@@ -160,14 +160,14 @@ const Target = module.exports = class Target extends Projectable {
   }
 }
 
-Target.define("delta", ["value", "target"], function () {
-  return +nice(this.value - this.target, 7)
+Target.define("valueDiff", ["value", "asset"], function () {
+  return this.asset.value - this.value
 })
-Target.define("divergence", ["delta", "target"], function () {
-  return this.target ? this.delta / this.target : null
+Target.define("valueDiffP", "valueDiff", function () {
+  return this.value ? this.valueDiff / this.value : null
 })
-Target.define("amount", ["target"], function () {
-  return +nice(this.target / this.asset.price, 7)
+Target.define("amount", ["value"], function () {
+  return +nice(this.value / this.asset.price, 7)
 })
 Target.define("amountDiff", ["amount"], function () {
   return +nice(this.amount - this.asset.amount, 7)

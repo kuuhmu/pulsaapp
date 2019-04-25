@@ -199,7 +199,7 @@ Order.type.balance = function (order, target) {
 
   // Requirements
 
-  if (target.target === null || target.amountDelta === 0) return
+  if (target.amount == null || target.amountDelta === 0) return
 
   if (!orderbook.bestBid || !orderbook.bestAsk) {
     order.description = [__("Fetching orderbook...")]
