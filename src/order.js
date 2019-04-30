@@ -228,12 +228,21 @@ Order.type.balance = function (order, target) {
  * **target** target.
  */
 function setBalancesLimits (target, deviation = global.balanceTargetDeviation) {
-  const balances = target.asset.balances
-  if (balances.length === 1) {
-    balances[0].amountTradable = target.amountDelta
+  // Empty orderbooks cannot be traded.
+  const balances = []
+  target.asset.balances.forEach(balance => {
+    if (balance.orderbook.price != null) balances.push(balance)
+    else balance.amountTradable = 0
+  })
+
+  // Special cases.
+  if (!balances.length) {
     return
+  } else if (balances.length === 1) {
+    return balances[0].amountTradable = target.amountDelta
   }
 
+  // Set each balance tradable amount.
   const amountTarget = +nice(target.amount / balances.length, 7)
   const amountMin = +nice(amountTarget * (1 - deviation), 7)
   const amountMax = +nice(amountTarget * (1 + deviation), 7)

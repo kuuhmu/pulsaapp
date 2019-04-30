@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Detect when an anchor orderbook is not tradable anymore.
 - Improve loading message spacing.
 
 ## 0.5.0 - 2019-04-19
