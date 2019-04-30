@@ -21,8 +21,7 @@ const Order = module.exports = class Order extends Projectable {
     if (target.asset.code === "XLM") return
 
     const order = new Order("balance", target.asset.orderbook, target)
-    order.watch(target, ["value", "target"], () => order.refresh())
-    order.watch(target.asset, "liabilities", () => order.refresh())
+    order.watch(target, "amount", () => order.refresh())
     order.watch(target.asset.orderbook, ["bids", "asks"], () => order.refresh())
     target.asset.offers.listen("change", () => order.refresh(), order)
 
