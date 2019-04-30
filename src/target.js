@@ -29,7 +29,8 @@ class Target extends Projectable {
       this.asset = asset
       this.mode = "ignore"
       this.order = Order.rebalance(this)
-      asset.targets.push(this)
+
+      asset.target = this
       this.watch(asset, "value", () => this.compute("valueDiff"))
     } else {
       this.childs = new Mirrorable()

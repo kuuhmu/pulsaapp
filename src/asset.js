@@ -53,7 +53,6 @@ const Asset = module.exports = class Asset extends Projectable {
     this.anchors = new Mirrorable()
     this.balances = new Mirrorable()
     this.offers = new Mirrorable()
-    this.targets = new Mirrorable()
 
     this.balances.mirror(balance => {
       this.anchors.push(balance.anchor)
