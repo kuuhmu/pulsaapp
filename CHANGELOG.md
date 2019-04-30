@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- Remove Stronghold anchors from trusted list. (Not active anymore)
+
 ### Fixed
 
 - Detect when an anchor orderbook is not tradable anymore.
