@@ -21,18 +21,24 @@ class RebalanceGui extends Gui {
     super(`
 <section class="RebalanceGui">
   <h2>${__("Rebalance")}</h2>
+
   %table
+
   <section hidden=%hideSection>
-    <div class="errors">%formatError:errors...</div>
     <form onsubmit=%rebalance hidden=%hideRebalance>
-      <button type="submit" disabled=%block>${__("Rebalance")}</button>
+      <button type="submit" disabled=%invalid>${__("Rebalance")}</button>
     </form>
+
     <form onsubmit=%apply hidden=%hideApply>
-      <button type="submit" disabled=%block>${__("Apply")}</button>
+      <button type="submit" disabled=%invalid>${__("Apply")}</button>
       <button onclick=%cancel>${__("Cancel")}</button>
     </form>
+
+    %formatError:error
   </section>
+
   %setupGui
+
 </section>
     `)
 
@@ -44,9 +50,6 @@ class RebalanceGui extends Gui {
     this.table.project("selected", this)
     this.project("selected", this.table)
 
-    this.errors = this.target.errors
-    this.errors.feed(this, "block", errors => !!errors.length)
-
     this.define("hideRebalance", ["selected", "modified"], () => {
       return this.selected || this.modified
     })
@@ -57,7 +60,8 @@ class RebalanceGui extends Gui {
       return this.hideRebalance && this.hideApply
     })
 
-    this.target.project("modified", this)
+    this.target.project(["error", "modified"], this)
+    this.define("invalid", "error", () => !!this.error)
 
     this.define("setupGui", "selected", () => {
       if (this.setupGui) this.setupGui.destroy()
@@ -66,7 +70,7 @@ class RebalanceGui extends Gui {
   }
 
   formatError (error) {
-    return new Gui(`<div class="error">%error</div>`, { error })
+    if (error) return html.create("p", ".error", error)
   }
 
   cancel () {
@@ -79,7 +83,7 @@ class RebalanceGui extends Gui {
       const accountId = this.portfolio.account.id
       localStorage[
         `target:${accountId}`
-      ] = this.target.template = this.target.toJson()
+      ] = this.target.json = this.target.toJson()
       this.target.modified = false
     } catch (error) {
       console.error(error)
@@ -157,7 +161,7 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
   }
 
   sortTargets (array) {
-    return array.sort((a, b) => b.goal - a.goal || a.globalPrice)
+    return array.sort((a, b) => b.value - a.value)
   }
 }
 
@@ -169,8 +173,8 @@ class TargetGui extends Gui {
     <img src=%image alt="">
     <span>%name</span>
   </td>
-  <td align="right">%goal%</td>
-  <td align="right">%valueDiffP%</td>
+  <td align="right">%share%</td>
+  <td align="right">%valueDiffP</td>
   <td align="right">%description...</td>
 </tr>
     `)
@@ -179,9 +183,9 @@ class TargetGui extends Gui {
 
     this.name = target.name || target.asset && target.asset.code
     target.asset.project("image", this)
-    target.project("goal", this, x => nice(x, 2))
+    target.project("share", this, x => nice(x * 100, 2))
     target.project("valueDiffP", this, x => {
-      return x == null ? "-" : nice(x * 100, 2)
+      return x == null ? "-" : nice(x * 100, 2) + "%"
     })
 
     this.watch(target, "order", () => {
@@ -203,12 +207,13 @@ TargetGui.Setup = class TargetSetup extends Gui {
     <h3>%assetName</h3>
     <hr>
     <label><span>${__("Size")}:</span>
-      <input class="half" type="number" step="any" min="0" %max value=%size
-       placeholder=%goal onchange=%switchMode>
+      <input class="half" type="number" step="any" min="0" %max
+        value=%size placeholder=%share oninput=%maybeSwitchMode>
       <select class="half" onchange=%setMode value=%mode>
-        <option value="equal">${__("Equal Share")}</option>
+        <option value="weight">${__("Weight")}</option>
         <option value="percentage">${__("Percentage")}</option>
         <option value="amount">${__("Amount")}</option>
+        <option value="ignore">${__("Ignore")}</option>
       </select>
     </label>
 
@@ -224,23 +229,27 @@ TargetGui.Setup = class TargetSetup extends Gui {
 
     this.assetName = target.asset.name
 
-    target.project("goal", this, x => nice(x, 2))
+    target.project("share", this, x => nice(100 * x, 2))
 
     target.project("size", this)
     this.project("size", target, x => x != null ? Number(x) : null)
 
-    target.project("mode", this, mode => mode || "equal")
+    target.project("mode", this)
     this.project("mode", target)
   }
 
-  switchMode () {
-    if (this.size && this.mode === "equal") this.mode = "percentage"
+  maybeSwitchMode () {
+    if (this.mode === "ignore") {
+      this.mode = "percentage"
+      this.target.update()
+    }
   }
 
   setMode () {
     switch (this.mode) {
-    case "equal":
-      this.size = null
+    case "weight":
+      this.size = 1
+      this.max = null
       break
     case "percentage":
       this.size = +nice(this.target.asset.share, 2)
@@ -250,11 +259,14 @@ TargetGui.Setup = class TargetSetup extends Gui {
       this.size = this.target.asset.amount
       this.max = null
       break
+    case "ignore":
+      this.size = null
+      break
     }
   }
 
   close () {
-    this.switchMode()
+    if (this.size != null) this.maybeSwitchMode()
     this.parent.selected = null
     return false
   }

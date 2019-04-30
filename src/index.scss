@@ -200,6 +200,11 @@ section section
   overflow-x: auto;
 }
 
+.RebalanceGui .error
+{
+  text-align: center
+}
+
 .RebalanceTable .order
 {
   &:hover { text-decoration: underline; }
@@ -210,11 +215,6 @@ section section
   margin: 1em auto;
   color: hsl(0, 0%, 50%);
   font-style: italic;
-}
-
-.errors:not(:empty) {
-  margin-top: 0.75em;
-  text-align: center;
 }
 
 /* Table */

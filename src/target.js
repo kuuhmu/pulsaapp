@@ -27,17 +27,14 @@ class Target extends Projectable {
 
     if (asset) {
       this.asset = asset
-      this.mode = "amount"
-      this.size = asset.amount
+      this.mode = "ignore"
       this.order = Order.rebalance(this)
       asset.targets.push(this)
       this.watch(asset, "value", () => this.compute("valueDiff"))
     } else {
       this.childs = new Mirrorable()
-      this.childs.listen("add", child => {
-        child.parent = this
-        this.compute()
-      })
+      this.childs.listen("add", child => child.parent = this)
+      this.childs.listen("change", () => this.computeAll())
     }
 
     // Normalize & compute
@@ -46,7 +43,7 @@ class Target extends Projectable {
         this.size = Math.max(0, this.size)
         if (this.mode === "percentage") this.size = Math.min(100, this.size)
       }
-      this.compute()
+      this.computeAll()
     })
   }
 
@@ -57,13 +54,10 @@ class Target extends Projectable {
 }
 
 Target.define("valueDiff", ["value", "asset"], function () {
-  return this.asset.value - this.value
+  return this.asset && this.asset.value - this.value
 })
 Target.define("valueDiffP", "valueDiff", function () {
   return this.value ? this.valueDiff / this.value : null
-})
-Target.define("amount", ["value"], function () {
-  return +nice(this.value / this.asset.price, 7)
 })
 Target.define("amountDiff", ["amount"], function () {
   return +nice(this.amount - this.asset.amount, 7)
@@ -71,18 +65,29 @@ Target.define("amountDiff", ["amount"], function () {
 Target.define("amountDelta", ["amountDiff"], function () {
   return Math.abs(this.amountDiff)
 })
+// Gets computed by "strategy.js".
+Target.define("share", null, function () {
+  return this.value / this.root.portfolio.total
+})
 
 /**
  * Actions
  */
 
-Target.prototype.compute = function () {
+Target.prototype.computeAll = function () {
   if (this.parent) {
-    this.root.compute()
+    this.root.computeAll()
   } else if (this.portfolio && this.portfolio.total) {
-    this.errors.splice(0, this.errors.length)
-    this.modified = this.hasChanged()
-    strategy.apply(this, this.portfolio.total)
+    try {
+      this.error = null
+      this.value = this.portfolio.total
+      this.modified = this.hasChanged()
+      strategy.apply(this)
+    } catch (error) {
+      this.error = error.message
+      console.error(error)
+    }
+    this.trigger("update")
   }
 }
 
@@ -93,11 +98,9 @@ Target.prototype.compute = function () {
 Target.forPortfolio = function (portfolio, json) {
   const target = json ? Target.fromJson(json) : new Target()
   target.portfolio = portfolio
-  target.errors = new Mirrorable()
-  target.goal = 100
 
   portfolio.target = target
-  target.watch(portfolio, "total", () => target.compute(portfolio.total))
+  target.watch(portfolio, "total", () => target.computeAll())
 
   // Add/Remove assets after trustline change.
   portfolio.assets.forEach(asset => {
@@ -152,14 +155,25 @@ Target.prototype.hasChanged = function () {
 Target.fromObject = function (object) {
   if (typeof object === "string") object = { asset: object }
 
-  const target = new Target(object.asset && Asset.resolve(object.asset))
+  // Create Target instance.
+  const asset = object.asset && Asset.resolve(object.asset)
+  const target = new Target(asset)
   target.size = object.size
   target.mode = object.mode
 
-  if (!object.asset) {
+  // Conversion from versions <= 0.5 − REMOVAL: 2020-05 (one year).
+  if (target.mode === "equal") target.mode = "weight"
+  if (target.mode === "skip") target.mode = "ignore"
+
+  // Set defaults.
+  if (!target.mode) target.mode = "weight"
+  if (target.size == null && target.mode === "weight") target.size = 1
+
+  // Parse childs.
+  if (object.childs) {
     target.group = object.group
     object.childs.forEach(entry => {
-      return target.childs.push(Target.fromObject(entry))
+      target.childs.push(Target.fromObject(entry))
     })
   }
 
@@ -167,18 +181,20 @@ Target.fromObject = function (object) {
 }
 
 Target.prototype.toObject = function () {
-  let object = {}
-
-  if (this.size != null) object.size = this.size
-  if (this.mode != null && this.mode !== "equal") object.mode = this.mode
+  if (this.mode === "ignore") return
+  let object = { mode: this.mode, size: this.size }
+  if (object.mode === "weight") {
+    delete object.mode
+    if (object.size === 1) delete object.size
+  }
 
   if (this.asset) {
     if (this.asset.type === "unknown") object.asset = this.asset.id
     else object.asset = this.asset.code
     if (Object.keys(object).length === 1) object = object.asset
   } else if (this.childs) {
-    if (this.group) object.group = this.group
-    object.childs = this.childs.map(target => target.toObject())
+    object.group = this.group
+    object.childs = this.childs.map(target => target.toObject()).filter(x => x)
   }
 
   return object
@@ -189,51 +205,3 @@ Target.prototype.toObject = function () {
  */
 
 module.exports = Target
-
-/**
- * Example
- */
-
-/*
-[
-  {
-    "group": "Fiats"
-    "size": "50",
-    "childs": [
-      { "asset": "USD", "size": "30", "min": { "amount": "2000" }},
-      { "asset": "EUR", "size": "20", "min": { "amount": "500" }},
-      { "asset": "CNY", "size": "20" },
-      { "asset": "GBP", "size": "20" }
-  },
-  {
-    //"group": "Native"
-    "size": "25",
-    "strategy": "marketCap",
-    "childs": ["XLM", "SLT", "MOBI"]
-  },
-  {
-    //"group": "Tether",
-    "size": "25",
-    "strategy": [["marketCap", 25], ["equal", 25], ["change7D", 25], ["inertia", 25]],
-    "childs": [{ "asset": "BTC", "min": { "amount": "0.05", "size": "20" }}, "ETH", [10, "byMarketCap"]]
-  }
-]
-
-[
-  {
-    "group": "Fiat",
-    "size": 50,
-    "strategy": "equal",
-    "childs": ["USD", "EUR", "GBP", "CNY"]
-  },
-  {
-    "group": "Native",
-    "size": 20,
-    "strategy": [["marketCap", 25], ["equal", 25], ["inertia", 50]]
-  }
-  { "asset": "BTC", "size": 10 },
-  { "asset": "ETH", "size": 5 },
-  { "asset": "XRP", "size": 3 }
-]
-
-*/

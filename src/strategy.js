@@ -4,64 +4,79 @@
  */
 const strategy = exports
 
+const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { __ } = require("@cosmic-plus/i18n")
 
-strategy.apply = function (target, total) {
-  if (!target.childs) return target.value = total
+const global = require("./global")
 
-  let used = 0
-  const computed = []
-  const remaining = []
-  const strat = target.mode || "equal"
+/**
+ * Applicator
+ */
+
+strategy.apply = function (target) {
+  const delayed = []
+  let sum = 0,
+    weights = 0
 
   target.childs.forEach(child => {
-    if (child.mode === "skip" || child.mode === "amount") {
-      child.value =
-        child.size != null
-          ? child.asset.price * child.size
-          : child.asset.price * child.asset.amount
-      child.goal = 100 * child.value / total
-      if (child.goal > 100) {
-        child.root.errors.push(
-          `${child.asset.code}: ${__("Order over portfolio total")}`
-        )
-      }
-      used += child.goal
-    } else if (child.size != null) {
-      child.goal = child.size
-      used += child.size
-      computed.push(child)
+    const mode = child.mode
+    if (mode === "weight") {
+      delayed.push(child)
+      weights += child.size
     } else {
-      remaining.push(child)
+      strategy[mode](child)
+      sum += child.value
     }
   })
 
-  if (total < 0) throw new Error("Rebalancing impossible")
+  const remains = Math.max(0, target.value - sum)
+  delayed.forEach(child => strategy.weight(child, remains, weights))
 
-  if (used > 100 || used !== 100 && !remaining.length) {
-    makeTotal100(computed, used)
-    remaining.forEach(target => target.goal = 0)
-  } else if (remaining.length) {
-    method[strat](remaining, 100 - used)
+  checkAllocationLimits(sum, target.value, delayed.length)
+}
+
+function checkAllocationLimits (allocated, available, checkUnderFlag) {
+  if (allocated > available) {
+    const over = +nice(allocated - available, 2)
+    const overP = +nice(100 * over / available, 2)
+    let msg = __("Rebalance setup is over portfolio value by")
+    msg += ` ${over} ${global.currency} (${overP}%) `
+    throw new Error(msg)
+  } else if (!checkUnderFlag && allocated < available) {
+    const under = +nice(available - allocated, 2)
+    const underP = +nice(100 * under / available, 2)
+    let msg = __("Rebalance setup is under portfolio value by")
+    msg += ` ${under} ${global.currency} (${underP}%) `
+    throw new Error(msg)
   }
-
-  computed.concat(remaining).forEach(child => {
-    strategy.apply(child, total * child.goal / 100)
-  })
 }
 
-function makeTotal100 (targets, used) {
-  const space = 100 - used
-  targets.forEach(target => target.goal += space * target.goal / used)
-}
-
-/*******************************************************************************
+/**
  * Strategies
  */
 
-const method = {}
+strategy.amount = function (target) {
+  target.amount = target.size
+  target.value = target.amount * target.asset.price
+  target.compute("share")
+}
 
-method.equal = function (targets, space) {
-  const goal = space / targets.length
-  targets.forEach(target => target.goal = goal)
+strategy.ignore = function (target) {
+  target.value = target.asset.value
+  target.amount = target.asset.amount
+  target.compute("share")
+}
+
+strategy.percentage = function (target) {
+  strategy.weight(target, target.parent.value, 100)
+}
+
+strategy.weight = function (target, remains, weights) {
+  if (!weights) {
+    target.value = target.amount = 0
+  } else {
+    target.value = target.size * remains / weights
+    target.amount = +nice(target.value / target.asset.price, 7)
+  }
+  target.compute("share")
 }

@@ -4,13 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- New balancing mode "weight" that replaces "equal". Weight let you specify
+  relative sizes for your positions. Once "percentage" & "quantity" targets have
+  been allocated, "weight" target shares the remaining funds.
+- New balancing mode "ignore".
+
 ### Changed
 
+- Balancing mode "percentage" is now strictly applied. Before, it would act as
+  "weight" in case unallocated funds remains − which could lead to a confusing
+  user experience.
+- Raise an error when total "percentage" targets are over hundred. Before, it
+  would lower every targets to get back to a correct targets − but this could
+  creates to confusion as well.
 - Remove Stronghold anchors from trusted list. (Not active anymore)
 
 ### Fixed
 
+- All overallocation/underallocation cases are now properly detected.
 - Detect when an anchor orderbook is not tradable anymore.
+- Rebalancing targets are now properly sorted after changes.
 - Improve loading message spacing.
 
 ## 0.5.0 - 2019-04-19
