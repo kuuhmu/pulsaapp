@@ -172,9 +172,22 @@ Target.fromObject = function (object) {
   // Parse childs.
   if (object.childs) {
     target.group = object.group
-    object.childs.forEach(entry => {
-      target.childs.push(Target.fromObject(entry))
-    })
+    const childs = object.childs.map(entry => Target.fromObject(entry))
+
+    // Conversion from versions <= 0.5 − REMOVAL: 2020-05 (one year).
+    //
+    // When there was no "equal" target, percentage targets whose sum is under
+    // 100 would act like "weight".
+    const percentChilds = childs.filter(child => child.mode === "percentage")
+    if (
+      percentChilds.length
+      && !childs.find(child => child.mode === "weight")
+      && 100 !== percentChilds.reduce((child, sum) => child.size + sum, 0)
+    ) {
+      percentChilds.forEach(child => child.mode = "weight")
+    }
+
+    target.childs.push(...childs)
   }
 
   return target
