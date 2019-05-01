@@ -24,100 +24,99 @@ class RebalanceGui extends Gui {
 
   %table
 
-  <section hidden=%hideSection>
-    <form onsubmit=%rebalance hidden=%hideRebalance>
-      <button type="submit" disabled=%invalid>${__("Rebalance")}</button>
+  %setup
+
+  <section hidden=%hideControls>
+    <form onsubmit="return false" hidden=%hideRebalance>
+      <button onclick=%rebalance disabled=%invalid>${__("Rebalance")}</button>
     </form>
 
-    <form onsubmit=%apply hidden=%hideApply>
-      <button type="submit" disabled=%invalid>${__("Apply")}</button>
+    <form onsubmit="return false" hidden=%hideApply>
+      <button onclick=%apply disabled=%invalid>${__("Apply")}</button>
       <button onclick=%cancel>${__("Cancel")}</button>
     </form>
 
-    %formatError:error
+    %toParagraph:error
   </section>
-
-  %setupGui
 
 </section>
     `)
 
     this.portfolio = portfolio
-    const template = localStorage[`target:${portfolio.account.id}`]
-    this.target = Target.forPortfolio(portfolio, template)
 
-    this.table = new RebalanceGui.Table(this)
+    // Load & bind template from localStorage.
+    const targetKey = `target:${portfolio.account.id}`
+    const template = localStorage[targetKey]
+    this.target = Target.forPortfolio(portfolio, template)
+    this.target.link("json", localStorage, targetKey)
+
+    // Targets table.
+    this.table = new RebalanceGui.Table(this.target)
     this.table.project("selected", this)
     this.project("selected", this.table)
 
+    // Target Setup.
+    this.trap("selected", () => {
+      if (this.setup) this.setup.destroy()
+      if (this.selected) {
+        this.setup = new TargetGui.Setup(this.selected)
+        this.setup.listen("close", () => this.selected = null)
+      } else {
+        this.setup = null
+      }
+    })
+
+    // Control Panel.
+    this.target.project(["error", "modified"], this)
+
+    this.define("hideControls", ["hideRebalance", "hideApply"], () => {
+      return this.hideRebalance && this.hideApply
+    })
     this.define("hideRebalance", ["selected", "modified"], () => {
       return this.selected || this.modified
     })
     this.define("hideApply", ["selected", "modified"], () => {
       return this.selected || !this.modified
     })
-    this.define("hideSection", ["hideRebalance", "hideApply"], () => {
-      return this.hideRebalance && this.hideApply
-    })
-
-    this.target.project(["error", "modified"], this)
-    this.define("invalid", "error", () => !!this.error)
-
-    this.define("setupGui", "selected", () => {
-      if (this.setupGui) this.setupGui.destroy()
-      return this.selected && new TargetGui.Setup(this.selected, this)
-    })
+    this.define("invalid", ["error"], () => !!this.error)
   }
 
-  formatError (error) {
+  toParagraph (error) {
     if (error) return html.create("p", ".error", error)
   }
 
   cancel () {
     location.reload()
-    return false
   }
 
   apply () {
-    try {
-      const accountId = this.portfolio.account.id
-      localStorage[
-        `target:${accountId}`
-      ] = this.target.json = this.target.toJson()
-      this.target.modified = false
-    } catch (error) {
-      console.error(error)
-    }
-    return false
+    this.target.json = this.target.toJson()
+    this.target.modified = false
   }
 
   rebalance () {
-    try {
-      const operations = listOperations(this.target)
-      const outdated = this.portfolio.offers.filter(offer => offer.outdated)
-      const remaining = outdated.filter(offer => {
-        return !operations.find(op => op.offer.id === offer.id)
-      })
-      operations.forEach(op => {
-        if (!op.offer.id && remaining.length) op.offer.id = remaining.pop().id
-      })
+    // TODO: Move this logic to Order & Offers models.
+    const operations = listOperations(this.target)
+    const outdated = this.portfolio.offers.filter(offer => offer.outdated)
+    const remaining = outdated.filter(offer => {
+      return !operations.find(op => op.offer.id === offer.id)
+    })
+    operations.forEach(op => {
+      if (!op.offer.id && remaining.length) op.offer.id = remaining.pop().id
+    })
 
-      if (!operations.length) return false
-      const cosmicLink = Order.operationsToCosmicLink(operations)
-      remaining.forEach(offer => {
-        cosmicLink.addOperation("manageOffer", { amount: 0, offerId: offer.id })
+    if (!operations.length) return false
+    const cosmicLink = Order.operationsToCosmicLink(operations)
+    remaining.forEach(offer => {
+      cosmicLink.addOperation("manageOffer", { amount: 0, offerId: offer.id })
+    })
+    if (cosmicLink) {
+      const sideFrame = new SideFrame(cosmicLink.uri)
+      sideFrame.listen("destroy", () => {
+        this.portfolio.getAccount()
+        this.portfolio.offers.get()
       })
-      if (cosmicLink) {
-        const sideFrame = new SideFrame(cosmicLink.uri)
-        sideFrame.listen("destroy", () => {
-          this.portfolio.getAccount()
-          this.portfolio.offers.get()
-        })
-      }
-    } catch (error) {
-      console.error(error)
     }
-    return false
   }
 }
 
@@ -130,7 +129,7 @@ function listOperations (target) {
 }
 
 RebalanceGui.Table = class RebalanceTable extends Gui {
-  constructor (parent) {
+  constructor (target) {
     super(`
 <section class="RebalanceTable">
   <table>
@@ -140,7 +139,9 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
       <th>${__("Divergence")}</th>
       <th>${__("Operation")}</th>
     </tr>
-    %formatTarget:targets...
+
+    %toTargetGui:targets...
+
     <tr hidden=true>
       <td align="center" colspan="4"><h3>${__("Add Asset")}</h3></td>
     </tr>
@@ -148,20 +149,21 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
 </section>
     `)
 
+    this.targets = target.childs
     this.selected = undefined
-    this.targets = parent.target.childs
+
+    target.listen("update", () => this.sortTargets(this.targets))
     this.sortTargets(this.targets)
-    parent.target.listen("update", () => this.sortTargets(this.targets))
   }
 
-  formatTarget (target) {
+  toTargetGui (target) {
     const targetGui = new TargetGui(target)
     targetGui.domNode.onclick = () => this.selected = target
     return targetGui
   }
 
   sortTargets (array) {
-    return array.sort((a, b) => b.value - a.value)
+    array.sort((a, b) => b.value - a.value)
   }
 }
 

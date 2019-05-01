@@ -20,61 +20,64 @@ class TargetGui extends Gui {
     <img src=%image alt="">
     <span>%name</span>
   </td>
-  <td align="right">%share%</td>
-  <td align="right">%valueDiffP</td>
-  <td align="right">%description...</td>
+  <td align="right">%toPercent:share</td>
+  <td align="right">%toPercent:valueDiffP</td>
+  <td align="right">%toDiv:description...</td>
 </tr>
     `)
 
     this.target = target
-
     this.name = target.name || target.asset && target.asset.code
-    target.asset.project("image", this)
-    target.project("share", this, x => nice(x * 100, 2))
-    target.project("valueDiffP", this, x => {
-      return x == null ? "-" : nice(x * 100, 2) + "%"
-    })
 
-    this.watch(target, "order", () => {
-      if (!target.order) {
-        this.cosmicLink = this.description = null
-      } else {
-        target.order.project("cosmicLink", this)
-        target.order.project("description", this, descriptionToList)
-      }
-    })
+    target.asset.project("image", this)
+    target.project(["share", "valueDiffP"], this)
+
+    // TODO: Simplify once Gui ignore undefined ellipsis.
+    if (target.order) target.order.project("description", this)
+    else this.description = []
+  }
+
+  toPercent (x) {
+    return x == null ? "-" : nice(x * 100, 2) + "%"
+  }
+
+  toDiv (obj) {
+    return html.create("div", null, obj)
   }
 }
 
 TargetGui.Setup = class TargetSetup extends Gui {
-  constructor (target, parent) {
+  constructor (target) {
     super(`
 <section>
   <form onsubmit=%close>
-    <h3>%assetName</h3>
+
+    <h3>%name</h3>
     <hr>
+
     <label><span>${__("Size")}:</span>
+
       <input class="half" type="number" step="any" min="0" %max
         value=%size placeholder=%share oninput=%maybeSwitchMode>
+
       <select class="half" onchange=%setMode value=%mode>
         <option value="weight">${__("Weight")}</option>
         <option value="percentage">${__("Percentage")}</option>
         <option value="amount">${__("Amount")}</option>
         <option value="ignore">${__("Ignore")}</option>
       </select>
+
     </label>
 
     <hr>
-
     <input type="submit" value="${__("Close")}">
+
   </form>
 </section>
     `)
 
-    this.parent = parent
     this.target = target
-
-    this.assetName = target.asset.name
+    this.name = target.asset.name
 
     target.project("share", this, x => nice(100 * x, 2))
 
@@ -93,6 +96,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
   }
 
   setMode () {
+    // TODO: Move this logic to Target model.
     switch (this.mode) {
     case "weight":
       this.size = 1
@@ -114,17 +118,10 @@ TargetGui.Setup = class TargetSetup extends Gui {
 
   close () {
     if (this.size != null) this.maybeSwitchMode()
-    this.parent.selected = null
+    this.trigger("close")
+    this.destroy()
     return false
   }
-}
-
-/**
- * Helpers
- */
-
-function descriptionToList (description) {
-  return description.map(e => html.create("div", null, e))
 }
 
 /**
