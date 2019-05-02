@@ -16,7 +16,7 @@ balance).
 
 - New balancing mode "weight" that replaces "equal". Weight let you specify
   relative sizes for your positions. Once "percentage" & "quantity" targets have
-  been allocated, "weight" target shares the remaining funds.
+  been allocated, the remaining funds are split between "weight" targets.
 - New balancing mode "ignore".
 
 ### Changed
@@ -25,18 +25,18 @@ balance).
   "weight" in case unallocated funds remains − which could lead to a confusing
   user experience.
 - Raise an error when total "percentage" targets are over hundred. Before, it
-  would lower every targets to get back to a correct targets − but this could
-  creates to confusion as well.
-- Remove Stronghold anchors from trusted list. (Not active anymore)
-- Rebalancing interface: display "Goal" according to rebalancing mode
+  would lower every target to get back to a valid sum − but this could lead to
+  confusion as well.
+- Remove Stronghold anchors from the trusted list. (Not active anymore)
+- Rebalancing interface displays "Goal" according to rebalancing mode
   (weight/percentage/quantity/ignore).
-- Rebalancing interface: "Divergence" is now displayed relatively to portfolio
+- Rebalancing interface "Divergence" is now displayed relatively to portfolio
   total value.
 
 ### Fixed
 
 - All overallocation/underallocation cases are now properly detected.
-- Detect when an anchor orderbook is not tradable anymore.
+- Detect when an anchor order book is not tradable anymore.
 - Rebalancing targets are now properly sorted after changes.
 - Fix an inconsistency that would cause rebalance targets to be uselessly
   computed multiple times.
