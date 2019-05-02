@@ -113,7 +113,7 @@ module.exports = class Portfolio extends Projectable {
  */
 
 Asset.define("share", "value", function () {
-  return global.portfolio && 100 * this.value / global.portfolio.total
+  return global.portfolio && this.value / global.portfolio.total
 })
 
 /**

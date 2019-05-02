@@ -21,7 +21,7 @@ class TargetGui extends Gui {
     <span>%name</span>
   </td>
   <td align="right">%command</td>
-  <td align="right">%toPercent:valueDiffP</td>
+  <td align="right">%toPercent:shareDiff</td>
   <td align="right">%toDiv:description...</td>
 </tr>
     `)
@@ -33,7 +33,7 @@ class TargetGui extends Gui {
     this.watch(target, ["size", "mode", "share"], () => this.compute("command"))
 
     target.asset.project("image", this)
-    target.project(["share", "valueDiffP"], this)
+    target.project("shareDiff", this)
 
     // TODO: Simplify once Gui ignore undefined ellipsis.
     if (target.order) target.order.project("description", this)
@@ -119,7 +119,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
       this.max = null
       break
     case "percentage":
-      this.size = +nice(this.target.asset.share, 2)
+      this.size = +nice(100 * this.target.asset.share, 2)
       this.max = 100
       break
     case "amount":

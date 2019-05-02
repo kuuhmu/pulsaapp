@@ -30,6 +30,8 @@ balance).
 - Remove Stronghold anchors from trusted list. (Not active anymore)
 - Rebalancing interface: display "Goal" according to rebalancing mode
   (weight/percentage/quantity/ignore).
+- Rebalancing interface: "Divergence" is now displayed relatively to portfolio
+  total value.
 
 ### Fixed
 

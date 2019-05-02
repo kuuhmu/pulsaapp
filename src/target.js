@@ -70,6 +70,9 @@ Target.define("amountDelta", ["amountDiff"], function () {
 Target.define("share", null, function () {
   return this.value / this.root.portfolio.total
 })
+Target.define("shareDiff", ["share"], function () {
+  return this.asset.share - this.share
+})
 
 /**
  * Actions
