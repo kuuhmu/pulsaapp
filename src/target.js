@@ -54,6 +54,11 @@ class Target extends Projectable {
   }
 }
 
+Target.define("name", ["group", "asset"], function () {
+  return this.group || this.asset.type === "unknow"
+    ? this.asset.id
+    : this.asset.code
+})
 Target.define("valueDiff", ["value", "asset"], function () {
   return this.asset && this.asset.value - this.value
 })
@@ -93,6 +98,19 @@ Target.prototype.computeAll = function () {
     }
     this.trigger("update")
   }
+}
+
+/**
+ * Utilities
+ */
+
+/**
+ * Return deterministically sorted **target** childs without mutating source
+ * object.
+ */
+Target.sortChilds = function (target) {
+  const childs = target.childs.slice()
+  return childs.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 /**
@@ -206,12 +224,12 @@ Target.prototype.toObject = function () {
   }
 
   if (this.asset) {
-    if (this.asset.type === "unknown") object.asset = this.asset.id
-    else object.asset = this.asset.code
+    object.asset = this.name
     if (Object.keys(object).length === 1) object = object.asset
   } else if (this.childs) {
     object.group = this.group
-    object.childs = this.childs.map(target => target.toObject()).filter(x => x)
+    const childs = Target.sortChilds(this)
+    object.childs = childs.map(target => target.toObject()).filter(x => x)
   }
 
   return object
