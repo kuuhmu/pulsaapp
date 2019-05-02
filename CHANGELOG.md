@@ -28,6 +28,8 @@ balance).
   would lower every targets to get back to a correct targets − but this could
   creates to confusion as well.
 - Remove Stronghold anchors from trusted list. (Not active anymore)
+- Rebalancing interface: display "Goal" according to rebalancing mode
+  (weight/percentage/quantity/ignore).
 
 ### Fixed
 

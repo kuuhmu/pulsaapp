@@ -20,7 +20,7 @@ class TargetGui extends Gui {
     <img src=%image alt="">
     <span>%name</span>
   </td>
-  <td align="right">%toPercent:share</td>
+  <td align="right">%command</td>
   <td align="right">%toPercent:valueDiffP</td>
   <td align="right">%toDiv:description...</td>
 </tr>
@@ -28,6 +28,9 @@ class TargetGui extends Gui {
 
     this.target = target
     this.name = target.name || target.asset && target.asset.code
+
+    this.define("command", null, () => this.toCommand(target))
+    this.watch(target, ["size", "mode", "share"], () => this.compute("command"))
 
     target.asset.project("image", this)
     target.project(["share", "valueDiffP"], this)
@@ -37,8 +40,21 @@ class TargetGui extends Gui {
     else this.description = []
   }
 
+  toCommand (target) {
+    switch (target.mode) {
+    case "ignore":
+      return "Ignore"
+    case "amount":
+      return `${target.amount} ${target.asset.code}`
+    case "weight":
+      return `${target.size} − ${this.toPercent(target.share)}`
+    case "percentage":
+      return this.toPercent(target.share)
+    }
+  }
+
   toPercent (x) {
-    return x == null ? "-" : nice(x * 100, 2) + "%"
+    return !x ? "-" : nice(x * 100, 2) + "%"
   }
 
   toDiv (obj) {
