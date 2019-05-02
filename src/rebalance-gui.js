@@ -140,7 +140,7 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
       <th>${__("Operation")}</th>
     </tr>
 
-    %toTargetGui:targets...
+    %targets...
 
     <tr hidden=true>
       <td align="center" colspan="4"><h3>${__("Add Asset")}</h3></td>
@@ -149,11 +149,11 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
 </section>
     `)
 
-    this.targets = target.childs
+    this.targets = target.childs.mirror(child => this.toTargetGui(child))
     this.selected = undefined
 
-    target.listen("update", () => this.sortTargets(this.targets))
-    this.sortTargets(this.targets)
+    target.listen("update", () => this.sortTargets())
+    this.sortTargets()
   }
 
   toTargetGui (target) {
@@ -162,8 +162,14 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
     return targetGui
   }
 
-  sortTargets (array) {
-    array.sort((a, b) => b.value - a.value)
+  sortTargets () {
+    this.targets.sort((a, b) => {
+      a = a.target
+      b = b.target
+      if (b.mode === "ignore" && a.mode !== "ignore") return -1
+      else if (a.mode === "ignore" && b.mode !== "ignore") return 1
+      return b.value - a.value || b.asset.code.localeCompare(a.asset.code)
+    })
   }
 }
 

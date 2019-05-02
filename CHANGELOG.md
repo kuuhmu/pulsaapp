@@ -34,6 +34,8 @@ balance).
 - All overallocation/underallocation cases are now properly detected.
 - Detect when an anchor orderbook is not tradable anymore.
 - Rebalancing targets are now properly sorted after changes.
+- Fix an inconsistency that would cause rebalance targets to be uselessly
+  computed multiple times.
 - Improve loading message spacing.
 
 ## 0.5.0 - 2019-04-19
