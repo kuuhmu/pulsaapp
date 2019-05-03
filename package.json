@@ -1,6 +1,6 @@
 {
   "name": "equilibre.io",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A portfolio balancer for Stellar Decentralized Exchange",
   "author": "MisterTicot",
   "repository": "github:cosmic-plus/webapp-equilibre-io",
@@ -33,10 +33,10 @@
     "serve": "npm run watch & cd web && live-server --https=../node_modules/live-server-https --no-browser"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
+    "@babel/core": "^7.4.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "@cosmic-plus/i18n-extractor": "^1.1.0",
     "autoprefixer-cli": "^1.0.0",
     "babel-eslint": "^10.0.1",
@@ -44,19 +44,19 @@
     "eslint": "^5.16.0",
     "live-server": "^1.2.1",
     "live-server-https": "0.0.2",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.12.0",
     "prettier": "^1.17.0",
     "raw-loader": "^1.0.0",
     "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.0"
+    "webpack-cli": "^3.3.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.4.3",
+    "@babel/runtime": "^7.4.4",
     "@cosmic-plus/base": "^2.0.0",
     "@cosmic-plus/domutils": "^2.0.2",
     "@cosmic-plus/i18n": "^1.2.0",
     "@cosmic-plus/jsutils": "^2.0.1",
-    "@cosmic-plus/ledger-wallet": "^0.3.0",
+    "@cosmic-plus/ledger-wallet": "^0.3.1",
     "@cosmic-plus/loopcall": "^1.1.0",
     "@fortawesome/fontawesome-free": "^5.8.1",
     "cosmic-lib": "^1.4.0",
