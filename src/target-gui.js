@@ -74,7 +74,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
     <label><span>${__("Size")}:</span>
 
       <input class="half" type="number" step="any" min="0" %max
-        value=%size placeholder=%share oninput=%maybeSwitchMode>
+        value=%size placeholder=%share onchange=%maybeSwitchMode>
 
       <select class="half" onchange=%setMode value=%mode>
         <option value="weight">${__("Weight")}</option>
@@ -105,9 +105,13 @@ TargetGui.Setup = class TargetSetup extends Gui {
   }
 
   maybeSwitchMode () {
-    if (this.mode === "ignore") {
+    if (this.size === 0) {
+      this.mode = "amount"
+    } else if (this.size === "") {
+      this.mode = "ignore"
+    } else if (this.mode === "ignore") {
       this.mode = "percentage"
-      this.target.update()
+      this.target.computeAll()
     }
   }
 
@@ -133,7 +137,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
   }
 
   close () {
-    if (this.size != null) this.maybeSwitchMode()
+    this.maybeSwitchMode()
     this.trigger("close")
     this.destroy()
     return false
