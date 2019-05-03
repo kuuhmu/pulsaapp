@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 This version comes with significant changes to the rebalancing targets
 configuration. It will automatically convert your previous setup to the new
 format. The first time you'll rebalance your portfolio, you'll have to
-`[Confirm]` the converted configuration (which will lead to exactly the same
+`[Save]` the converted configuration (which will lead to exactly the same
 balance).
 
 ### Added

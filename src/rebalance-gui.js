@@ -32,7 +32,7 @@ class RebalanceGui extends Gui {
     </form>
 
     <form onsubmit="return false" hidden=%hideApply>
-      <button onclick=%apply disabled=%invalid>${__("Apply")}</button>
+      <button onclick=%apply disabled=%invalid>${__("Save")}</button>
       <button onclick=%cancel>${__("Cancel")}</button>
     </form>
 
@@ -48,7 +48,7 @@ class RebalanceGui extends Gui {
     const targetKey = `target:${portfolio.account.id}`
     const template = localStorage[targetKey]
     this.target = Target.forPortfolio(portfolio, template)
-    this.target.link("json", localStorage, targetKey)
+    this.target.link("json", localStorage, targetKey, null, { init: false })
 
     // Targets table.
     this.table = new RebalanceGui.Table(this.target)
@@ -168,7 +168,7 @@ RebalanceGui.Table = class RebalanceTable extends Gui {
       b = b.target
       if (b.mode === "ignore" && a.mode !== "ignore") return -1
       else if (a.mode === "ignore" && b.mode !== "ignore") return 1
-      return b.value - a.value || b.asset.code.localeCompare(a.asset.code)
+      return b.value - a.value || a.asset.code.localeCompare(b.asset.code)
     })
   }
 }

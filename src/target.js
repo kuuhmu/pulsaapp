@@ -167,7 +167,7 @@ Target.prototype.toJson = function (beautifyFlag) {
 }
 
 Target.prototype.hasChanged = function () {
-  return this.json && this.json !== this.toJson()
+  return this.toJson() !== (this.json || "{\"childs\":[]}")
 }
 
 /**

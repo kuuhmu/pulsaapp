@@ -35,15 +35,13 @@ class TargetGui extends Gui {
     target.asset.project("image", this)
     target.project("shareDiff", this)
 
-    // TODO: Simplify once Gui ignore undefined ellipsis.
     if (target.order) target.order.project("description", this)
-    else this.description = []
   }
 
   toCommand (target) {
     switch (target.mode) {
     case "ignore":
-      return "Ignore"
+      return __("Ignore")
     case "amount":
       return `${target.amount} ${target.asset.code}`
     case "weight":
@@ -66,7 +64,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
   constructor (target) {
     super(`
 <section>
-  <form onsubmit=%close>
+  <form onsubmit="return false">
 
     <h3>%name</h3>
     <hr>
@@ -80,13 +78,13 @@ TargetGui.Setup = class TargetSetup extends Gui {
         <option value="weight">${__("Weight")}</option>
         <option value="percentage">${__("Percentage")}</option>
         <option value="amount">${__("Amount")}</option>
-        <option value="ignore">${__("Ignore")}</option>
+        <option value="ignore" hidden=%targetIsXlm>${__("Ignore")}</option>
       </select>
 
     </label>
 
     <hr>
-    <input type="submit" value="${__("Close")}">
+    <input type="submit" onclick=%close value="${__("Close")}">
 
   </form>
 </section>
@@ -94,6 +92,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
 
     this.target = target
     this.name = target.asset.name
+    this.targetIsXlm = target.asset.id === "stellar"
 
     target.project("share", this, x => nice(100 * x, 2))
 
@@ -140,7 +139,6 @@ TargetGui.Setup = class TargetSetup extends Gui {
     this.maybeSwitchMode()
     this.trigger("close")
     this.destroy()
-    return false
   }
 }
 

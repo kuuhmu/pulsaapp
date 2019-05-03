@@ -53,9 +53,9 @@
   "dependencies": {
     "@babel/runtime": "^7.4.3",
     "@cosmic-plus/base": "^2.0.0",
-    "@cosmic-plus/domutils": "^2.0.0",
+    "@cosmic-plus/domutils": "^2.0.2",
     "@cosmic-plus/i18n": "^1.2.0",
-    "@cosmic-plus/jsutils": "^2.0.0",
+    "@cosmic-plus/jsutils": "^2.0.1",
     "@cosmic-plus/ledger-wallet": "^0.3.0",
     "@cosmic-plus/loopcall": "^1.1.0",
     "@fortawesome/fontawesome-free": "^5.8.1",
