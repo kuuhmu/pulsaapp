@@ -106,7 +106,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
   maybeSwitchMode () {
     if (this.size === 0) {
       this.mode = "amount"
-    } else if (this.size === "") {
+    } else if (!this.size) {
       this.mode = "ignore"
     } else if (this.mode === "ignore") {
       this.mode = "percentage"
