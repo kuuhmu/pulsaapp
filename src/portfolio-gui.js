@@ -12,8 +12,8 @@ const Tabs = require("@cosmic-plus/domutils/es5/tabs")
 const { __ } = require("@cosmic-plus/i18n")
 
 const AssetGui = require("./asset-gui")
-const global = require("./global")
-const marketData = require("./market-data")
+const global = require("./logic/global")
+const marketData = require("./logic/market-data")
 
 /**
  * Class

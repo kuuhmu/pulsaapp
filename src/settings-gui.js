@@ -5,7 +5,7 @@
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const { __ } = require("@cosmic-plus/i18n")
 
-const global = require("./global")
+const global = require("./logic/global")
 
 /**
  * Class

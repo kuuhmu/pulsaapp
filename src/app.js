@@ -10,9 +10,10 @@ const Tabs = require("@cosmic-plus/domutils/es5/tabs")
 const params = require("@cosmic-plus/domutils/es5/params")
 const { __ } = require("@cosmic-plus/i18n")
 
+const global = require("./logic/global")
+const Portfolio = require("./logic/portfolio")
+
 const clickWall = require("./helpers/click-wall")
-const global = require("./global")
-const Portfolio = require("./portfolio")
 const { isOverflowing } = require("./helpers/misc")
 
 const ActivityGui = require("./activity-gui")

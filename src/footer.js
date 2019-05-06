@@ -8,7 +8,7 @@ const Gui = require("@cosmic-plus/domutils/es5/gui")
 const html = require("@cosmic-plus/domutils/es5/html")
 const { __ } = require("@cosmic-plus/i18n")
 
-const global = require("./global")
+const global = require("./logic/global")
 const SideFrame = require("./helpers/side-frame")
 
 const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"

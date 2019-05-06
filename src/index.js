@@ -7,7 +7,7 @@ const html = require("@cosmic-plus/domutils/es5/html")
 const i18n = require("@cosmic-plus/i18n")
 const load = require("@cosmic-plus/domutils/es5/load")
 
-const global = require("./global")
+const global = require("./logic/global")
 
 async function init () {
   // Service worker

@@ -10,7 +10,7 @@ const { __ } = require("@cosmic-plus/i18n")
 const { CosmicLink } = require("cosmic-lib")
 
 const SideFrame = require("./helpers/side-frame")
-const global = require("./global")
+const global = require("./logic/global")
 
 /**
  * Class
