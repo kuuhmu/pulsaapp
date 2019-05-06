@@ -9,7 +9,7 @@ const html = require("@cosmic-plus/domutils/es5/html")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")
-const SideFrame = require("./side-frame")
+const SideFrame = require("./helpers/side-frame")
 
 const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"
 
@@ -128,7 +128,7 @@ const icons = [
     __("Email"),
     "mailto:mister.ticot@cosmic.plus"
   ),
-  new Icon(require("./svg/donate.svg"), __("Donate"), donate)
+  new Icon(require("./svg/donate.svg"), "Donate", donate)
 ]
 
 /**

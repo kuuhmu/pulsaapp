@@ -7,7 +7,7 @@ const i18n = require("@cosmic-plus/i18n")
 const html = require("@cosmic-plus/domutils/es5/html")
 const { __ } = i18n
 
-const SideFrame = require("./side-frame")
+const SideFrame = require("./helpers/side-frame")
 const Order = require("./order")
 const Target = require("./target")
 const TargetGui = require("./target-gui")

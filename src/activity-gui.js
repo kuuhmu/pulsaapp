@@ -9,7 +9,7 @@ const Tabs = require("@cosmic-plus/domutils/es5/tabs")
 const { __ } = require("@cosmic-plus/i18n")
 const { CosmicLink } = require("cosmic-lib")
 
-const SideFrame = require("./side-frame")
+const SideFrame = require("./helpers/side-frame")
 const global = require("./global")
 
 /**
