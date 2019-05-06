@@ -2,16 +2,14 @@
 /**
  * Footer
  */
-const { CosmicLink } = require("cosmic-lib")
-
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const html = require("@cosmic-plus/domutils/es5/html")
 const { __ } = require("@cosmic-plus/i18n")
 
-const global = require("./logic/global")
-const SideFrame = require("./helpers/side-frame")
+const donate = require("./helpers/donate")
+const Icon = require("./helpers/icon")
 
-const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"
+const global = require("./logic/global")
 
 /**
  * Class
@@ -28,55 +26,6 @@ class Footer extends Gui {
     `,
       { icons, links }
     )
-  }
-}
-
-/**
- * Footer Icons
- */
-
-class Icon extends Gui {
-  constructor (image, name, action) {
-    super(`<a -ref=%link class="Icon">%image</a>`)
-
-    this.image = typeof image === "string" ? new Gui(image) : image
-    this.link.title = name
-
-    if (typeof action === "function") {
-      this.link.onclick = action
-    } else if (typeof action === "string") {
-      this.link.href = action
-      if (action.match(/^http/)) {
-        this.link.target = "_blank"
-        this.link.rel = "noopener"
-      }
-    }
-  }
-}
-
-/**
- * Donate
- */
-
-function donate () {
-  const amount = prompt(`\
-${__("Equilibre.io runs on donation.")}
-
-${__(
-    "Please contribute to its development according to what you think the service worth."
-  )}
-
-${__("Enter an amount (in Lumens)")}:\
-`)
-
-  if (amount === "0" || isNaN(+amount)) {
-    confirm(`${__("Not a valid amount")}: ${amount}`)
-  } else if (amount) {
-    const cosmicLink = new CosmicLink({
-      memo: __("Donation to Equilibre.io"),
-      network: "public"
-    }).addOperation("payment", { amount, destination: MYPUBKEY })
-    new SideFrame(cosmicLink.uri)
   }
 }
 
@@ -134,6 +83,7 @@ const icons = [
 /**
  * Demo Page
  */
+const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"
 function displayDemo () {
   localStorage[`target:${MYPUBKEY}`] = demoConfig
   location.href = `?address=${MYPUBKEY}`
