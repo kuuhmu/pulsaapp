@@ -3,7 +3,6 @@
  * Login interface
  */
 const dom = require("@cosmic-plus/domutils/es5/dom")
-const Form = require("@cosmic-plus/domutils/es5/form")
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const html = require("@cosmic-plus/domutils/es5/html")
 const Tabs = require("@cosmic-plus/domutils/es5/tabs")
@@ -14,6 +13,7 @@ const global = require("./logic/global")
 const Portfolio = require("./logic/portfolio")
 
 const clickWall = require("./helpers/click-wall")
+const Form = require("./helpers/form")
 const { isOverflowing } = require("./helpers/misc")
 
 const ActivityGui = require("./activity-gui")
@@ -45,15 +45,13 @@ tabs.fitScreen = function () {
 }
 tabs.fitScreen()
 
-const loginForm = new Form(dom.loginForm).addValidator(login)
-html.show(dom.loginForm)
-dom.loginForm.autocomplete = "on"
+const loginForm = new Form(dom.loginForm, { hidden: false, onsubmit: login })
+loginForm.dom.loginWithLedger.onclick = loginWithLedgerWallet
+
 if (params.address) {
   tabs.select("#login")
-  dom.loginAddressBox.value = params.address
+  loginForm["stellar-public-key"] = params.address
   login()
-} else {
-  dom.ledgerLoginButton.onclick = () => loginWithLedgerWallet()
 }
 
 tabs.listen("select", page => {
@@ -67,36 +65,37 @@ tabs.listen("select", page => {
 
 let ledger
 async function loginWithLedgerWallet () {
+  loginForm["stellar-public-key"] = null
   ledger = await getLedgerModule()
-  loginForm.setInfo(__("Please open the Stellar App in your Ledger Wallet"))
+  loginForm.info(__("Please open the Stellar App in your Ledger Wallet"))
   try {
     await ledger.connect()
-    dom.loginAddressBox.value = ledger.publicKey
+    loginForm["stellar-public-key"] = ledger.publicKey
     login()
   } catch (error) {
-    console.error(error)
-    loginForm.setError(error)
+    loginForm.error(error)
   }
 }
 
-async function login (address = dom.loginAddressBox.value) {
-  if (!address) throw new Error(__("Please enter an address."))
+async function login () {
+  const address = loginForm["stellar-public-key"]
+  if (!address) loginForm.error(__("Please enter an address."))
   if (ledger) ledger.disconnect()
 
-  loginForm.setInfo(__("Connecting to your account..."))
+  loginForm.info(__("Connecting to your account..."))
   params.$set({ address })
   clickWall.enable()
 
   try {
     global.portfolio = await Portfolio.resolve(address)
-    loginForm.setInfo(`${__("Fetching market data")}...`)
+    loginForm.info(`${__("Fetching market data")}...`)
     setTimeout(
-      () => loginForm.setInfo(`${__("Sorry, it takes a while (^.^)\"")}...`),
+      () => loginForm.info(`${__("Sorry, it takes a while (^.^)\"")}...`),
       10000
     )
-    setTimeout(() => loginForm.setInfo(`${__("Almost there")}...`), 20000)
+    setTimeout(() => loginForm.info(`${__("Almost there")}...`), 20000)
     setTimeout(
-      () => loginForm.setInfo(`${__("I'm running, I'm running")}...`),
+      () => loginForm.info(`${__("I'm running, I'm running")}...`),
       30000
     )
     global.portfolio.listen("open", () => {
@@ -104,9 +103,8 @@ async function login (address = dom.loginAddressBox.value) {
       clickWall.disable()
     })
   } catch (error) {
-    console.error(error)
-    loginForm.setError(error)
     clickWall.disable()
+    loginForm.error(error)
   }
 }
 
