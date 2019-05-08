@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Settings: 30 additional reference currencies (total: 33).
+
 ## 0.6.1 - 2019-05-04
 
 ### Fixed
