@@ -27,8 +27,10 @@ ${__("Enter an amount (in Lumens)")}:\
 function showDonateFrame (amount) {
   const memo = __("Donation to Equilibre.io")
   const network = "public"
-  const cosmicLink = new CosmicLink({ memo, network })
-    .addOperation("payment", { amount, destination: MYPUBKEY })
+  const cosmicLink = new CosmicLink({ memo, network }).addOperation("payment", {
+    amount,
+    destination: MYPUBKEY
+  })
 
   new SideFrame(cosmicLink.uri)
 }
