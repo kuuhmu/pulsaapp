@@ -55,9 +55,7 @@ class Target extends Projectable {
 }
 
 Target.define("name", ["group", "asset"], function () {
-  return this.group || this.asset.type === "unknow"
-    ? this.asset.id
-    : this.asset.code
+  return this.group || this.asset.id
 })
 Target.define("valueDiff", ["value", "asset"], function () {
   return this.asset && this.asset.value - this.value

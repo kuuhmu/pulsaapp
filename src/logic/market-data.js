@@ -36,7 +36,7 @@ marketData.crypto.list = async function () {
   const list = {}
   response.data.forEach(entry => {
     const symbol = entry.symbol.toUpperCase()
-    list[symbol] = { id: entry.id, name: entry.name }
+    list[symbol] = { apiId: entry.id, name: entry.name }
   })
   return list
 }
@@ -47,7 +47,7 @@ marketData.crypto.stellarNative = async function () {
 }
 
 marketData.crypto.info = async function (asset) {
-  const response = await coingeckoCall(`coins/${asset.id}`, {
+  const response = await coingeckoCall(`coins/${asset.apiId}`, {
     localization: false,
     tickers: false,
     market_data: false,
@@ -59,7 +59,7 @@ marketData.crypto.info = async function (asset) {
 }
 
 marketData.crypto.prices = async function (assets) {
-  const ids = assets.map(asset => asset.id).join(",")
+  const ids = assets.map(asset => asset.apiId).join(",")
   const quote = global.currency.toLowerCase()
   const response = await coingeckoCall("simple/price", {
     ids,
@@ -67,14 +67,14 @@ marketData.crypto.prices = async function (assets) {
   })
   const prices = {}
   assets.forEach(asset => {
-    const assetData = response.data[asset.id]
+    const assetData = response.data[asset.apiId]
     if (assetData) prices[asset.code] = assetData[quote]
   })
   return prices
 }
 
 marketData.crypto.history = async function (asset, limit = 1000) {
-  const response = await coingeckoCall(`coins/${asset.id}/market_chart`, {
+  const response = await coingeckoCall(`coins/${asset.apiId}/market_chart`, {
     vs_currency: global.currency,
     days: limit
   })

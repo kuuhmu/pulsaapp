@@ -27,7 +27,7 @@ class TargetGui extends Gui {
     `)
 
     this.target = target
-    this.name = target.name || target.asset && target.asset.code
+    this.name = target.asset.code
 
     this.define("command", null, () => this.toCommand(target))
     this.watch(target, ["size", "mode", "share"], () => this.compute("command"))
@@ -92,7 +92,7 @@ TargetGui.Setup = class TargetSetup extends Gui {
 
     this.target = target
     this.name = target.asset.name
-    this.targetIsXlm = target.asset.id === "stellar"
+    this.targetIsXlm = target.asset.id === "XLM"
 
     target.project("share", this, x => nice(100 * x, 2))
 
