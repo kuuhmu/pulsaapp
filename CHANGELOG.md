@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Settings: 30 additional reference currencies (total: 33).
 
+### Fixed
+
+- Rebalancing: Being the quote currency, XLM cannot be in "ignore" mode.
+
 ## 0.6.1 - 2019-05-04
 
 ### Fixed

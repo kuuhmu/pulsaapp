@@ -32,6 +32,12 @@ class Target extends Projectable {
 
       asset.target = this
       this.watch(asset, "value", () => this.compute("valueDiff"))
+
+      // XLM is never ignored.
+      if (asset.id === "XLM") {
+        this.mode = "weight"
+        this.size = 1
+      }
     } else {
       this.childs = new Mirrorable()
       this.childs.listen("add", child => child.parent = this)
@@ -184,6 +190,12 @@ Target.fromObject = function (object) {
   // Conversion from versions <= 0.5 − REMOVAL: 2020-05 (one year).
   if (target.mode === "equal") target.mode = "weight"
   if (target.mode === "skip") target.mode = "ignore"
+
+  // Fix for versions <= 0.6.1 - REMOVAL: 2020-06 (one year).
+  if (target.asset && target.asset.id === "XLM" && target.mode === "ignore") {
+    target.mode = "weight"
+    target.size = 1
+  }
 
   // Set defaults.
   if (!target.mode) target.mode = "weight"
