@@ -53,6 +53,7 @@ const Asset = module.exports = class Asset extends Projectable {
     this.anchors = new Mirrorable()
     this.balances = new Mirrorable()
     this.offers = new Mirrorable()
+    this.autoUpdatePrice = AUTO_REFRESH_PRICES
 
     this.balances.mirror(balance => {
       this.anchors.push(balance.anchor)
@@ -125,13 +126,17 @@ Asset.refreshPrices = async function (array) {
 Asset.refreshCryptoPrices = async function (assets = Asset.cryptos) {
   if (!assets.length) return
   const prices = await marketData.crypto.prices(assets)
-  assets.forEach(asset => asset.globalPrice = prices[asset.code])
+  assets.forEach(asset => {
+    if (asset.autoUpdatePrice) asset.globalPrice = prices[asset.code]
+  })
 }
 
 Asset.refreshFiatPrices = async function (fiats = Asset.fiats) {
   if (!fiats.length) return
   const prices = await marketData.fiat.prices(fiats)
-  fiats.forEach(asset => asset.price = asset.globalPrice = prices[asset.code])
+  fiats.forEach(asset => {
+    if (asset.autoUpdatePrice) asset.globalPrice = prices[asset.code]
+  })
 }
 
 /**
