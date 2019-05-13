@@ -215,84 +215,70 @@ Order.type.balance = function (order, target) {
 
   // Rebalancing
 
-  setBalancesLimits(target)
-  if (isOneOperationEnough(target)) {
-    addBalancingOperation(target, orderbook, target.amountDiff)
+  setBalancesTargets(target)
+  if (isOneOperationEnough(target, target.amountDiff)) {
+    addOneOperation(target, target.amountDiff)
   } else {
-    addSplitTrade(target)
+    addMultipleOperations(target, target.amountDiff)
   }
 }
 
 /**
- * Set the `amountTradable` property of **target** balances according to
- * **target** target.
+ * Set the `targetAmount` property of **target** balances according to
+ * `target.amount`.
  */
-function setBalancesLimits (target, deviation = global.balanceTargetDeviation) {
+function setBalancesTargets (target) {
   // Empty orderbooks cannot be traded.
   const balances = []
   target.asset.balances.forEach(balance => {
     if (balance.orderbook.price != null) balances.push(balance)
-    else balance.amountTradable = 0
+    else balance.targetAmount = null
   })
 
   // Special cases.
   if (!balances.length) {
     return
   } else if (balances.length === 1) {
-    return balances[0].amountTradable = target.amountDelta
+    return balances[0].targetAmount = target.amount
   }
 
   // Set each balance tradable amount.
-  const amountTarget = +nice(target.amount / balances.length, 7)
-  const amountMin = +nice(amountTarget * (1 - deviation), 7)
-  const amountMax = +nice(amountTarget * (1 + deviation), 7)
-
-  balances.forEach(balance => {
-    if (target.amountDiff > 0) {
-      balance.amountTradable = amountMax - balance.amount
-    } else {
-      balance.amountTradable = balance.amount - amountMin
-    }
-  })
+  const targetAmount = +nice(target.amount / balances.length, 7)
+  balances.forEach(balance => balance.targetAmount = targetAmount)
 }
 
 /**
  * Returns whether or not it is possible meet **target** rebalancing target in
  * one operation.
  */
-function isOneOperationEnough (target) {
+function isOneOperationEnough (target, size) {
   const balances = target.asset.balances
-  return !!filterTradableBalances(balances, target.amountDelta).length
-}
-
-/**
- * Return the **balances** that can be traded for **amountTraded**.
- */
-function filterTradableBalances (balances, amountTraded = 0) {
-  return balances.filter(balance => balance.amountTradable >= amountTraded)
+  return !!balances.filter(b => b.sizeMin <= size && size <= b.sizeMax).length
 }
 
 /**
  * Adds an operation to `target.order` that trades **size** `target.asset` on
  * **orderbook**.
  */
-function addBalancingOperation (target, orderbook, size) {
-  const filter = makeOfferFilter(target, Math.abs(size))
+function addOneOperation (target, size, orderbook = target.asset.orderbook) {
+  const filter = makeOfferFilter(target, size)
   Order.type.limit(target.order, size, { orderbook, filter })
 }
 
 /**
  * Split a trade over multiple anchors.
  */
-function addSplitTrade (target) {
-  const tradableBalances = filterTradableBalances(target.asset.balances)
-  const tradableAmounts = tradableBalances.map(x => x.amountTradable)
-  const tradableTotal = tradableAmounts.reduce((x, sum) => x + sum, 0)
-  const tradeShares = tradableAmounts.map(x => x / tradableTotal)
-  const tradeAmounts = tradeShares.map(x => +nice(x * target.amountDiff, 7))
+function addMultipleOperations (target, size) {
+  const balances = target.asset.balances
+  const sizeSide = size > 0 ? "sizeMax" : "sizeMin"
 
-  tradableBalances.forEach((balance, index) => {
-    addBalancingOperation(target, balance.orderbook, tradeAmounts[index])
+  // Compute `size` share for each balance.
+  const sizesLimit = balances.reduce((sum, b) => sum + b[sizeSide], 0)
+  const sizes = balances.map(b => +nice(size * b[sizeSide] / sizesLimit, 7))
+
+  // Create operations accordingly.
+  balances.forEach((balance, index) => {
+    addOneOperation(target, sizes[index], balance.orderbook)
   })
 }
 
@@ -300,11 +286,13 @@ function addSplitTrade (target) {
  * Returns a balancing offer filter for **tradedAmount** to be used with
  * `Orderbook.findOffer()`.
  */
-function makeOfferFilter (target, amountTraded) {
+function makeOfferFilter (target, size) {
+  const amountTraded = Math.abs(size)
   const noMinValue = target.mode === "quantity" || target.amount === 0
   return offer => {
     return (
-      offer.balance.amountTradable >= amountTraded
+      size >= offer.balance.sizeMin
+      && size <= offer.balance.sizeMax
       && offer.baseVolume > amountTraded * global.skipMarginalOffers
       && (noMinValue || amountTraded * offer.basePrice > global.minOfferValue)
     )

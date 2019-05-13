@@ -5,9 +5,13 @@
 const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
+const nice = require("@cosmic-plus/jsutils/es5/nice")
+
 const Anchor = require("./anchor")
 const Asset = require("./asset")
 const Orderbook = require("./orderbook")
+
+const global = require("./global")
 
 const Balance = module.exports = class Balance extends Projectable {
   static resolve (code, issuer) {
@@ -60,6 +64,32 @@ const Balance = module.exports = class Balance extends Projectable {
 Balance.table = {}
 Balance.define("value", ["amount", "price"], function () {
   return this.amount === 0 ? 0 : this.amount * this.price
+})
+
+// targetAmount is set by "./order.js"
+Balance.define("targetMin", ["targetAmount"], function () {
+  return +nice(this.targetAmount * (1 - global.balanceTargetDeviation), 7)
+})
+Balance.define("targetMax", ["targetAmount"], function () {
+  return +nice(this.targetAmount * (1 + global.balanceTargetDeviation), 7)
+})
+Balance.define("targetMinDiff", ["amount", "targetMin"], function () {
+  return this.targetMin - this.amount
+})
+Balance.define("targetMaxDiff", ["amount", "targetMax"], function () {
+  return this.targetMax - this.amount
+})
+Balance.define("sizeMin", ["targetMinDiff"], function () {
+  return Math.min(0, this.targetMinDiff)
+})
+Balance.define("sizeMax", ["targetMaxDiff"], function () {
+  return Math.max(0, this.targetMaxDiff)
+})
+Balance.define("underMin", ["targetMinDiff"], function () {
+  return Math.max(0, this.targetMinDiff)
+})
+Balance.define("overMax", ["targetMaxDiff"], function () {
+  return Math.max(0, -this.targetMaxDiff)
 })
 
 /**
