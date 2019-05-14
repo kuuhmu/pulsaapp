@@ -14,7 +14,7 @@ const Portfolio = require("./logic/portfolio")
 
 const clickWall = require("./helpers/click-wall")
 const Form = require("./helpers/form")
-const { isOverflowing } = require("./helpers/misc")
+const { isOverflowing } = require("./helpers/dom")
 
 const ActivityGui = require("./activity-gui")
 const PortfolioGui = require("./portfolio-gui")
