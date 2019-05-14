@@ -10,12 +10,13 @@
  * complete portfolio balancing target ends up being a tree made of Targets.
  */
 const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
-const nice = require("@cosmic-plus/jsutils/es5/nice")
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
 const Asset = require("./asset")
 const Order = require("./order")
+
 const strategy = require("./strategy")
+const { arraySum, fixed7, positive } = require("../helpers/misc")
 
 /**
  * Definition
@@ -47,7 +48,7 @@ class Target extends Projectable {
     // Normalize & compute
     this.trap("size", () => {
       if (this.size) {
-        this.size = Math.max(0, this.size)
+        this.size = positive(this.size)
         if (this.mode === "percentage") this.size = Math.min(100, this.size)
       }
       this.computeAll()
@@ -70,7 +71,7 @@ Target.define("valueDiffP", "valueDiff", function () {
   return this.value ? this.valueDiff / this.value : null
 })
 Target.define("amountDiff", ["amount"], function () {
-  return +nice(this.amount - this.asset.amount, 7)
+  return fixed7(this.amount - this.asset.amount)
 })
 Target.define("amountDelta", ["amountDiff"], function () {
   return Math.abs(this.amountDiff)
@@ -214,7 +215,7 @@ Target.fromObject = function (object) {
     if (
       percentChilds.length
       && !childs.find(child => child.mode === "weight")
-      && 100 !== percentChilds.reduce((child, sum) => child.size + sum, 0)
+      && arraySum(percentChilds, "size") !== 100
     ) {
       percentChilds.forEach(child => child.mode = "weight")
     }

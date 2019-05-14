@@ -6,13 +6,14 @@
 const cosmicLib = require("cosmic-lib")
 const loopcall = require("@cosmic-plus/loopcall")
 const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
-const nice = require("@cosmic-plus/jsutils/es5/nice")
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 const hiddenKey = require("@cosmic-plus/jsutils/es5/misc").setHiddenProperty
 const { day } = require("@cosmic-plus/jsutils/es5/misc")
 
 const Asset = require("./asset")
 const Balance = require("./balance")
+
+const { fixed7 } = require("../helpers/misc")
 
 /**
  * Class
@@ -121,7 +122,7 @@ class Offer extends Projectable {
     this.compute("price")
     this.rawAmount = record.amount
     if (this.side === "buy") {
-      this.amount = nice(this.rawAmount * this.rawPrice, 7)
+      this.amount = fixed7(this.rawAmount * this.rawPrice)
     }
 
     this.date = day(this.last_modified_time)

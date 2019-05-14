@@ -8,6 +8,7 @@ const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")
+const { fixed7, positive } = require("../helpers/misc")
 
 /**
  * Applicator
@@ -29,7 +30,7 @@ strategy.apply = function (target) {
     }
   })
 
-  const remains = Math.max(0, target.value - sum)
+  const remains = positive(target.value - sum)
   delayed.forEach(child => strategy.weight(child, remains, weights))
 
   checkAllocationLimits(sum, target.value, delayed.length)
@@ -76,7 +77,7 @@ strategy.weight = function (target, remains, weights) {
     target.value = target.amount = 0
   } else {
     target.value = target.size * remains / weights
-    target.amount = +nice(target.value / target.asset.price, 7)
+    target.amount = fixed7(target.value / target.asset.price)
   }
   target.compute("share")
 }

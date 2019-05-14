@@ -4,11 +4,12 @@
  */
 
 const cosmicLib = require("cosmic-lib")
-const nice = require("@cosmic-plus/jsutils/es5/nice")
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 const StellarSdk = require("@cosmic-plus/base/es5/stellar-sdk")
 const { timeout } = require("@cosmic-plus/jsutils/es5/misc")
 const { __ } = require("@cosmic-plus/i18n")
+
+const { fixed7 } = require("../helpers/misc")
 
 const Orderbook = module.exports = class Orderbook extends Projectable {
   static forBalance (balance, quote) {
@@ -119,7 +120,7 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
       side,
       merged.sort(sortOffers).map(row => {
         const mergedRow = Object.assign({}, row)
-        mergedRow.volume = volume += +nice(row.amount * row.price, 7)
+        mergedRow.volume = volume += fixed7(row.amount * row.price)
         mergedRow.baseVolume = baseVolume += +row.amount
         mergedRow.quoteVolume = quoteVolume += +row.quoteAmount
         return mergedRow
@@ -235,12 +236,12 @@ function updateOffersPrices (offers, quote) {
     baseVolume = 0
   offers.forEach(row => {
     if (row.side === "asks") {
-      row.quoteAmount = +nice(row.amount * row.basePrice, 7)
+      row.quoteAmount = fixed7(row.amount * row.basePrice)
     } else {
-      row.amount = +nice(row.quoteAmount / row.basePrice, 7)
+      row.amount = fixed7(row.quoteAmount / row.basePrice)
     }
-    row.price = +nice(row.basePrice * quote.price, 7)
-    row.volume = volume += +nice(row.amount * row.price, 7)
+    row.price = fixed7(row.basePrice * quote.price)
+    row.volume = volume += fixed7(row.amount * row.price)
     row.baseVolume = baseVolume += +row.amount
     row.quoteVolume = quoteVolume += +row.quoteAmount
   })

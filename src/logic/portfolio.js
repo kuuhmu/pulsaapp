@@ -15,6 +15,7 @@ const global = require("./global")
 // const History = require("./portfolio-history")
 const Offers = require("./offers")
 
+const { arraySum } = require("../helpers/misc")
 /**
  * Class
  */
@@ -48,9 +49,8 @@ module.exports = class Portfolio extends Projectable {
     this.accountCallBuilder = Portfolio.accountCallBuilder(accountId)
 
     this.define("total", "assets", () => {
-      return this.assets
-        .filter(asset => asset.isSupported)
-        .reduce((sum, x) => sum + x.value, 0)
+      const assets = this.assets.filter(asset => asset.isSupported)
+      return arraySum(assets, "value")
     })
     this.assets.mirror(asset =>
       this.watch(asset, ["value", "isSupported"], () => this.compute("total"))

@@ -11,6 +11,7 @@ const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")
+const { arraySum, fixed7, clamp } = require("../helpers/misc")
 
 /**
  * Class
@@ -72,7 +73,7 @@ const Order = module.exports = class Order extends Projectable {
   }
 
   setOperation (operation, offer, amount) {
-    operation.amount = amount
+    operation.amount = fixed7(amount)
     operation.cost = amount * offer.price
     operation.offer = offer
     this.operations.trigger("update")
@@ -146,7 +147,7 @@ function operationToOdesc (operation) {
     odesc = {
       buying: base,
       selling: quote,
-      amount: operation.amount * offer.price_r.n / offer.price_r.d,
+      amount: fixed7(operation.amount * offer.price_r.n / offer.price_r.d),
       price: { n: offer.price_r.d, d: offer.price_r.n }
     }
   } else {
@@ -157,7 +158,6 @@ function operationToOdesc (operation) {
       price: offer.price_r
     }
   }
-  odesc.amount = Math.abs(odesc.amount).toFixed(7)
   odesc.offerId = operation.offer.id
 
   return odesc
@@ -243,7 +243,7 @@ function setBalancesTargets (target) {
   }
 
   // Set each balance tradable amount.
-  const targetAmount = +nice(target.amount / balances.length, 7)
+  const targetAmount = fixed7(target.amount / balances.length)
   balances.forEach(balance => balance.targetAmount = targetAmount)
 }
 
@@ -273,8 +273,8 @@ function addMultipleOperations (target, size) {
   const sizeSide = size > 0 ? "sizeMax" : "sizeMin"
 
   // Compute `size` share for each balance.
-  const sizesLimit = balances.reduce((sum, b) => sum + b[sizeSide], 0)
-  const sizes = balances.map(b => +nice(size * b[sizeSide] / sizesLimit, 7))
+  const sizesLimit = arraySum(balances, sizeSide)
+  const sizes = balances.map(b => fixed7(size * b[sizeSide] / sizesLimit))
 
   // Create operations accordingly.
   balances.forEach((balance, index) => {
@@ -330,18 +330,6 @@ function clampOfferPrice (offer, spread = global.maxSpread / 2) {
   } else {
     offer.price = clamp(offer.price, refPrice, refPrice * (1 + spread))
   }
-}
-
-/**
- * Returns a number whose value is limited to the given range.
- *
- * @param  {Number} value An arbitrary number
- * @param  {Number} min Lower boundary
- * @param  {[type]} max Upper boundary
- * @return {Number}
- */
-function clamp (value, min, max) {
-  return Math.min(Math.max(value, min), max)
 }
 
 /**

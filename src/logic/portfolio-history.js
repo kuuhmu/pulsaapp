@@ -12,6 +12,7 @@ const loopcall = require("@cosmic-plus/loopcall")
 const Asset = require("./asset")
 const global = require("./global")
 
+const { fixed7 } = require("../helpers/misc")
 /**
  * Balances history
  *
@@ -142,18 +143,18 @@ effectHandler.trade = function (day, record) {
     record.bought_asset_issuer
   )
   const sold = makeAssetId(record.sold_asset_code, record.sold_asset_issuer)
-  day[bought].amount = round7(day[bought].amount - record.bought_amount)
-  day[sold].amount = round7(day[sold].amount + +record.sold_amount)
+  day[bought].amount = fixed7(day[bought].amount - record.bought_amount)
+  day[sold].amount = fixed7(day[sold].amount + +record.sold_amount)
 }
 
 effectHandler.account_credited = function (day, record) {
   const asset = makeAssetId(record.asset_code, record.asset_issuer)
-  day[asset].amount = round7(day[asset].amount + +record.amount)
+  day[asset].amount = fixed7(day[asset].amount + +record.amount)
 }
 
 effectHandler.account_debited = function (day, record) {
   const asset = makeAssetId(record.asset_code, record.asset_issuer)
-  day[asset].amount = round7(day[asset].amount - record.amount)
+  day[asset].amount = fixed7(day[asset].amount - record.amount)
 }
 
 effectHandler.trustline_created = function (day, record) {
@@ -199,8 +200,4 @@ function dayBefore (ISOString) {
   const date = new Date(ISOString)
   date.setDate(date.getDate() - 1)
   return dailyDate(date)
-}
-
-function round7 (number) {
-  return +Number(number).toFixed(7)
 }
