@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Rebalancing: Anchors risk-balancing rules are now strictly applied when
+  crafting transactions.
+
 ## 0.7.0 - 2019-05-11
 
 ### Added

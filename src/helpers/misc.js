@@ -33,9 +33,27 @@ misc.clamp = function (value, min, max) {
 }
 
 /**
+ * Returns **value1** if its absolute is lesser than or equal **value2**
+ * absolute, else returns **value2**.
+ */
+misc.absoluteMin = function (value1, value2) {
+  return Math.abs(value1) <= Math.abs(value2) ? value1 : value2
+}
+
+/**
  * Sum array values, or array elements `key` if specified.
  */
 misc.arraySum = function (array, key) {
   if (key) return array.reduce((sum, obj) => sum + obj[key], 0)
   else return array.reduce((sum, x) => sum + x, 0)
+}
+
+/**
+ * Proportionally scale **array** values, or **array** elements **key** property
+ * if provided, to make their sum equal **targetSum**.
+ */
+misc.arrayScale = function (array, targetSum, key) {
+  const sum = misc.arraySum(array, key)
+  if (key) return array.map(obj => obj[key] * targetSum / sum)
+  else return array.map(x => x * targetSum / sum)
 }

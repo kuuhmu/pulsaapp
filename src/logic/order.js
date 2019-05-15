@@ -11,7 +11,15 @@ const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")
-const { arraySum, fixed7, clamp } = require("../helpers/misc")
+const {
+  positive,
+  negative,
+  fixed7,
+  clamp,
+  absoluteMin,
+  arraySum,
+  arrayScale
+} = require("../helpers/misc")
 
 /**
  * Class
@@ -270,15 +278,26 @@ function addOneOperation (target, size, orderbook = target.asset.orderbook) {
  */
 function addMultipleOperations (target, size) {
   const balances = target.asset.balances
-  const sizeSide = size > 0 ? "sizeMax" : "sizeMin"
 
-  // Compute `size` share for each balance.
-  const sizesLimit = arraySum(balances, sizeSide)
-  const sizes = balances.map(b => fixed7(size * b[sizeSide] / sizesLimit))
+  // First trade under/over allocated funds, if any.
+  const misallocatedKey = positive(size) ? "underMin" : "overMax"
+  const misallocated = arraySum(balances, misallocatedKey)
+  const toTrade = absoluteMin(size, misallocated)
+  const sizes = arrayScale(balances, toTrade, misallocatedKey)
+
+  // Then, if it was not enough, trade available well-allocated funds.
+  if (toTrade !== size) {
+    const sizeKey = positive(size) ? "sizeMax" : "sizeMin"
+    const remains = size - misallocated
+    const tradable = balances.map(b => b[sizeKey] - b[misallocatedKey])
+    const sizes2 = arrayScale(tradable, remains)
+    sizes2.forEach((value, index) => sizes[index] += value)
+  }
 
   // Create operations accordingly.
   balances.forEach((balance, index) => {
-    addOneOperation(target, sizes[index], balance.orderbook)
+    const size = fixed7(sizes[index])
+    addOneOperation(target, size, balance.orderbook)
   })
 }
 

@@ -85,7 +85,7 @@ Balance.define("sizeMax", ["targetMaxDiff"], function () {
   return positive(this.targetMaxDiff)
 })
 Balance.define("underMin", ["targetMinDiff"], function () {
-  return positive(this.targetMinDiff)
+  return negative(-this.targetMinDiff)
 })
 Balance.define("overMax", ["targetMaxDiff"], function () {
   return positive(-this.targetMaxDiff)
