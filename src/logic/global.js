@@ -22,6 +22,10 @@ global.portfolio = undefined
 // How much a balance can deviate from its allocated target (percentage).
 global.balanceTargetDeviation = 0.2
 
+// Maximum percentage of an asset holding that can be transfered between its
+// anchors for the purpose of rebalancing them.
+global.anchorsRebalanceRiskMax = 0.025
+
 /// Minimum offer value to setup a rebalancing operation (in Lumens).
 global.minOfferValue = 1
 

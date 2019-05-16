@@ -224,7 +224,9 @@ Order.type.balance = function (order, target) {
   // Rebalancing
 
   setBalancesTargets(target)
-  if (isOneOperationEnough(target, target.amountDiff)) {
+  if (!areTargetAnchorsBalanced(target)) {
+    balanceTargetAnchors(target, target.amountDiff)
+  } else if (isOneOperationEnough(target, target.amountDiff)) {
     addOneOperation(target, target.amountDiff)
   } else {
     addMultipleOperations(target, target.amountDiff)
@@ -253,6 +255,44 @@ function setBalancesTargets (target) {
   // Set each balance tradable amount.
   const targetAmount = fixed7(target.amount / balances.length)
   balances.forEach(balance => balance.targetAmount = targetAmount)
+}
+
+/**
+ * Returns whether or not **target** asset anchors current funds are risk
+ * balanced.
+ */
+function areTargetAnchorsBalanced (target) {
+  const balances = target.asset.balances
+  return !(arraySum(balances, "underMin") && arraySum(balances, "overMax"))
+}
+
+/**
+ * Create a set of operations that even out anchor amounts of `target.asset`.
+ */
+function balanceTargetAnchors (
+  target,
+  size = target.amountDiff,
+  riskMax = global.anchorsRebalanceRiskMax
+) {
+  const balances = target.asset.balances
+
+  // Compute the amount to transfer between anchors.
+  const under = -arraySum(balances, "underMin")
+  const over = arraySum(balances, "overMax")
+  const misallocated = Math.max(under - positive(size), over + negative(size))
+
+  // Eventually limit risk by capping that amount.
+  const currentRisk = Math.abs(target.valueDiffP)
+  const amountCap = target.amount * positive(riskMax - currentRisk)
+  const transferAmount = Math.min(misallocated, amountCap)
+
+  // Factor in the amount of asset to buy/sell to balance portfolio.
+  const buy = fixed7(transferAmount + positive(size))
+  const sell = fixed7(transferAmount - negative(size))
+
+  // Generate operations accordingly.
+  addMultipleOperations(target, buy)
+  addMultipleOperations(target, -sell)
 }
 
 /**

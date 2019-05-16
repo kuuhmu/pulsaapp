@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Rebalancing: Assets with multiple anchors whose are imbalanced now gets
+  pro-actively rebalanced. This happens once the asset itself is balanced
+  enough. This is done by little steps to mitigate the risks when only one of
+  the two balancing trade is taken: anchorA to XLM or XLM to AnchorB.
+
 ### Changed
 
 - Rebalancing: Native assets other than lumens don't use global market prices
