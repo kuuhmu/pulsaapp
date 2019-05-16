@@ -45,7 +45,8 @@ class PortfolioGui extends Gui {
 
   select (asset) {
     if (this.chart) this.chart.destroy()
-    if (asset && asset.globalPrice && asset.code !== global.currency) {
+    const assetHasChart = asset && (asset.isTether || asset.apiId)
+    if (assetHasChart && asset.code !== global.currency) {
       this.chart = new PortfolioGui.Chart(asset)
     } else {
       this.chart = null

@@ -41,9 +41,11 @@ const Asset = module.exports = class Asset extends Projectable {
       if (this.type === "fiat") {
         Asset.fiats.push(this)
         this.image = `${FIAT_BASEURL}${id.toLowerCase()}${FIAT_IMAGEFORMAT}`
+        this.useGlobalPrice = true
       } else {
         Asset.cryptos.push(this)
         this.type = "crypto"
+        if (this.isTether || this.id === "XLM") this.useGlobalPrice = true
       }
     } else {
       this.code = id.replace(/:.*/, "")
@@ -54,7 +56,6 @@ const Asset = module.exports = class Asset extends Projectable {
     this.anchors = new Mirrorable()
     this.balances = new Mirrorable()
     this.offers = new Mirrorable()
-    this.autoUpdatePrice = AUTO_REFRESH_PRICES
 
     this.balances.mirror(balance => {
       this.anchors.push(balance.anchor)
@@ -128,7 +129,7 @@ Asset.refreshCryptoPrices = async function (assets = Asset.cryptos) {
   if (!assets.length) return
   const prices = await marketData.crypto.prices(assets)
   assets.forEach(asset => {
-    if (asset.autoUpdatePrice) asset.globalPrice = prices[asset.code]
+    if (asset.useGlobalPrice) asset.globalPrice = prices[asset.code]
   })
 }
 
@@ -136,7 +137,7 @@ Asset.refreshFiatPrices = async function (fiats = Asset.fiats) {
   if (!fiats.length) return
   const prices = await marketData.fiat.prices(fiats)
   fiats.forEach(asset => {
-    if (asset.autoUpdatePrice) asset.globalPrice = prices[asset.code]
+    if (asset.useGlobalPrice) asset.globalPrice = prices[asset.code]
   })
 }
 
@@ -145,22 +146,22 @@ Asset.refreshFiatPrices = async function (fiats = Asset.fiats) {
  */
 
 Asset.info = {
-  USD: { type: "fiat", name: "US Dollar" },
-  EUR: { type: "fiat", name: "Euro" },
-  CNY: { type: "fiat", name: "Renminbi" },
+  USD: { isTether: true, type: "fiat", name: "US Dollar" },
+  EUR: { isTether: true, type: "fiat", name: "Euro" },
+  CNY: { isTether: true, type: "fiat", name: "Renminbi" },
 
-  BTC: { apiId: "bitcoin" },
-  ETH: { apiId: "ethereum" },
-  XRP: { apiId: "ripple" },
+  BTC: { isTether: true, apiId: "bitcoin" },
+  ETH: { isTether: true, apiId: "ethereum" },
+  XRP: { isTether: true, apiId: "ripple" },
+  KIN: { isTether: true, apiId: "kin" },
+  BAT: { isTether: true, apiId: "basic-attention-token" },
+  ZRX: { isTether: true, apiId: "0x" },
+  BCH: { isTether: true, apiId: "bitcoin-cash" },
+  STEEM: { isTether: true, apiId: "steem" },
+  SBD: { isTether: true, apiId: "steem-dollar" },
+  LINK: { isTether: true, apiId: "chainlink" },
+
   XLM: { apiId: "stellar" },
-  KIN: { apiId: "kin" },
-  BAT: { apiId: "basic-attention-token" },
-  ZRX: { apiId: "0x" },
-  BCH: { apiId: "bitcoin-cash" },
-  STEEM: { apiId: "steem" },
-  SBD: { apiId: "steem-dollar" },
-  LINK: { apiId: "chainlink" },
-
   SLT: { apiId: "smartlands" },
   MOBI: { apiId: "mobius" },
   SHX: { apiId: "stronghold-token" },

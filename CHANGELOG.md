@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Rebalancing: Native assets other than lumens don't use global market prices
+  anymore, as those prices are not reliable due to market manipulations. This
+  change affects valuation & price picking of: MOBI, REPO, RMT, SLT, TERN.
 - Rebalancing: Anchors risk-balancing rules are now strictly applied when
   crafting transactions.
 
