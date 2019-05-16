@@ -376,18 +376,14 @@ function tightenSpread (offer, percentage = global.spreadTightening) {
 }
 
 /**
- * Floor/ceil **offer**'s price to maintain a maximum spread of **spread**
- * from its price.
- *
- * @param {Object} offer offer to price-cap
- * @param {Number} [spread=0.025] Maximum spread from asset price (in percent)
+ * Floor/ceil **offer**'s price between global market price and **premium**.
  */
-function clampOfferPrice (offer, spread = global.maxSpread / 2) {
-  const refPrice = offer.balance.asset.price
+function clampOfferPrice (offer, premium = global.maxSpread / 2) {
+  const globalPrice = offer.balance.asset.price
   if (offer.side === "bids") {
-    offer.price = clamp(offer.price, refPrice * (1 - spread), refPrice)
+    offer.price = clamp(offer.price, globalPrice * (1 - premium), globalPrice)
   } else {
-    offer.price = clamp(offer.price, refPrice, refPrice * (1 + spread))
+    offer.price = clamp(offer.price, globalPrice, globalPrice * (1 + premium))
   }
 }
 
