@@ -18,6 +18,8 @@ All notable changes to this project will be documented in this file.
   change affects valuation & price picking of: MOBI, REPO, RMT, SLT, TERN.
 - Rebalancing: Anchors risk-balancing rules are now strictly applied when
   crafting transactions.
+- Improve compliance with the [PWA] standard.
+- Improve loading time.
 
 ## 0.7.0 - 2019-05-11
 
@@ -201,5 +203,6 @@ balance).
 Beta 1 release
 
 [cosmic-lib]: https://github.com/cosmic-plus/node-cosmic-lib/blob/master/CHANGELOG.md
+[pwa]: https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Introduction
 [@ddombrowsy]: https://github.com/ddombrowsky
 [@pawelfus]: https://github.com/pawelfus
