@@ -87,6 +87,10 @@ marketData.crypto.history = async function (asset, limit = 1000) {
     }
   })
 
+  // Normalize last day timestamp.
+  const oneDay = 24 * 60 * 60 * 1000
+  data[data.length - 1].time = data[data.length - 2].time + oneDay
+
   setHistoryLatestPrice(asset, data)
   return data
 }

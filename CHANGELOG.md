@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+## Fixed
+
+- Portfolio price chart: Make data for last day display properly (a timestamp
+  issue was causing weird roundings for crypto assets).
+
 ## 0.8.0 - 2019-05-17
 
 ### Added
