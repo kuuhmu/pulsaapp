@@ -86,6 +86,8 @@ marketData.crypto.history = async function (asset, limit = 1000) {
       volume: +nice(response.data.total_volumes[index][1] / record[1])
     }
   })
+
+  setHistoryLatestPrice(asset, data)
   return data
 }
 
@@ -161,6 +163,14 @@ function cacheHistory (asset, data) {
 function cachedHistory (asset) {
   const json = localStorage[`prices.${asset.code}`]
   if (!json) return
-  const data = JSON.parse(json)
-  if (data[0] === day()) return data[1]
+
+  const [date, data] = JSON.parse(json)
+  if (date !== day()) return
+
+  setHistoryLatestPrice(asset, data)
+  return data
+}
+
+function setHistoryLatestPrice (asset, data) {
+  data[data.length - 1].price = asset.price
 }
