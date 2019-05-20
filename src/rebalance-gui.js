@@ -11,6 +11,7 @@ const SideFrame = require("./helpers/side-frame")
 const Order = require("./logic/order")
 const Target = require("./logic/target")
 const TargetGui = require("./target-gui")
+const TargetSetup = require("./widgets/target-setup")
 
 /**
  * Class
@@ -59,7 +60,7 @@ class RebalanceGui extends Gui {
     this.trap("selected", () => {
       if (this.setup) this.setup.destroy()
       if (this.selected) {
-        this.setup = new TargetGui.Setup(this.selected)
+        this.setup = new TargetSetup(this.selected)
         this.setup.listen("close", () => this.selected = null)
       } else {
         this.setup = null
