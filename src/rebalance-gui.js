@@ -10,8 +10,8 @@ const { __ } = i18n
 const SideFrame = require("./helpers/side-frame")
 const Order = require("./logic/order")
 const Target = require("./logic/target")
-const TargetGui = require("./target-gui")
 const TargetSetup = require("./widgets/target-setup")
+const TargetsTable = require("./widgets/targets-table")
 
 /**
  * Class
@@ -52,7 +52,7 @@ class RebalanceGui extends Gui {
     this.target.link("json", localStorage, targetKey, null, { init: false })
 
     // Targets table.
-    this.table = new RebalanceGui.Table(this.target)
+    this.table = new TargetsTable(this.target)
     this.table.project("selected", this)
     this.project("selected", this.table)
 
@@ -127,51 +127,6 @@ function listOperations (target) {
     if (child.order) operations = operations.concat(child.order.operations)
   })
   return operations
-}
-
-RebalanceGui.Table = class RebalanceTable extends Gui {
-  constructor (target) {
-    super(`
-<section class="RebalanceTable">
-  <table>
-    <tr>
-      <th>${__("Name")}</th>
-      <th>${__("Goal")}</th>
-      <th>${__("Divergence")}</th>
-      <th>${__("Operation")}</th>
-    </tr>
-
-    %targets...
-
-    <tr hidden=true>
-      <td align="center" colspan="4"><h3>${__("Add Asset")}</h3></td>
-    </tr>
-  </table>
-</section>
-    `)
-
-    this.targets = target.childs.mirror(child => this.toTargetGui(child))
-    this.selected = undefined
-
-    target.listen("update", () => this.sortTargets())
-    this.sortTargets()
-  }
-
-  toTargetGui (target) {
-    const targetGui = new TargetGui(target)
-    targetGui.domNode.onclick = () => this.selected = target
-    return targetGui
-  }
-
-  sortTargets () {
-    this.targets.sort((a, b) => {
-      a = a.target
-      b = b.target
-      if (b.mode === "ignore" && a.mode !== "ignore") return -1
-      else if (a.mode === "ignore" && b.mode !== "ignore") return 1
-      return b.value - a.value || a.asset.code.localeCompare(b.asset.code)
-    })
-  }
 }
 
 /**
