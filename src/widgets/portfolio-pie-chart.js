@@ -1,0 +1,88 @@
+"use strict"
+/**
+ * Portfolio Pie Chart
+ */
+const Highcharts = require("highcharts")
+require("../highcharts-theme")
+
+const Gui = require("@cosmic-plus/domutils/es5/gui")
+const nice = require("@cosmic-plus/jsutils/es5/nice")
+const { __ } = require("@cosmic-plus/i18n")
+
+const global = require("../logic/global")
+
+/**
+ * Class
+ */
+
+module.exports = class PortfolioPieChart extends Gui {
+  constructor (portfolio) {
+    super(`<div -ref=%container align="center"></div>`)
+    this.portfolio = portfolio
+
+    this.listen("destroy", () => this.chart && this.chart.destroy())
+    this.watch(this.portfolio, "total", () => {
+      // For some unknow reason the timeout makes the chart draw better.
+      setTimeout(() => this.draw(portfolio.assets), 1)
+    })
+  }
+
+  draw () {
+    if (this.chart) this.chart.destroy()
+
+    this.chart = Highcharts.chart(this.container, {
+      title: "",
+      legend: { enabled: false },
+      chart: { type: "pie" },
+      tooltip: {
+        pointFormat: `
+${__("Amount")}: {point.amount} {point.code}<br>
+${__("Price")}: {point.price} ${global.currency}<br>
+<b>${__("Value")}: {point.y} ${global.currency}</b>
+`
+      },
+
+      plotOptions: {
+        pie: {
+          dataLabels: {
+            format: "{point.amount} {point.code}<br>({point.percentage:.0f}%)"
+          },
+          point: {
+            events: {
+              select: x => this.selected = x.target.options.asset,
+              legendItemClick: () => false
+            }
+          }
+        }
+      },
+
+      series: [
+        {
+          name: __("Amount"),
+          colorByPoint: true,
+          ignoreHiddenPoint: true,
+          data: this.portfolio.assets
+            .filter(asset => asset.value)
+            .map(makePoint)
+            .sort((a, b) => b.y - a.y)
+        }
+      ]
+    })
+  }
+}
+
+/**
+ * Helpers
+ */
+
+function makePoint (asset) {
+  return {
+    name: asset.name,
+    code: asset.code,
+    asset: asset,
+    y: +nice(asset.value, 2),
+    amount: nice(asset.amount),
+    price: nice(asset.price),
+    percentage: asset.percentage
+  }
+}

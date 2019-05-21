@@ -2,9 +2,6 @@
 /**
  * Portfolio Graphical User Interface
  */
-const Highcharts = require("highcharts")
-require("./highcharts-theme")
-
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
 const Tabs = require("@cosmic-plus/domutils/es5/tabs")
@@ -12,6 +9,8 @@ const { __ } = require("@cosmic-plus/i18n")
 
 const AssetGui = require("./asset-gui")
 const AssetPriceChart = require("./widgets/asset-price-chart")
+const PortfolioPieChart = require("./widgets/portfolio-pie-chart")
+
 const global = require("./logic/global")
 
 /**
@@ -22,46 +21,63 @@ class PortfolioGui extends Gui {
   constructor (portfolio) {
     super(`
 <section><h2>${__("Portfolio")}: %total %currency</h2>
-  %summary
-  %chart
 
-  <p class="note" align="center">
+  %nav
+  <section>%view</section>
+
+  %priceChart
+
+  <p class="note">
     ${__("Anchor prices are from Stellar DEX")} /
     ${__("Global prices are from %%coingecko when available.")}
-    </p>
+  </p>
 
 </section>`)
 
     this.portfolio = portfolio
 
+    // Init.
     portfolio.project("total", this, x => nice(x, 2))
     this.currency = global.currency
-    this.summary = new PortfolioGui.Summary(this)
     this.coingecko = new Gui(
       `<a target="_blank" rel="noopener" href="https://coingecko.com">coingecko</a>`
     )
+
+    // Bind components together.
+    this.table = new PortfolioGui.Table(this)
+    this.project("selected", this.table)
+    this.table.project("selected", this)
+
+    this.pieChart = new PortfolioPieChart(this.portfolio)
+    this.project("selected", this.pieChart)
+    this.pieChart.project("selected", this)
+
+    this.trap("selected", () => this.maybeDrawPriceChart())
+
+    // Create overview.
+    const overview = new Tabs()
+    overview.add("table", __("Table"), this.table)
+    overview.add("chart", __("Chart"), this.pieChart)
+
+    overview.project(["nav", "view"], this)
+
+    // Save & load last selected tab.
+    overview.listen("select", id => localStorage["PortfolioSummary.tab"] = id)
+    overview.select(localStorage["PortfolioSummary.tab"])
+    if (!overview.selected) overview.select("table")
   }
 
-  select (asset) {
-    if (this.chart) this.chart.destroy()
+  maybeDrawPriceChart () {
+    if (this.priceChart) this.priceChart.destroy()
+
+    const asset = this.selected
     const assetHasChart = asset && (asset.isTether || asset.apiId)
+
     if (assetHasChart && asset.code !== global.currency) {
-      this.chart = new AssetPriceChart(asset)
+      this.priceChart = new AssetPriceChart(asset)
     } else {
-      this.chart = null
+      this.priceChart = null
     }
-  }
-}
-
-PortfolioGui.Summary = class PortfolioSummary extends Gui {
-  constructor (parent) {
-    const tabs = new Tabs()
-    super(`%nav <section>%view</section>`, tabs)
-
-    tabs.add("table", __("Table"), new PortfolioGui.Table(parent))
-    tabs.add("graph", __("Graph"), () => new PortfolioGui.Graph(parent))
-    tabs.listen("select", id => localStorage["PortfolioSummary.tab"] = id)
-    tabs.select(localStorage["PortfolioSummary.tab"] || "table")
   }
 }
 
@@ -110,74 +126,6 @@ PortfolioGui.Table = class PortfolioTable extends Gui {
       this.selected = assetGui
       assetGui.detailledView()
     }
-  }
-}
-
-PortfolioGui.Graph = class PortfolioGraph extends Gui {
-  constructor (parent) {
-    super(`<div -ref=%container align="center"></div>`)
-    this.parent = parent
-
-    this.listen("destroy", () => this.chart && this.chart.destroy())
-    this.watch(parent.portfolio, "total", () => {
-      // For some unknow reason the timeout makes the chart draw better.
-      setTimeout(() => this.makePie(), 1)
-    })
-  }
-
-  makePie () {
-    if (this.chart) this.chart.destroy()
-
-    this.chart = Highcharts.chart(this.container, {
-      title: "",
-      legend: { enabled: false },
-      chart: { type: "pie" },
-      tooltip: {
-        pointFormat: `
-${__("Amount")}: {point.amount} {point.code}<br>
-${__("Price")}: {point.price} ${global.currency}<br>
-<b>${__("Value")}: {point.y} ${global.currency}</b>
-`
-      },
-
-      plotOptions: {
-        pie: {
-          dataLabels: {
-            format: "{point.amount} {point.code}<br>({point.percentage:.0f}%)"
-          },
-          point: {
-            events: {
-              select: x => this.parent.select(x.target.options.asset),
-              legendItemClick: () => false
-            }
-          }
-        }
-      },
-
-      series: [
-        {
-          name: __("Amount"),
-          colorByPoint: true,
-          ignoreHiddenPoint: true,
-          data: this.parent.portfolio.assets
-            .filter(asset => asset.value)
-            .map(makeAssetPoint)
-            .sort((a, b) => b.y - a.y)
-        }
-      ]
-    })
-  }
-}
-
-function makeAssetPoint (asset) {
-  return {
-    name: asset.name,
-    code: asset.code,
-    asset: asset,
-    y: +nice(asset.value, 2),
-    amount: nice(asset.amount),
-    price: nice(asset.price),
-    percentage: asset.percentage
   }
 }
 
