@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## Fixed
 
+- Portfolio pie chart: Fix cases that caused wrong positioning.
 - Portfolio price chart: Make data for last day display properly (a timestamp
   issue was causing weird roundings for crypto assets).
 

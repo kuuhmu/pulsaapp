@@ -20,11 +20,12 @@ module.exports = class PortfolioPieChart extends Gui {
     super(`<div -ref=%container align="center"></div>`)
     this.portfolio = portfolio
 
+    this.watch(this.portfolio, "total", () => this.draw())
     this.listen("destroy", () => this.chart && this.chart.destroy())
-    this.watch(this.portfolio, "total", () => {
-      // For some unknow reason the timeout makes the chart draw better.
-      setTimeout(() => this.draw(portfolio.assets), 1)
-    })
+  }
+
+  reflow () {
+    if (this.chart) this.chart.reflow()
   }
 
   draw () {

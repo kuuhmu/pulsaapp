@@ -60,6 +60,9 @@ class PortfolioGui extends Gui {
     overview.add("chart", __("Chart"), this.pieChart)
 
     overview.project(["nav", "view"], this)
+    overview.listen("select", id => {
+      if (id === "chart") this.pieChart.reflow()
+    })
 
     // Save & load last selected tab.
     overview.listen("select", id => localStorage["PortfolioSummary.tab"] = id)
