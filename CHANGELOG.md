@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Portfolio pie chart: Fix cases that caused wrong positioning.
 - Portfolio price chart: Make data for last day display properly (a timestamp
   issue was causing weird roundings for crypto assets).
+- Fix a bug that caused sell offers under 1XLM to pick absurdly high prices
+  instead of being filtered out.
 
 ## 0.8.0 - 2019-05-17
 

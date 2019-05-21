@@ -309,6 +309,10 @@ function isOneOperationEnough (target, size) {
  * **orderbook**.
  */
 function addOneOperation (target, size, orderbook = target.asset.orderbook) {
+  const noMinValue = target.mode === "quantity" || target.amount === 0
+  const baseAsk = orderbook.asks[0].basePrice
+  if (!noMinValue && Math.abs(size * baseAsk) < global.minOfferValue) return
+
   const filter = makeOfferFilter(target, size)
   Order.type.limit(target.order, size, { orderbook, filter })
 }
@@ -346,14 +350,11 @@ function addMultipleOperations (target, size) {
  * `Orderbook.findOffer()`.
  */
 function makeOfferFilter (target, size) {
-  const amountTraded = Math.abs(size)
-  const noMinValue = target.mode === "quantity" || target.amount === 0
   return offer => {
     return (
       size >= offer.balance.sizeMin
       && size <= offer.balance.sizeMax
-      && offer.baseVolume > amountTraded * global.skipMarginalOffers
-      && (noMinValue || amountTraded * offer.basePrice > global.minOfferValue)
+      && offer.baseVolume > Math.abs(size) * global.skipMarginalOffers
     )
   }
 }
