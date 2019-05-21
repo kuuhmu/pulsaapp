@@ -1,39 +1,79 @@
-"use_strict"
+"use strict"
 /**
- * Asset GUI
+ * Portfolio Table
  */
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const html = require("@cosmic-plus/domutils/es5/html")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
-const msg = require("@cosmic-plus/i18n").__
+const { __ } = require("@cosmic-plus/i18n")
 
 /**
  * Class
  */
+module.exports = class PortfolioTable extends Gui {
+  constructor (portfolio) {
+    super(`
+<table class="PortfolioTable">
+  <tr>
+    <th>${__("Name")}</th>
+    <th>${__("Anchor")}</th>
+    <th>${__("Amount")}</th>
+    <th>${__("Price")}</th>
+    <th>${__("Value")}</th>
+  </tr>
+  %rows...
+</table>
+`)
 
-class AssetGui extends Gui {
+    this.portfolio = portfolio
+    this.rows = portfolio.assets.mirror(asset => this.toAssetRow(asset))
+    this.watch(portfolio, "total", () => this.sort())
+    this.trap("selected", () => this.onselect(this.selected))
+  }
+
+  toAssetRow (asset) {
+    const row = new AssetRow(asset)
+    row.domNode.onclick = () => {
+      if (this.selected === row.asset) this.selected = null
+      else this.selected = row.asset
+    }
+    return row
+  }
+
+  sort () {
+    this.rows.sort((a, b) => b.asset.value - a.asset.value)
+  }
+
+  onselect (asset) {
+    if (this.selectedRow) this.selectedRow.simpleView()
+    this.selectedRow = this.rows.find(row => row.asset === asset)
+    if (this.selectedRow) this.selectedRow.detailledView()
+  }
+}
+
+class AssetRow extends Gui {
   constructor (asset) {
     super(`
-<tr %style>
+<tr %class>
   <td align="left">
     <img src=%image alt="">
     <span>%name</span>
   </td>
   <td align="left">
     <div hidden=%simple>%anchors...</div>
-    <div %class>%anchorTotal</div>
+    <div class=%mode>%anchorTotal</div>
   </td>
   <td align="right">
     <div hidden=%simple>%amounts...</div>
-    <div %class>%amountTotal</div>
+    <div class=%mode>%amountTotal</div>
   </td>
   <td align="right">
     <div hidden=%simple>%prices...</div>
-    <div %class title=%priceDetails>%priceTotal</div>
+    <div class=%mode title=%priceDetails>%priceTotal</div>
   </td>
   <td align="right">
     <div hidden=%simple>%values...</div>
-    <div %class>%valueTotal</div>
+    <div class=%mode>%valueTotal</div>
   </td>
 </tr>
     `)
@@ -63,21 +103,17 @@ class AssetGui extends Gui {
   simpleView () {
     this.simple = true
     this.class = ""
+    this.mode = ""
     this.anchorTotal = this.anchorHeader
   }
 
   detailledView () {
     this.simple = false
-    this.class = "footer"
+    this.class = "selected"
+    this.mode = "footer"
     this.anchorTotal = "Total"
   }
 }
-
-/**
- * Export
- */
-
-module.exports = AssetGui
 
 /**
  * Helpers
@@ -85,7 +121,7 @@ module.exports = AssetGui
 
 function anchorName (anchors) {
   if (anchors.length === 1) return anchors[0].name
-  else return `${msg("Multiple")} (${anchors.length})`
+  else return `${__("Multiple")} (${anchors.length})`
 }
 
 function cell (object, key, func) {

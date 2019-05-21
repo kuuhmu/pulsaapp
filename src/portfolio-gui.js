@@ -7,9 +7,9 @@ const nice = require("@cosmic-plus/jsutils/es5/nice")
 const Tabs = require("@cosmic-plus/domutils/es5/tabs")
 const { __ } = require("@cosmic-plus/i18n")
 
-const AssetGui = require("./asset-gui")
 const AssetPriceChart = require("./widgets/asset-price-chart")
 const PortfolioPieChart = require("./widgets/portfolio-pie-chart")
+const PortfolioTable = require("./widgets/portfolio-table")
 
 const global = require("./logic/global")
 
@@ -17,7 +17,7 @@ const global = require("./logic/global")
  * Class
  */
 
-class PortfolioGui extends Gui {
+module.exports = class PortfolioGui extends Gui {
   constructor (portfolio) {
     super(`
 <section><h2>${__("Portfolio")}: %total %currency</h2>
@@ -44,11 +44,11 @@ class PortfolioGui extends Gui {
     )
 
     // Bind components together.
-    this.table = new PortfolioGui.Table(this)
+    this.table = new PortfolioTable(portfolio)
     this.project("selected", this.table)
     this.table.project("selected", this)
 
-    this.pieChart = new PortfolioPieChart(this.portfolio)
+    this.pieChart = new PortfolioPieChart(portfolio)
     this.project("selected", this.pieChart)
     this.pieChart.project("selected", this)
 
@@ -83,57 +83,3 @@ class PortfolioGui extends Gui {
     }
   }
 }
-
-PortfolioGui.Table = class PortfolioTable extends Gui {
-  constructor (parent) {
-    super(`
-<table>
-  <tr>
-    <th>${__("Name")}</th>
-    <th>${__("Anchor")}</th>
-    <th>${__("Amount")}</th>
-    <th>${__("Price")}</th>
-    <th>${__("Value")}</th>
-  </tr>
-  %assetsGui...
-</table>
-`)
-
-    this.parent = parent
-
-    this.assetsGui = parent.portfolio.assets.mirror(asset => {
-      const assetGui = new AssetGui(asset)
-      assetGui.domNode.onclick = () => this.select(assetGui)
-      return assetGui
-    })
-
-    this.watch(parent.portfolio, "total", () => this.sort())
-  }
-
-  sort () {
-    this.assetsGui.sort((a, b) => b.asset.value - a.asset.value)
-  }
-
-  select (assetGui) {
-    if (this.selected) {
-      this.selected.domNode.className = ""
-      this.selected.simpleView()
-    }
-
-    if (this.selected === assetGui) {
-      this.parent.select()
-      this.selected = null
-    } else {
-      this.parent.select(assetGui.asset)
-      assetGui.domNode.className = "selected"
-      this.selected = assetGui
-      assetGui.detailledView()
-    }
-  }
-}
-
-/**
- * Export
- */
-
-module.exports = PortfolioGui
