@@ -3,7 +3,7 @@
  * Portfolio Pie Chart
  */
 const Highcharts = require("highcharts")
-require("../highcharts-theme")
+require("./helpers/highcharts-theme")
 
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
