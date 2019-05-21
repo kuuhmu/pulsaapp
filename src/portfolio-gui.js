@@ -3,7 +3,6 @@
  * Portfolio Graphical User Interface
  */
 const Highcharts = require("highcharts")
-const Highstock = require("highcharts/highstock")
 require("./highcharts-theme")
 
 const Gui = require("@cosmic-plus/domutils/es5/gui")
@@ -12,8 +11,8 @@ const Tabs = require("@cosmic-plus/domutils/es5/tabs")
 const { __ } = require("@cosmic-plus/i18n")
 
 const AssetGui = require("./asset-gui")
+const AssetPriceChart = require("./widgets/asset-price-chart")
 const global = require("./logic/global")
-const marketData = require("./logic/market-data")
 
 /**
  * Class
@@ -47,7 +46,7 @@ class PortfolioGui extends Gui {
     if (this.chart) this.chart.destroy()
     const assetHasChart = asset && (asset.isTether || asset.apiId)
     if (assetHasChart && asset.code !== global.currency) {
-      this.chart = new PortfolioGui.Chart(asset)
+      this.chart = new AssetPriceChart(asset)
     } else {
       this.chart = null
     }
@@ -179,47 +178,6 @@ function makeAssetPoint (asset) {
     amount: nice(asset.amount),
     price: nice(asset.price),
     percentage: asset.percentage
-  }
-}
-
-PortfolioGui.Chart = class PortfolioChart extends Gui {
-  constructor (asset) {
-    super(`
-      <section><h3>${asset.code} ${__("to")} ${global.currency}</h3>
-        <div -ref=%container><p>${__("Loading...")}</p></div>
-      </section>
-    `)
-
-    this.asset = asset
-    this.listen("destroy", () => this.chart && this.chart.destroy())
-    marketData.assetHistory(asset).then(data => this.makeChart(data))
-  }
-
-  makeChart (data) {
-    this.chart = Highstock.stockChart(this.container, {
-      rangeSelector: { selected: 2 },
-      chart: {
-        backgroundColor: "#fbfbfd"
-      },
-      yAxis: [
-        { labels: { align: "left" }, height: "80%", resize: { enabled: true } },
-        { labels: { align: "left" }, top: "80%", height: "20%", offset: 0 }
-      ],
-      series: [
-        {
-          type: "spline",
-          name: "Price",
-          data: data.map(x => [x.time, +nice(x.price)])
-        },
-        {
-          type: "column",
-          name: "Volume",
-          data: data.map(x => [x.time, x.volume]),
-          yAxis: 1
-        }
-      ],
-      credits: { enabled: false }
-    })
   }
 }
 
