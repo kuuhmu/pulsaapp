@@ -1,6 +1,6 @@
 "use_strict"
 /**
- * Balance entry
+ * Balance
  */
 const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
@@ -12,30 +12,34 @@ const Orderbook = require("./orderbook")
 const global = require("./global")
 const { fixed7, positive, negative } = require("../helpers/misc")
 
-const Balance = module.exports = class Balance extends Projectable {
+/**
+ * Definition
+ */
+class Balance extends Projectable {
   static resolve (code, issuer) {
     const id = code ? `${code}:${issuer}` : "XLM"
     return Balance.table[id]
   }
 
-  static ingest (entry) {
-    const id = entryId(entry)
+  static ingest (record) {
+    const id = Balance.recordToId(record)
     const balance = Balance.table[id]
-    if (!balance) return new Balance(entry, id)
+    if (!balance) return new Balance(record)
 
-    balance.amount = +entry.balance
-    balance.buying = +entry.buying_liabilities
-    balance.selling = +entry.selling_liabilities
+    balance.amount = +record.balance
+    balance.buying = +record.buying_liabilities
+    balance.selling = +record.selling_liabilities
     return balance
   }
 
-  constructor (entry) {
+  constructor (record) {
     super()
 
-    this.id = entryId(entry)
-    this.code = entry.asset_code || "XLM"
-    this.anchor = Anchor.resolve(entry.asset_issuer || "stellar.org")
+    this.id = Balance.recordToId(record)
     Balance.table[this.id] = this
+
+    this.code = record.asset_code || "XLM"
+    this.anchor = Anchor.resolve(record.asset_issuer || "stellar.org")
 
     if (this.id === "XLM" || this.id in Anchor.known) {
       this.asset = Asset.resolve(Anchor.known[this.id] || this.code)
@@ -44,10 +48,10 @@ const Balance = module.exports = class Balance extends Projectable {
       this.asset = Asset.resolve(this.id)
       this.known = false
     }
-    this.amount = +entry.balance
-    this.buying = +entry.buying_liabilities
+    this.amount = +record.balance
+    this.buying = +record.buying_liabilities
+    this.selling = +record.selling_liabilities
     this.offers = new Mirrorable()
-    this.selling = +entry.selling_liabilities
 
     this.asset.balances.push(this)
 
@@ -61,6 +65,7 @@ const Balance = module.exports = class Balance extends Projectable {
 }
 
 Balance.table = {}
+
 Balance.define("value", ["amount", "price"], function () {
   return this.amount === 0 ? 0 : this.amount * this.price
 })
@@ -92,9 +97,16 @@ Balance.define("overMax", ["targetMaxDiff"], function () {
 })
 
 /**
- * Helpers
+ * Utilities
  */
 
-function entryId (entry) {
-  return entry.asset_code ? `${entry.asset_code}:${entry.asset_issuer}` : "XLM"
+Balance.recordToId = function (record) {
+  return record.asset_code
+    ? `${record.asset_code}:${record.asset_issuer}`
+    : "XLM"
 }
+
+/**
+ * Export
+ */
+module.exports = Balance
