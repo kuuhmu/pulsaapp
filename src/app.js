@@ -29,6 +29,12 @@ require("./footer")
 /**
  * Init
  */
+const Asset = require("./logic/asset")
+const knownAssets = require("./data/assets.json")
+Asset.register(knownAssets.fiat, { type: "fiat", isTether: true })
+Asset.register(knownAssets.foreign, { type: "crypto", isTether: true })
+Asset.register(knownAssets.native, { type: "crypto", isTether: false })
+
 const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
 tabs.add("#welcome", __("Welcome"), welcome)
 tabs.add("#login", __("Login"), dom.loginForm)

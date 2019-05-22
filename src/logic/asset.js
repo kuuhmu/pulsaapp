@@ -22,12 +22,13 @@ const { arraySum } = require("../helpers/misc")
  */
 
 const Asset = module.exports = class Asset extends Projectable {
-  static resolve (id) {
-    return Asset.table[id] || new Asset(id)
+  static resolve (id, params) {
+    return Asset.table[id] || new Asset(id, params)
   }
 
-  constructor (id) {
+  constructor (id, params) {
     super()
+    if (params) Object.assign(this, params)
 
     this.id = id
     Asset.table[id] = this
@@ -35,9 +36,8 @@ const Asset = module.exports = class Asset extends Projectable {
     // Empty image by default
     this.image = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
 
-    if (Asset.info[id]) {
+    if (this.type) {
       this.code = id
-      Object.assign(this, Asset.info[id])
       if (this.type === "fiat") {
         Asset.fiats.push(this)
         this.image = `${FIAT_BASEURL}${id.toLowerCase()}${FIAT_IMAGEFORMAT}`
@@ -111,6 +111,16 @@ Asset.define("isSupported", ["type", "price"], function () {
  * Utilities
  */
 
+/**
+ * Registers **assets** as known assets, assigns **params** to them.
+ */
+Asset.register = function (assets, defaults) {
+  for (let code in assets) {
+    const params = Object.assign({}, defaults, assets[code])
+    Asset.resolve(code, params)
+  }
+}
+
 Asset.refreshPrices = async function (array) {
   if (!array) {
     await Asset.refreshCryptoPrices()
@@ -142,44 +152,13 @@ Asset.refreshFiatPrices = async function (fiats = Asset.fiats) {
 }
 
 /**
- * Known Assets
- */
-
-Asset.info = {
-  USD: { isTether: true, type: "fiat", name: "US Dollar" },
-  EUR: { isTether: true, type: "fiat", name: "Euro" },
-  CNY: { isTether: true, type: "fiat", name: "Renminbi" },
-
-  BTC: { isTether: true, apiId: "bitcoin" },
-  ETH: { isTether: true, apiId: "ethereum" },
-  XRP: { isTether: true, apiId: "ripple" },
-  KIN: { isTether: true, apiId: "kin" },
-  BAT: { isTether: true, apiId: "basic-attention-token" },
-  ZRX: { isTether: true, apiId: "0x" },
-  BCH: { isTether: true, apiId: "bitcoin-cash" },
-  STEEM: { isTether: true, apiId: "steem" },
-  SBD: { isTether: true, apiId: "steem-dollar" },
-  LINK: { isTether: true, apiId: "chainlink" },
-
-  XLM: { apiId: "stellar" },
-  SLT: { apiId: "smartlands" },
-  MOBI: { apiId: "mobius" },
-  SHX: { apiId: "stronghold-token" },
-  RMT: { apiId: "sureremit" },
-  TERN: { apiId: "ternio" },
-  PEDI: { apiId: "pedity" },
-  GRAT: { apiId: "gratz" },
-  REPO: { apiId: "repo" }
-}
-
-/**
  * Init
  */
 
 Asset.table = {}
 Asset.cryptos = []
 Asset.fiats = []
-new Asset(global.currency)
+Asset.resolve(global.currency, { type: "fiat", isTether: true })
 
 // Automatic global price refresh
 if (AUTO_REFRESH_PRICES) {

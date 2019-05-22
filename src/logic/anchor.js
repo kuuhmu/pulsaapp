@@ -19,7 +19,7 @@ const Anchor = module.exports = class Anchor extends Projectable {
     super()
 
     this.pubkey = pubkey
-    this.alias = aliases.table[pubkey]
+    this.alias = aliases.all[pubkey]
     this.name = helpers.shorter(this.alias || this.pubkey)
     Anchor.table[pubkey] = this
 
