@@ -1,33 +1,33 @@
 "use_strict"
 /**
- * Anchor class
+ * Anchor
  */
 const aliases = require("@cosmic-plus/base/es5/aliases")
 const helpers = require("@cosmic-plus/jsutils/es5/misc")
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
 /**
- * Class
+ * Definition
  */
 
 const Anchor = module.exports = class Anchor extends Projectable {
-  static resolve (address) {
-    return Anchor.all[address] || new Anchor(address)
+  static resolve (pubkey) {
+    return Anchor.table[pubkey] || new Anchor(pubkey)
   }
 
-  constructor (address) {
+  constructor (pubkey) {
     super()
 
-    this.address = address
-    this.alias = aliases.all[address]
-    this.name = helpers.shorter(this.alias || this.address)
-    Anchor.all[address] = this
+    this.pubkey = pubkey
+    this.alias = aliases.table[pubkey]
+    this.name = helpers.shorter(this.alias || this.pubkey)
+    Anchor.table[pubkey] = this
 
     this.assets = {}
   }
 }
 
-Anchor.all = {}
+Anchor.table = {}
 
 /**
  * Known Anchors

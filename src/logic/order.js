@@ -147,7 +147,7 @@ function operationDirection (op) {
 
 function operationToOdesc (operation) {
   const offer = operation.offer
-  const base = offer.balance.code + ":" + offer.balance.anchor.address
+  const base = offer.balance.code + ":" + offer.balance.anchor.pubkey
   const quote = "XLM"
 
   let odesc

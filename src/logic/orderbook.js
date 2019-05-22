@@ -51,7 +51,7 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
   }
 
   static offersCallBuilder (balance) {
-    const baseAsset = new StellarSdk.Asset(balance.code, balance.anchor.address)
+    const baseAsset = new StellarSdk.Asset(balance.code, balance.anchor.pubkey)
     const quoteAsset = StellarSdk.Asset.native()
     const server = cosmicLib.resolve.server()
     return server.orderbook(baseAsset, quoteAsset)
@@ -174,7 +174,7 @@ Orderbook.prototype.findOffer = function (side, filter) {
   for (let index in offers) {
     const offer = offers[index]
     if (filter && !filter(offer)) continue
-    const anchor = offer.balance.anchor.address
+    const anchor = offer.balance.anchor.pubkey
     if (!anchors[anchor]) {
       anchors[anchor] = true
       last = offer
