@@ -34,6 +34,8 @@ const knownAssets = require("./data/assets.json")
 Asset.register(knownAssets.fiat, { type: "fiat", isTether: true })
 Asset.register(knownAssets.foreign, { type: "crypto", isTether: true })
 Asset.register(knownAssets.native, { type: "crypto", isTether: false })
+const Anchor = require("./logic/anchor")
+Anchor.register(require("./data/anchors.json"))
 
 const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
 tabs.add("#welcome", __("Welcome"), welcome)

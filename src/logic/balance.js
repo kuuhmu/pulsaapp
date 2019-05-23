@@ -41,13 +41,14 @@ class Balance extends Projectable {
     this.code = record.asset_code || "XLM"
     this.anchor = Anchor.resolve(record.asset_issuer || "stellar.org")
 
-    if (this.id === "XLM" || this.id in Anchor.known) {
-      this.asset = Asset.resolve(Anchor.known[this.id] || this.code)
+    if (this.code in this.anchor.assets) {
+      this.asset = this.anchor.assets[this.code]
       this.known = true
     } else {
       this.asset = Asset.resolve(this.id)
       this.known = false
     }
+
     this.amount = +record.balance
     this.buying = +record.buying_liabilities
     this.selling = +record.selling_liabilities

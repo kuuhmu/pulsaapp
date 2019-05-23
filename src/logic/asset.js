@@ -58,7 +58,6 @@ const Asset = module.exports = class Asset extends Projectable {
     this.offers = new Mirrorable()
 
     this.balances.mirror(balance => {
-      this.anchors.push(balance.anchor)
       this.watch(balance, "amount", () => this.compute("amount"))
       this.watch(balance, ["buying", "selling"], () => {
         this.compute("liabilities")

@@ -89,7 +89,7 @@ class AssetRow extends Gui {
     asset.link("amount", this, "amountTotal", nice)
     asset.link("price", this, "priceTotal", nice)
     asset.link("value", this, "valueTotal", x => nice(x, 2))
-    asset.anchors.feed(this, "anchorHeader", anchorName)
+    asset.balances.feed(this, "anchorHeader", anchorName)
 
     const orderbook = this.asset.orderbook
     this.define("priceDetails", "orderbook", () => priceDetails(orderbook))
@@ -119,9 +119,9 @@ class AssetRow extends Gui {
  * Helpers
  */
 
-function anchorName (anchors) {
-  if (anchors.length === 1) return anchors[0].name
-  else return `${__("multiple")} (${anchors.length})`
+function anchorName (balances) {
+  if (balances.length === 1) return balances[0].anchor.name
+  else return `${__("multiple")} (${balances.length})`
 }
 
 function cell (object, key, func) {
