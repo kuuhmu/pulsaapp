@@ -1,4 +1,4 @@
-"use_strict"
+"use strict"
 /**
  * Compute portfolio data from Account object.
  */

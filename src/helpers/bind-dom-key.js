@@ -1,4 +1,4 @@
-"use_strict"
+"use strict"
 
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 

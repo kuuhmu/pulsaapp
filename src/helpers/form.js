@@ -1,4 +1,4 @@
-"use_strict"
+"use strict"
 /**
  * form.js − Generate formulary with ease
  *

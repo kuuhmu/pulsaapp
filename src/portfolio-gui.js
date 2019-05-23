@@ -1,4 +1,4 @@
-"use_strict"
+"use strict"
 /**
  * Portfolio Graphical User Interface
  */

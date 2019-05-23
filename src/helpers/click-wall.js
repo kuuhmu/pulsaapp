@@ -1,4 +1,4 @@
-"use_strict"
+"use strict"
 /**
  * Overlay that prevent user interaction
  */
