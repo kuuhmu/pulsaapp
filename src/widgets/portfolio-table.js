@@ -121,7 +121,7 @@ class AssetRow extends Gui {
 
 function anchorName (anchors) {
   if (anchors.length === 1) return anchors[0].name
-  else return `${__("Multiple")} (${anchors.length})`
+  else return `${__("multiple")} (${anchors.length})`
 }
 
 function cell (object, key, func) {

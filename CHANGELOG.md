@@ -2,13 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.8.1 - 2019-05-24
+
+## Changed
+
+- The portfolio pie chart is now displayed instantly.
 
 ## Fixed
 
 - Portfolio pie chart: Fix cases that caused wrong positioning.
 - Portfolio price chart: Make data for last day display properly (a timestamp
-  issue was causing weird roundings for crypto assets).
+  issue caused weird roundings for crypto assets).
 - Fix a bug that caused sell offers under 1XLM to pick absurdly high prices
   instead of being filtered out.
 
