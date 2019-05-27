@@ -64,6 +64,9 @@ class Target extends Projectable {
 Target.define("name", ["group", "asset"], function () {
   return this.group || this.asset.id
 })
+Target.define("modified", ["json"], function () {
+  return this.hasChanged()
+})
 Target.define("valueDiff", ["value", "asset"], function () {
   return this.asset && this.asset.value - this.value
 })
@@ -95,7 +98,7 @@ Target.prototype.computeAll = function () {
     try {
       this.error = null
       this.value = this.portfolio.total
-      this.modified = this.hasChanged()
+      this.compute("modified")
       strategy.apply(this)
     } catch (error) {
       this.error = error.message
