@@ -2,13 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Raise up the number of fetched offers for orderbooks to fix an edge-case where
+  price estimation for native assets other than Lumens would fail.
+
 ## 0.8.1 - 2019-05-24
 
-## Changed
+### Changed
 
 - The portfolio pie chart is now displayed instantly.
 
-## Fixed
+### Fixed
 
 - Portfolio pie chart: Fix cases that caused wrong positioning.
 - Portfolio price chart: Make data for last day display properly (a timestamp

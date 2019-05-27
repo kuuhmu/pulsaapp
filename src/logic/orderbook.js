@@ -67,7 +67,7 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
 
   async getOffers () {
     try {
-      const offers = await this.offersCallBuilder.call()
+      const offers = await this.offersCallBuilder.limit(200).call()
       this.ingest(offers)
     } catch (error) {
       console.error(error)
