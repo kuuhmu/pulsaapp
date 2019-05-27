@@ -17,29 +17,27 @@ const { fixed7, positive, negative } = require("../helpers/misc")
  */
 class Balance extends Projectable {
   static resolve (code, issuer) {
-    const id = code ? `${code}:${issuer}` : "XLM"
-    return Balance.table[id]
+    const id = Balance.makeId(code, issuer)
+    return Balance.table[id] || new Balance({ code, issuer })
   }
 
   static ingest (record) {
-    const id = Balance.recordToId(record)
-    const balance = Balance.table[id]
-    if (!balance) return new Balance(record)
-
-    balance.amount = +record.balance
-    balance.buying = +record.buying_liabilities
-    balance.selling = +record.selling_liabilities
+    const params = Balance.recordToParams(record)
+    const balance = Balance.resolve(params.code, params.issuer)
+    balance.update(params)
     return balance
   }
 
-  constructor (record) {
+  constructor (params) {
+    const { code, issuer } = params
+
     super()
 
-    this.id = Balance.recordToId(record)
+    this.id = Balance.makeId(code, issuer)
     Balance.table[this.id] = this
 
-    this.code = record.asset_code || "XLM"
-    this.anchor = Anchor.resolve(record.asset_issuer || "stellar.org")
+    this.code = code
+    this.anchor = Anchor.resolve(issuer || "stellar.org")
 
     if (this.code in this.anchor.assets) {
       this.asset = this.anchor.assets[this.code]
@@ -49,9 +47,7 @@ class Balance extends Projectable {
       this.known = false
     }
 
-    this.amount = +record.balance
-    this.buying = +record.buying_liabilities
-    this.selling = +record.selling_liabilities
+    this.update(params)
     this.offers = new Mirrorable()
 
     this.asset.balances.push(this)
@@ -62,6 +58,13 @@ class Balance extends Projectable {
       this.orderbook = Orderbook.forBalance(this, Asset.resolve("XLM"))
       this.orderbook.project("price", this)
     }
+  }
+
+  update (params) {
+    const { amount, buying, selling } = params
+    this.amount = amount || 0
+    this.buying = buying || 0
+    this.selling = selling || 0
   }
 }
 
@@ -101,10 +104,29 @@ Balance.define("overMax", ["targetMaxDiff"], function () {
  * Utilities
  */
 
-Balance.recordToId = function (record) {
-  return record.asset_code
-    ? `${record.asset_code}:${record.asset_issuer}`
-    : "XLM"
+Balance.makeId = function (code, issuer) {
+  if (issuer) return `${code}:${issuer}`
+  else if (code === "XLM") return "XLM"
+  else throw new Error(`Missing issuer for ${code}.`)
+}
+
+/**
+ * API-Specific Format: Record
+ **/
+
+Balance.fromRecord = function (record) {
+  const params = Balance.recordToParams(record)
+  return new Balance(params)
+}
+
+Balance.recordToParams = function (record) {
+  const params = Object.create(record)
+  params.code = record.asset_type === "native" ? "XLM" : record.asset_code
+  params.issuer = record.asset_issuer
+  params.amount = +record.balance
+  params.buying = +record.buying_liabilities
+  params.selling = +record.selling_liabilities
+  return params
 }
 
 /**
