@@ -157,6 +157,19 @@ Orderbook.define("spread%", ["spread", "bestAsk"], function () {
  */
 
 /**
+ * Returns whether or not an orderbook offers has been fetched at least once.
+ * Agregated orderbooks return `true` only when each child orderbook has been
+ * fetched.
+ */
+Orderbook.prototype.isFetched = function () {
+  if (this.childs) {
+    return this.childs.reduce((and, child) => and && child.isFetched(), true)
+  } else {
+    return this.asks != null && this.bids != null
+  }
+}
+
+/**
  * Look for the best first offer in **orderbook** **side** that match **filter**
  * (if provided) among child orderbooks.
  *
