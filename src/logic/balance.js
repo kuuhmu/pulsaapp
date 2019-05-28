@@ -33,12 +33,13 @@ class Balance extends Projectable {
 
     super()
 
+    // Identification
+    this.code = code
+    this.anchor = Anchor.resolve(issuer || "stellar.org")
     this.id = Balance.makeId(code, issuer)
     Balance.table[this.id] = this
 
-    this.code = code
-    this.anchor = Anchor.resolve(issuer || "stellar.org")
-
+    // Link with an asset object.
     if (this.code in this.anchor.assets) {
       this.asset = this.anchor.assets[this.code]
       this.known = true
@@ -46,12 +47,13 @@ class Balance extends Projectable {
       this.asset = Asset.resolve(this.id)
       this.known = false
     }
+    this.asset.balances.push(this)
 
+    // Set updatable properties.
     this.update(params)
     this.offers = new Mirrorable()
 
-    this.asset.balances.push(this)
-
+    // Dynamic price definition.
     if (this.code === "XLM") {
       this.asset.project("price", this)
     } else {
