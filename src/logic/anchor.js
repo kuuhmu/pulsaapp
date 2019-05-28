@@ -58,6 +58,21 @@ Anchor.register = function (anchors) {
 }
 
 /**
+ * Returns the anchor local code for **assetCode**.
+ */
+Anchor.prototype.tetherCode = function (assetCode) {
+  for (let index in this.emit) {
+    const entry = this.emit[index]
+
+    if (entry === assetCode) {
+      return assetCode
+    } else if (Array.isArray(entry)) {
+      if (entry[0] === assetCode) return entry[1]
+    }
+  }
+}
+
+/**
  * Export
  */
 module.exports = Anchor
