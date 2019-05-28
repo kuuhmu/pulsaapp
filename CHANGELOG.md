@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- Try to make additional profit when an anchor for a tethered asset is out of
+  balance.
+
 ### Fixed
 
 - Raise up the number of fetched offers for orderbooks to fix an edge-case where

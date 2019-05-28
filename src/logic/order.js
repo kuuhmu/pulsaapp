@@ -377,14 +377,20 @@ function tightenSpread (offer, percentage = global.spreadTightening) {
 }
 
 /**
- * Floor/ceil **offer**'s price between global market price and **premium**.
+ * Floor/ceil **offer**'s price between global market price and a **premium**.
+ * **premium** soft cap is given in argument; hard cap is the average anchor
+ * price.
  */
 function clampOfferPrice (offer, premium = global.maxSpread / 2) {
   const globalPrice = offer.balance.asset.price
+  const anchorPrice = offer.balance.orderbook.price
+
   if (offer.side === "bids") {
-    offer.price = clamp(offer.price, globalPrice * (1 - premium), globalPrice)
+    const minPrice = Math.min(anchorPrice, globalPrice * (1 - premium))
+    offer.price = clamp(offer.price, minPrice, globalPrice)
   } else {
-    offer.price = clamp(offer.price, globalPrice, globalPrice * (1 + premium))
+    const maxPrice = Math.max(anchorPrice, globalPrice * (1 + premium))
+    offer.price = clamp(offer.price, globalPrice, maxPrice)
   }
 }
 
