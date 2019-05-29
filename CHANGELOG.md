@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix a regression introduced in 0.8.0 that prevented rebalancing operations to
+  get generated in some cases.
 - Raise up the number of fetched offers for orderbooks to fix an edge-case where
   price estimation for native assets other than Lumens would fail.
 

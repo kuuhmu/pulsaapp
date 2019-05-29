@@ -54,6 +54,8 @@ misc.arraySum = function (array, key) {
  */
 misc.arrayScale = function (array, targetSum, key) {
   const sum = misc.arraySum(array, key)
+  if (!sum) return array.map(() => 0)
+
   if (key) return array.map(obj => obj[key] * targetSum / sum)
   else return array.map(x => x * targetSum / sum)
 }
