@@ -41,34 +41,45 @@ button
   background: hsl(240, 40%, 96%);
 }
 
+fieldset
+{
+  border: none;
+  min-height: 2.4em;
+  text-align: right;
+}
+
+
 label
 {
   display: inline-block;
   width: 100%;
   height: 2.4em;
-  white-space: nowrap;
 }
 
-label span,
-label div
+form > label span,
+fieldset legend
 {
   display: inline-block;
   width: 20%;
   text-align: left;
-  line-height: 1.8em;
 }
 
-label textarea,
-label select,
-label button,
-label input
+fieldset legend
+{
+  float: left;
+  line-height: 2.2em;
+
+}
+
+label *
 {
   width: 76%;
 }
 
-label select.half,
-label input.half
+label .half,
+fieldset .half
 {
+  min-width: 7em;
   width: 38%;
 }
 

@@ -12,8 +12,8 @@ const { __ } = require("@cosmic-plus/i18n")
 module.exports = class TargetSetupSize extends Gui {
   constructor (target) {
     super(`
-<label class="TargetSetupSize">
-  <span>${__("Size")}:</span>
+<fieldset class="TargetSetupSize">
+  <legend>${__("Size")}:</legend>
 
   <input class="half" type="number" step="any" min="0" %max value=%size
     placeholder=%share onchange=%maybeSwitchMode>
@@ -25,7 +25,7 @@ module.exports = class TargetSetupSize extends Gui {
     <option value="ignore" hidden=%targetIsXlm>${__("Ignore")}</option>
   </select>
 
-</label>
+</fieldset>
     `)
 
     this.target = target
