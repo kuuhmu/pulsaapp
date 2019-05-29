@@ -250,6 +250,44 @@ Target.prototype.toObject = function () {
 }
 
 /**
+ * Format: CosmicLink
+ */
+
+Target.prototype.toCosmicLink = function () {
+  if (this !== this.root) {
+    throw new Error("Only root target can be converted to CosmicLink")
+  }
+
+  // Generate CosmicLink.
+  const operations = this.toOperations()
+  const cosmicLink = Order.operationsToCosmicLink(operations)
+
+  // Set outdated offers to be replaced.
+  const outdated = this.portfolio.offers.listOutdated()
+  cosmicLink.tdesc.operations.forEach(odesc => {
+    if (outdated.length) odesc.offerId = outdated.pop().id
+  })
+  outdated.forEach(remains => {
+    cosmicLink.addOperation("manageOffer", { offerId: remains.id, amount: 0 })
+  })
+
+  return cosmicLink.tdesc.operations.length ? cosmicLink : null
+}
+
+/**
+ * Format: Operations
+ */
+Target.prototype.toOperations = function () {
+  if (this.childs) {
+    return [].concat(...this.childs.map(child => child.toOperations()))
+  } else if (this.order) {
+    return this.order.operations
+  } else {
+    return []
+  }
+}
+
+/**
  * Export
  */
 

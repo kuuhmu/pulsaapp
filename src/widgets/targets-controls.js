@@ -8,8 +8,6 @@ const { __ } = require("@cosmic-plus/i18n")
 
 const SideFrame = require("../helpers/side-frame")
 
-const Order = require("../logic/order")
-
 /**
  * Class
  */
@@ -49,41 +47,17 @@ module.exports = class TargetsControls extends Gui {
 
   save () {
     this.target.json = this.target.toJson()
-    this.target.modified = false
   }
 
   rebalance () {
-    // TODO: Move this logic to Order & Offers models.
-    const operations = listOperations(this.target)
-    const portfolio = this.target.portfolio
-    const outdated = portfolio.offers.filter(offer => offer.outdated)
-    const remaining = outdated.filter(offer => {
-      return !operations.find(op => op.offer.id === offer.id)
-    })
-    operations.forEach(op => {
-      if (!op.offer.id && remaining.length) op.offer.id = remaining.pop().id
-    })
+    const cosmicLink = this.target.toCosmicLink()
 
-    if (!operations.length) return false
-
-    const cosmicLink = Order.operationsToCosmicLink(operations)
-    remaining.forEach(offer => {
-      cosmicLink.addOperation("manageOffer", { amount: 0, offerId: offer.id })
-    })
     if (cosmicLink) {
       const sideFrame = new SideFrame(cosmicLink.uri)
       sideFrame.listen("destroy", () => {
-        portfolio.getAccount()
-        portfolio.offers.get()
+        this.target.portfolio.getAccount()
+        this.target.portfolio.offers.get()
       })
     }
   }
-}
-
-function listOperations (target) {
-  let operations = []
-  target.childs.forEach(child => {
-    if (child.order) operations = operations.concat(child.order.operations)
-  })
-  return operations
 }

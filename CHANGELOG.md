@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
   get generated in some cases.
 - Raise up the number of fetched offers for orderbooks to fix an edge-case where
   price estimation for native assets other than Lumens would fail.
+- Handle the edge-case of a fully rebalanced portfolio which has obsolete offers
+  to cancel.
 
 ## 0.8.1 - 2019-05-24
 
