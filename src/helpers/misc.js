@@ -41,6 +41,22 @@ misc.absoluteMin = function (value1, value2) {
 }
 
 /**
+ * Return whether or not **array** contains **value**.
+ */
+misc.arrayContains = function (array, value) {
+  return array.indexOf(value) !== -1
+}
+
+/**
+ * Remove all the occurences of **item** from **array**.
+ */
+misc.arrayRemove = function (array, item) {
+  for (let index = array.length - 1; index >= 0; index--) {
+    if (array[index] === item) array.splice(index, 1)
+  }
+}
+
+/**
  * Sum array values, or array elements `key` if specified.
  */
 misc.arraySum = function (array, key) {
