@@ -68,7 +68,6 @@ fieldset legend
 {
   float: left;
   line-height: 2.2em;
-
 }
 
 label *
@@ -136,11 +135,15 @@ select:hover
 [type="checkbox"] + label,
 [type="radio"] + label
 {
-  width: 33%;
+  width: 25.15%;
+  min-width: 9.9em;
   height: 1.8em;
   border-radius: 0.1em;
-  padding: 0;
+  padding: 0.2em;
+  line-height: 1.4em;
+  white-space: nowrap;
   font-style: italic;
+  text-align: center;
   color: hsl(0, 0%, 40%);
 }
 

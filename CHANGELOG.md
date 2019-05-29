@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- It is now possible to enable/disable anchors on-the-fly for tethered assets
+  that have multiple known anchors. The rebalancing algorithm will gradually
+  move the funds to comply with the new setup in about 5~15 steps.
+
 ### Changed
 
 - Try to make additional profit when an anchor for a tethered asset is out of
