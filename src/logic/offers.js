@@ -16,7 +16,7 @@ const Balance = require("./balance")
 const { fixed7 } = require("../helpers/misc")
 
 /**
- * Class
+ * Definition: Offers (collection)
  */
 
 class Offers extends Mirrorable {
@@ -69,6 +69,18 @@ class Offers extends Mirrorable {
     }
   }
 }
+
+/**
+ * Utilities
+ */
+
+Offers.prototype.listOutdated = function () {
+  return this.filter(offer => offer.outdated)
+}
+
+/**
+ * Definition: Offer (one)
+ */
 
 class Offer extends Projectable {
   static resolve (record) {
