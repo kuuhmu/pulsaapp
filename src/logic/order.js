@@ -88,9 +88,6 @@ const Order = module.exports = class Order extends Projectable {
   }
 }
 
-Order.define("cosmicLink", "operations", function () {
-  return Order.operationsToCosmicLink(this.operations)
-})
 Order.define("description", "operations", function () {
   return Order.operationsToDescription(this.operations)
 })
@@ -100,11 +97,14 @@ Order.define("description", "operations", function () {
  */
 
 Order.operationsToCosmicLink = function (operations = []) {
+  // Create CosmicLink.
   const cosmicLink = new CosmicLink({
     memo: "Equilibre.io",
     maxTime: "+5",
     source: global.portfolio.accountId
   })
+
+  // Set operations.
   operations.forEach(operation => {
     cosmicLink.addOperation("manageOffer", operationToOdesc(operation))
   })
@@ -208,7 +208,7 @@ Order.type.balance = function (order, target) {
 
   if (target.amount == null || target.amountDelta === 0) return
 
-  if (!orderbook.bestBid || !orderbook.bestAsk) {
+  if (!orderbook.isFetched()) {
     order.description = [__("Fetching orderbook...")]
     return
   }
@@ -241,8 +241,11 @@ function setBalancesTargets (target) {
   // Empty orderbooks cannot be traded.
   const balances = []
   target.asset.balances.forEach(balance => {
-    if (balance.orderbook.price != null) balances.push(balance)
-    else balance.targetAmount = null
+    if (balance.orderbook.price == null || balance.action === "closing") {
+      balance.targetAmount = null
+    } else {
+      balances.push(balance)
+    }
   })
 
   // Special cases.

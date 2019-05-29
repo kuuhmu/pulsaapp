@@ -13,10 +13,17 @@ const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
 const Asset = require("./asset")
+const Balance = require("./balance")
 const Order = require("./order")
 
 const strategy = require("./strategy")
-const { arraySum, fixed7, positive } = require("../helpers/misc")
+const {
+  arrayContains,
+  arrayRemove,
+  arraySum,
+  fixed7,
+  positive
+} = require("../helpers/misc")
 
 /**
  * Definition
@@ -106,6 +113,49 @@ Target.prototype.computeAll = function () {
     }
     this.trigger("update")
   }
+}
+
+/**
+ * Open a new trustline then fund the new position.
+ */
+Target.prototype.addAnchor = function (anchor) {
+  const code = anchor.tetherCode(this.asset.code)
+  const issuer = anchor.pubkey
+  const balance = Balance.resolve(code, issuer)
+
+  if (balance.action === "closing") {
+    arrayRemove(this.closing, issuer)
+    balance.action = null
+  } else {
+    this.root.portfolio.balances.push(balance)
+    this.opening.push(issuer)
+    balance.action = "opening"
+  }
+
+  this.root.compute("modified")
+  this.order.refresh()
+}
+
+/**
+ * Begin anchor liquidation process, remove the trustline once done.
+ */
+Target.prototype.removeAnchor = function (anchor) {
+  const code = anchor.tetherCode(this.asset.code)
+  const issuer = anchor.pubkey
+  const balance = Balance.resolve(code, issuer)
+
+  if (balance.action === "opening") {
+    arrayRemove(this.root.portfolio.balances, balance)
+    arrayRemove(this.asset.balances, this)
+    arrayRemove(this.opening, issuer)
+    balance.action = null
+  } else {
+    this.closing.push(issuer)
+    balance.action = "closing"
+  }
+
+  this.root.compute("modified")
+  this.order.refresh()
 }
 
 /**
@@ -205,7 +255,7 @@ Target.fromObject = function (object) {
   if (!target.mode) target.mode = "weight"
   if (target.size == null && target.mode === "weight") target.size = 1
 
-  // Parse childs.
+  // Group Target: Parse childs.
   if (object.childs) {
     target.group = object.group
     const childs = object.childs.map(entry => Target.fromObject(entry))
@@ -224,6 +274,29 @@ Target.fromObject = function (object) {
     }
 
     target.childs.push(...childs)
+  } else {
+    // Asset Target: Deal with trustline opening/closing.
+    const balances = target.asset.balances
+    target.opening = object.opening || []
+    target.closing = object.closing || []
+
+    balances.forEach(balance => {
+      const issuer = balance.anchor.pubkey
+      if (arrayContains(target.closing, issuer)) {
+        // Trustline is still not closed.
+        balance.action = "closing"
+      } else {
+        // Trustline has been opened.
+        arrayRemove(target.opening, issuer)
+      }
+    })
+
+    // Trustline has been closed.
+    target.closing.forEach(issuer => {
+      if (!balances.find(balance => balance.anchor.pubkey === issuer)) {
+        arrayRemove(target.closing, issuer)
+      }
+    })
   }
 
   return target
@@ -231,6 +304,7 @@ Target.fromObject = function (object) {
 
 Target.prototype.toObject = function () {
   if (this.mode === "ignore") return
+
   let object = { mode: this.mode, size: this.size }
   if (object.mode === "weight") {
     delete object.mode
@@ -239,6 +313,8 @@ Target.prototype.toObject = function () {
 
   if (this.asset) {
     object.asset = this.name
+    if (this.opening.length) object.opening = this.opening
+    if (this.closing.length) object.closing = this.closing
     if (Object.keys(object).length === 1) object = object.asset
   } else if (this.childs) {
     object.group = this.group
@@ -269,6 +345,17 @@ Target.prototype.toCosmicLink = function () {
   })
   outdated.forEach(remains => {
     cosmicLink.addOperation("manageOffer", { offerId: remains.id, amount: 0 })
+  })
+
+  // Open/close trustlines.
+  this.portfolio.balances.forEach(balance => {
+    if (balance.action === "opening") {
+      cosmicLink.tdesc.operations.unshift({})
+      cosmicLink.setOperation(0, "changeTrust", { asset: balance.id })
+    }
+    if (balance.action === "closing" && balance.amount === 0) {
+      cosmicLink.addOperation("changeTrust", { asset: balance.id, limit: 0 })
+    }
   })
 
   return cosmicLink.tdesc.operations.length ? cosmicLink : null

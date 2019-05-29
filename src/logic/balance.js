@@ -10,7 +10,7 @@ const Asset = require("./asset")
 const Orderbook = require("./orderbook")
 
 const global = require("./global")
-const { fixed7, positive, negative } = require("../helpers/misc")
+const { fixed7, positive, negative, arrayRemove } = require("../helpers/misc")
 
 /**
  * Definition
@@ -25,6 +25,7 @@ class Balance extends Projectable {
     const params = Balance.recordToParams(record)
     const balance = Balance.resolve(params.code, params.issuer)
     balance.update(params)
+    balance.hasTrustline = true
     return balance
   }
 
@@ -71,6 +72,17 @@ class Balance extends Projectable {
 }
 
 Balance.table = {}
+
+Balance.trap("hasTrustline", () => {
+  if (this.hasTrustline) {
+    arrayRemove(this.asset.target.opening, this.anchor.pubkey)
+  }
+})
+
+Balance.define("isActive", ["action", "hasTrustline"], function () {
+  if (this.hasTrustline) return this.action !== "closing"
+  else return this.action === "opening"
+})
 
 Balance.define("value", ["amount", "price"], function () {
   return this.amount === 0 ? 0 : this.amount * this.price
