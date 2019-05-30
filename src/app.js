@@ -12,7 +12,7 @@ const { __ } = require("@cosmic-plus/i18n")
 const global = require("./logic/global")
 const Portfolio = require("./logic/portfolio")
 
-const clickWall = require("./helpers/click-wall")
+const ClickWall = require("./helpers/click-wall")
 const Form = require("./helpers/form")
 const { isOverflowing } = require("./helpers/dom")
 
@@ -92,6 +92,8 @@ async function login () {
 
   loginForm.info(__("Connecting to your account..."))
   params.$set({ address })
+
+  const clickWall = new ClickWall()
   clickWall.enable()
 
   try {
@@ -108,10 +110,10 @@ async function login () {
     )
     global.portfolio.listen("open", () => {
       initGui()
-      clickWall.disable()
+      clickWall.destroy()
     })
   } catch (error) {
-    clickWall.disable()
+    clickWall.destroy()
     loginForm.error(error)
   }
 }
