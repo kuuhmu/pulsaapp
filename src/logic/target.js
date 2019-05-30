@@ -41,6 +41,10 @@ class Target extends Projectable {
       asset.target = this
       this.watch(asset, "value", () => this.compute("valueDiff"))
 
+      // Operations on trustlines.
+      this.opening = []
+      this.closing = []
+
       // XLM is never ignored.
       if (asset.id === "XLM") {
         this.mode = "weight"
@@ -277,8 +281,8 @@ Target.fromObject = function (object) {
   } else {
     // Asset Target: Deal with trustline opening/closing.
     const balances = target.asset.balances
-    target.opening = object.opening || []
-    target.closing = object.closing || []
+    if (object.opening) target.opening = object.opening
+    if (object.closing) target.closing = object.closing
 
     balances.forEach(balance => {
       const issuer = balance.anchor.pubkey
