@@ -353,11 +353,15 @@ Target.prototype.toCosmicLink = function () {
 
   // Open/close trustlines.
   this.portfolio.balances.forEach(balance => {
+    const asset = balance.asset
     if (balance.action === "opening") {
       cosmicLink.tdesc.operations.unshift({})
       cosmicLink.setOperation(0, "changeTrust", { asset: balance.id })
     }
-    if (balance.action === "closing" && balance.amount === 0) {
+    if (
+      balance.amount === 0 && balance.action === "closing"
+      || asset.amount === 0 && asset.target.mode === "remove"
+    ) {
       cosmicLink.addOperation("changeTrust", { asset: balance.id, limit: 0 })
     }
   })

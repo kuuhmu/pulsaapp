@@ -47,6 +47,8 @@ module.exports = class TargetsTable extends Gui {
       b = b.target
       if (b.mode === "ignore" && a.mode !== "ignore") return -1
       else if (a.mode === "ignore" && b.mode !== "ignore") return 1
+      if (b.mode === "remove" && a.mode !== "remove") return -1
+      else if (a.mode === "remove" && b.mode !== "remove") return 1
       return b.value - a.value || a.asset.code.localeCompare(b.asset.code)
     })
   }
@@ -82,6 +84,8 @@ class TargetRow extends Gui {
     switch (target.mode) {
     case "ignore":
       return __("Ignore")
+    case "remove":
+      return __("Remove")
     case "amount":
       return `${target.amount} ${target.asset.code}`
     case "weight":

@@ -68,6 +68,12 @@ strategy.ignore = function (target) {
   target.compute("share")
 }
 
+strategy.remove = function (target) {
+  target.amount = 0
+  target.value = 0
+  target.compute("share")
+}
+
 strategy.percentage = function (target) {
   strategy.weight(target, target.parent.value, 100)
 }

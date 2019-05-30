@@ -23,6 +23,7 @@ module.exports = class TargetSetupSize extends Gui {
     <option value="percentage">${__("Percentage")}</option>
     <option value="amount">${__("Amount")}</option>
     <option value="ignore" hidden=%targetIsXlm>${__("Ignore")}</option>
+    <option value="remove" hidden=%targetIsXlm>${__("Remove")}</option>
   </select>
 
 </fieldset>
@@ -44,8 +45,8 @@ module.exports = class TargetSetupSize extends Gui {
     if (this.size === 0) {
       this.mode = "amount"
     } else if (!this.size) {
-      this.mode = "ignore"
-    } else if (this.mode === "ignore") {
+      if (this.mode !== "remove") this.mode = "ignore"
+    } else if (this.mode === "ignore" || this.mode === "remove") {
       this.mode = "percentage"
       this.target.computeAll()
     }
@@ -67,7 +68,8 @@ module.exports = class TargetSetupSize extends Gui {
       this.max = null
       break
     case "ignore":
-      this.size = null
+    case "remove":
+      this.target.set("size", null)
       break
     }
   }
