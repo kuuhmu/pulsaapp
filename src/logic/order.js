@@ -325,27 +325,50 @@ function addOneOperation (target, size, orderbook = target.asset.orderbook) {
  */
 function addMultipleOperations (target, size) {
   const balances = target.asset.balances
+  let tradeSize = 0,
+    trade = balances.map(() => 0)
 
-  // First trade under/over allocated funds, if any.
-  const misallocatedKey = positive(size) ? "underMin" : "overMax"
-  const misallocated = arraySum(balances, misallocatedKey)
-  const toTrade = absoluteMin(size, misallocated)
-  const sizes = arrayScale(balances, toTrade, misallocatedKey)
-
-  // Then, if it was not enough, trade available well-allocated funds.
-  if (toTrade !== size) {
-    const sizeKey = positive(size) ? "sizeMax" : "sizeMin"
-    const remains = size - misallocated
-    const tradable = balances.map(b => b[sizeKey] - b[misallocatedKey])
-    const sizes2 = arrayScale(tradable, remains)
-    sizes2.forEach((value, index) => sizes[index] += value)
+  // 1. Sell balances being closed.
+  if (negative(size)) {
+    const liquidate = balances.map(balance => {
+      return balance.action === "closing" ? -balance.amount : 0
+    })
+    tradeSize = _addToTrade(trade, liquidate, size)
   }
 
-  // Create operations accordingly.
+  // 2. If this was not enough, trade imbalanced anchors.
+  const misallocatedKey = positive(size) ? "underMin" : "overMax"
+  if (tradeSize !== size) {
+    const misallocated = balances.map(balance => {
+      return balance.action !== "closing" ? balance[misallocatedKey] : 0
+    })
+    tradeSize = _addToTrade(trade, misallocated, size - tradeSize)
+  }
+
+  // 3. If this was not enough, trade balanced anchors.
+  if (tradeSize !== size) {
+    const sizeKey = positive(size) ? "sizeMax" : "sizeMin"
+    const tradable = balances.map(b => b[sizeKey] - b[misallocatedKey])
+    _addToTrade(trade, tradable, size - tradeSize)
+  }
+
+  // Create operations according to **trade**.
   balances.forEach((balance, index) => {
-    const size = fixed7(sizes[index])
+    const size = fixed7(trade[index])
     addOneOperation(target, size, balance.orderbook)
   })
+}
+
+/**
+ * Adds **amounts** to **trade**, which is an array of trade sizes. Caps summed
+ * **trade** sizes to **sizeMax**. Returns the summed **trade** size.
+ */
+function _addToTrade (trade, amounts, sizeMax) {
+  const amountsSum = arraySum(amounts)
+  const tradeSize = absoluteMin(sizeMax, amountsSum)
+  const toBeAdded = arrayScale(amounts, tradeSize)
+  toBeAdded.forEach((value, index) => trade[index] += value)
+  return arraySum(trade)
 }
 
 /**
