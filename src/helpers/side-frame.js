@@ -4,8 +4,9 @@
  */
 const html = require("@cosmic-plus/domutils/es5/html")
 const Observable = require("@cosmic-plus/jsutils/es5/observable")
-const { timeout } = require("@cosmic-plus/jsutils/es5/misc")
 const { __ } = require("@cosmic-plus/i18n")
+
+const ClickWall = require("./click-wall")
 
 /**
  * Class
@@ -34,16 +35,10 @@ class SideFrame extends Observable {
   show () {
     if (!this.domNode.hidden) return
 
-    this.htmlOverflow = document.documentElement.style.overflow
-    this.bodyOverflow = document.body.style.overflow
-    document.documentElement.style.overflow = "hidden"
-    document.body.style.overflow = "hidden"
-
-    html.show(SideFrame.shadow, SideFrame.close, this.domNode)
     this.domNode.style.animationName = "slideInRight"
-    SideFrame.shadow.style.background = "rgba(0,0,0,0.3)"
+    html.show(SideFrame.close, this.domNode)
 
-    return timeout(400).then(() => {
+    return SideFrame.shadow.enable().then(() => {
       SideFrame.shadow.onclick = () => this.close()
       SideFrame.close.onclick = () => this.close()
       this.trigger("show")
@@ -53,17 +48,11 @@ class SideFrame extends Observable {
   hide () {
     if (this.domNode.hidden) return
 
-    document.documentElement.style.overflow = this.htmlOverflow
-    document.body.style.overflow = this.bodyOverflow
-
-    SideFrame.shadow.onclick = null
     html.hide(SideFrame.close)
-
     this.domNode.style.animationName = "slideOutRight"
-    SideFrame.shadow.style.background = "transparent"
 
-    return timeout(400).then(() => {
-      html.hide(SideFrame.shadow, SideFrame.close, this.domNode)
+    return SideFrame.shadow.disable().then(() => {
+      html.hide(this.domNode)
       this.trigger("hide")
     })
   }
@@ -107,7 +96,7 @@ window.addEventListener("message", event => {
 
 SideFrame.style = {
   position: "fixed",
-  zIndex: 998,
+  zIndex: 1000,
   right: 0,
   top: 0,
   width: "30em",
@@ -129,7 +118,7 @@ SideFrame.style = {
 SideFrame.close = html.create("span", { hidden: true }, `× ${__("Close")}`)
 Object.assign(SideFrame.close.style, {
   position: "fixed",
-  zIndex: 999,
+  zIndex: 1001,
   top: "0.1em",
   right: "0.1em",
   color: "hsl(0, 0%, 40%)",
@@ -146,17 +135,11 @@ document.body.insertBefore(SideFrame.close, document.body.firstChild)
  * Shadow Layer
  */
 
-SideFrame.shadow = html.create("div", { hidden: true })
-Object.assign(SideFrame.shadow.style, {
-  position: "fixed",
-  zIndex: 997,
-  top: 0,
-  width: "100%",
-  height: "100%",
-  background: "transparent",
-  transition: "background 0.4s"
+SideFrame.shadow = new ClickWall({
+  scrollbar: "hide",
+  opacity: 0.3,
+  delay: 400
 })
-document.body.insertBefore(SideFrame.shadow, document.body.firstChild)
 
 /**
  * Export
