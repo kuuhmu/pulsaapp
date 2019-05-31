@@ -15,7 +15,7 @@ const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 const global = require("./global")
 const marketData = require("./market-data")
 const Orderbook = require("./orderbook")
-const { arraySum } = require("../helpers/misc")
+const { fixed7, arraySum } = require("../helpers/misc")
 
 /**
  * Class
@@ -85,7 +85,7 @@ const Asset = module.exports = class Asset extends Projectable {
 }
 
 Asset.define("amount", "balances", function () {
-  return this.balances && arraySum(this.balances, "amount")
+  return this.balances && fixed7(arraySum(this.balances, "amount"))
 })
 
 Asset.define("value", ["amount", "price"], function () {

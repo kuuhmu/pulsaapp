@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Handle the edge-case of a fully rebalanced portfolio which has obsolete offers
   to cancel.
 - US Dollar name now displays properly.
+- Truncate default quantity in target size setup.
 
 ## 0.8.1 - 2019-05-24
 
