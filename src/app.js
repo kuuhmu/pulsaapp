@@ -29,11 +29,16 @@ require("./footer")
 /**
  * Init
  */
+
+// Load known assets.
 const Asset = require("./logic/asset")
 const knownAssets = require("./data/assets.json")
 Asset.register(knownAssets.fiat, { type: "fiat", isTether: true })
 Asset.register(knownAssets.foreign, { type: "crypto", isTether: true })
 Asset.register(knownAssets.native, { type: "crypto", isTether: false })
+Asset.resolve(global.currency, { type: "fiat", isTether: true })
+
+// Load known anchors.
 const Anchor = require("./logic/anchor")
 Anchor.register(require("./data/anchors.json"))
 

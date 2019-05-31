@@ -157,7 +157,6 @@ Asset.refreshFiatPrices = async function (fiats = Asset.fiats) {
 Asset.table = {}
 Asset.cryptos = []
 Asset.fiats = []
-Asset.resolve(global.currency, { type: "fiat", isTether: true })
 
 // Automatic global price refresh
 if (AUTO_REFRESH_PRICES) {
