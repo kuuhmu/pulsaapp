@@ -34,6 +34,7 @@ module.exports = class RebalanceGui extends Gui {
     const template = localStorage[targetKey]
     this.target = Target.forPortfolio(portfolio, template)
     this.target.link("json", localStorage, targetKey, null, { init: false })
+    this.target.json = this.target.toJson()
 
     // Targets table.
     this.table = new TargetsTable(this.target)

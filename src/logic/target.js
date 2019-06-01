@@ -41,6 +41,12 @@ class Target extends Projectable {
       asset.target = this
       this.watch(asset, "value", () => this.compute("valueDiff"))
 
+      // Asset with 0 amount won't trigger recompute by moving portfolio total
+      // value.
+      this.watch(asset, "price", () => {
+        if (!this.asset.amount && this.size) this.computeAll()
+      })
+
       // Operations on trustlines.
       this.opening = []
       this.closing = []
@@ -301,6 +307,9 @@ Target.fromObject = function (object) {
         arrayRemove(target.closing, issuer)
       }
     })
+
+    // No balance for asset.
+    if (!balances.length) asset.target = null
   }
 
   return target

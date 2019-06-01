@@ -27,6 +27,9 @@ All notable changes to this project will be documented in this file.
   to cancel.
 - US Dollar name now displays properly.
 - Truncate default quantity in target size setup.
+- Fix a rare bug that prevented new trustline to show up.
+- Fix a rare bug that prevented target of empty balance to be computed properly.
+
 
 ## 0.8.1 - 2019-05-24
 
