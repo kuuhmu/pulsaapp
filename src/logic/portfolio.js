@@ -104,6 +104,7 @@ class Portfolio extends Projectable {
       this.offers = Offers.forPortfolio(this)
       await this.offers.stream()
       this.trigger("open")
+      Asset.getAllInfo()
     }
   }
 }

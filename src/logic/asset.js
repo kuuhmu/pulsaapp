@@ -12,7 +12,6 @@ const FIAT_IMAGEFORMAT = ".svg"
 const Mirrorable = require("@cosmic-plus/jsutils/es5/mirrorable")
 const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
-const global = require("./global")
 const marketData = require("./market-data")
 const Orderbook = require("./orderbook")
 const { fixed7, arraySum } = require("../helpers/misc")

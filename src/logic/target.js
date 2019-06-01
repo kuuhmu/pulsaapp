@@ -126,6 +126,27 @@ Target.prototype.computeAll = function () {
 }
 
 /**
+ * Add a target for **asset** into portfolio.
+ */
+Target.prototype.addAsset = function (asset) {
+  if (!this.childs) throw new Error("Target is not a group: ", target)
+  if (asset.target) throw new Error("Asset already has a target: ", asset)
+
+  // Add asset & target to current portfolio.
+  const target = new Target(asset)
+  target.parent = this
+  asset.anchors.forEach(anchor => target.addAnchor(anchor))
+  this.childs.push(target)
+  this.root.portfolio.assets.push(asset)
+
+  // Default setup.
+  target.mode = "weight"
+  target.size = 1
+
+  return target
+}
+
+/**
  * Open a new trustline then fund the new position.
  */
 Target.prototype.addAnchor = function (anchor) {
@@ -318,17 +339,21 @@ Target.fromObject = function (object) {
 Target.prototype.toObject = function () {
   if (this.mode === "ignore") return
 
+  // Parameters reduction.
   let object = { mode: this.mode, size: this.size }
   if (object.mode === "weight") {
     delete object.mode
     if (object.size === 1) delete object.size
   }
 
+  // Asset target.
   if (this.asset) {
     object.asset = this.name
     if (this.opening.length) object.opening = this.opening
     if (this.closing.length) object.closing = this.closing
     if (Object.keys(object).length === 1) object = object.asset
+
+    // Group target.
   } else if (this.childs) {
     object.group = this.group
     const childs = Target.sortChilds(this)
@@ -361,21 +386,37 @@ Target.prototype.toCosmicLink = function () {
   })
 
   // Open/close trustlines.
-  this.portfolio.balances.forEach(balance => {
-    const asset = balance.asset
-    if (balance.action === "opening") {
-      cosmicLink.tdesc.operations.unshift({})
-      cosmicLink.setOperation(0, "changeTrust", { asset: balance.id })
-    }
-    if (
-      balance.amount === 0 && balance.action === "closing"
-      || asset.amount === 0 && asset.target.mode === "remove"
-    ) {
-      cosmicLink.addOperation("changeTrust", { asset: balance.id, limit: 0 })
-    }
-  })
+  this.portfolio.balances
+    .filter(b => b.asset.target)
+    .forEach(balance => {
+      if (shouldOpenTrustline(balance)) {
+        cosmicLink.tdesc.operations.unshift({})
+        cosmicLink.setOperation(0, "changeTrust", { asset: balance.id })
+      }
+      if (shouldCloseTrustline(balance)) {
+        cosmicLink.tdesc.operations.unshift({})
+        cosmicLink.setOperation(0, "changeTrust", {
+          asset: balance.id,
+          limit: 0
+        })
+      }
+    })
 
   return cosmicLink.tdesc.operations.length ? cosmicLink : null
+}
+
+function shouldOpenTrustline (balance) {
+  if (balance.asset.target.mode === "remove") return false
+  else return balance.action === "opening"
+}
+
+function shouldCloseTrustline (balance) {
+  if (!balance.hasTrustline) return false
+  else
+    return (
+      balance.amount === 0 && balance.action === "closing"
+      || balance.asset.target.mode === "remove" && balance.asset.amount === 0
+    )
 }
 
 /**

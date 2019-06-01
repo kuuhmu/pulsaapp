@@ -241,7 +241,7 @@ function setBalancesTargets (target) {
   // Empty orderbooks cannot be traded.
   const balances = []
   target.asset.balances.forEach(balance => {
-    if (balance.orderbook.price == null || balance.action === "closing") {
+    if (balance.orderbook.price == null || !balance.isActive) {
       balance.targetAmount = null
     } else {
       balances.push(balance)
