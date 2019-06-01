@@ -11,8 +11,9 @@ const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"
 
 module.exports = function promptDonation () {
   const amount = prompt(`\
-${__("Equilibre.io runs on donation.")}\
-${__("Each contribution is a pleasant surprise for me. :)")}
+${__("Equilibre.io runs on donation.")} \
+${__("Each contribution matters to me.")} \
+${__("Thank you!")}
 
 ${__("Enter an amount (in Lumens)")}:\
 `)
