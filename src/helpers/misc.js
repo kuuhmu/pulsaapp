@@ -57,6 +57,13 @@ misc.arrayRemove = function (array, item) {
 }
 
 /**
+ * Returns values that are in **array1** but not in **array2**.
+ */
+misc.arrayOnlyInFirst = function (array1, array2) {
+  return array1.filter(item => !misc.arrayContains(array2, item))
+}
+
+/**
  * Sum array values, or array elements `key` if specified.
  */
 misc.arraySum = function (array, key) {
