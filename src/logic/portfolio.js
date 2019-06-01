@@ -15,12 +15,12 @@ const global = require("./global")
 // const History = require("./portfolio-history")
 const Offers = require("./offers")
 
-const { arraySum } = require("../helpers/misc")
+const { arraySum, arrayOnlyInFirst } = require("../helpers/misc")
 /**
  * Class
  */
 
-module.exports = class Portfolio extends Projectable {
+class Portfolio extends Projectable {
   static async resolve (address) {
     await checkNetwork()
 
@@ -109,6 +109,18 @@ module.exports = class Portfolio extends Projectable {
 }
 
 /**
+ * Utilities
+ */
+
+/**
+ * List known assets for which account doesn't have any trustline.
+ */
+Portfolio.prototype.availableAssets = function () {
+  const allAssets = Object.values(Asset.table)
+  return arrayOnlyInFirst(allAssets, this.assets)
+}
+
+/**
  * Extension
  */
 
@@ -128,3 +140,8 @@ async function checkNetwork () {
     throw new Error(__("Can't connect to the Stellar blockchain"))
   }
 }
+
+/**
+ * Export
+ */
+module.exports = Portfolio
