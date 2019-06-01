@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.9.0 - 2019-06-01
 
 ### Added
 
@@ -10,12 +10,12 @@ All notable changes to this project will be documented in this file.
 - It is now possible to enable/disable anchors on-the-fly for tethered assets
   that have multiple known anchors. The rebalancing algorithm will gradually
   move the funds to comply with the new setup in about 5~15 steps.
-- Add the "remove" rebalancing mode that liquidate an asset and remove its
+- Add the "remove" rebalancing mode to liquidate an asset and remove its
   trustlines.
 
 ### Changed
 
-- Try to make additional profit when an anchor for a tethered asset is out of
+- Try to make an additional profit when an anchor for a tethered asset is out of
   balance.
 - Up-to-date targets for demo portfolio.
 
