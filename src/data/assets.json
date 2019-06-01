@@ -1,7 +1,7 @@
 {
   "fiat": {
-    "CNY": { "show": true, "name": "Renminbi" },
     "USD": { "show": true, "name": "US Dollar" },
+    "CNY": { "show": true, "name": "Renminbi" },
 
     "EUR": { "name": "Euro" }
   },
@@ -10,12 +10,13 @@
     "BTC": { "show": true, "apiId": "bitcoin" },
     "ETH": { "show": true, "apiId": "ethereum" },
     "XRP": { "show": true, "apiId": "ripple" },
+    "LTC": { "show": true, "apiId": "litecoin" },
+
+    "KIN": { "show": true, "apiId": "kin" },
 
     "BAT": { "apiId": "basic-attention-token" },
     "BCH": { "apiId": "bitcoin-cash" },
-    "KIN": { "apiId": "kin" },
     "LINK": { "apiId": "chainlink" },
-    "LTC": { "apiId": "litecoin" },
     "MTL": { "apiId": "metal" },
     "OMG": { "apiId": "omisego" },
     "REP": { "apiId": "augur" },
@@ -26,15 +27,13 @@
   "native": {
     "XLM": { "show": true, "apiId": "stellar" },
 
+    "FRAS": { "show": true, "apiId": "frasindo-rent" },
     "MOBI": { "show": true, "apiId": "mobius" },
+    "PEDI": { "show": true, "apiId": "pedity" },
     "REPO": { "show": true, "apiId": "repo" },
     "RMT": { "show": true, "apiId": "sureremit" },
     "SHX": { "show": true, "apiId": "stronghold-token" },
     "SLT": { "show": true, "apiId": "smartlands" },
-    "TERN": { "show": true, "apiId": "ternio" },
-
-    "FRAS": { "apiId": "frasindo-rent" },
-    "GRAT": { "apiId": "gratz" },
-    "PEDI": { "apiId": "pedity" }
+    "TERN": { "show": true, "apiId": "ternio" }
   }
 }
