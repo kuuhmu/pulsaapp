@@ -120,6 +120,14 @@ Asset.register = function (assets, defaults) {
   }
 }
 
+/**
+ * Get general information (name, logo, ...) for all known assets.
+ */
+Asset.getAllInfo = function () {
+  const assets = Object.values(Asset.table)
+  assets.forEach(asset => asset.getInfo())
+}
+
 Asset.refreshPrices = async function (array) {
   if (!array) {
     await Asset.refreshCryptoPrices()
