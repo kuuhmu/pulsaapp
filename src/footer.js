@@ -89,7 +89,7 @@ function displayDemo () {
   location.href = `?address=${MYPUBKEY}`
 }
 
-const demoConfig = `{"childs":["EUR","CNY","USD",{"size":12.5,"mode":"percentage","asset":"XLM"},{"size":12.5,"mode":"percentage","asset":"ETH"},{"size":12.5,"mode":"percentage","asset":"BTC"},{"size":4,"mode":"percentage","asset":"SLT"},{"size":4,"mode":"percentage","asset":"REPO"},{"size":2.25,"mode":"percentage","asset":"PEDI"},{"size":2.25,"mode":"percentage","asset":"TERN"}]}`
+const demoConfig = `{"childs":[{"mode":"percentage","size":12.5,"asset":"BTC"},"CNY",{"mode":"percentage","size":12.5,"asset":"ETH"},"EUR",{"mode":"percentage","size":2.5,"asset":"MOBI"},{"mode":"percentage","size":2.5,"asset":"REPO"},{"mode":"percentage","size":2.5,"asset":"RMT"},{"mode":"percentage","size":2.5,"asset":"SLT"},{"mode":"percentage","size":2.5,"asset":"TERN"},"USD",{"mode":"percentage","size":12.5,"asset":"XLM"}]}`
 
 /**
  * Links

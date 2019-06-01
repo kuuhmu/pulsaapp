@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 
 - Try to make additional profit when an anchor for a tethered asset is out of
   balance.
+- Up-to-date targets for demo portfolio.
 
 ### Fixed
 
