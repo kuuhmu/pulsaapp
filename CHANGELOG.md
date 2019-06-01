@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- It is now possible to add new assets to the portfolio.
 - It is now possible to enable/disable anchors on-the-fly for tethered assets
   that have multiple known anchors. The rebalancing algorithm will gradually
   move the funds to comply with the new setup in about 5~15 steps.
@@ -29,7 +30,6 @@ All notable changes to this project will be documented in this file.
 - Truncate default quantity in target size setup.
 - Fix a rare bug that prevented new trustline to show up.
 - Fix a rare bug that prevented target of empty balance to be computed properly.
-
 
 ## 0.8.1 - 2019-05-24
 

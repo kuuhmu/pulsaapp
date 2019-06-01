@@ -7,6 +7,12 @@ const html = require("@cosmic-plus/domutils/es5/html")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { __ } = require("@cosmic-plus/i18n")
 
+const AssetPrompt = require("./asset-prompt")
+
+/**
+ * Definition
+ */
+
 module.exports = class TargetsTable extends Gui {
   constructor (target) {
     super(`
@@ -21,12 +27,15 @@ module.exports = class TargetsTable extends Gui {
 
     %targets...
 
-    <tr hidden=true>
-      <td align="center" colspan="4"><h3>${__("Add Asset")}</h3></td>
-    </tr>
+    <tr><td colspan="4" align="center" onclick=%addAsset>
+      <h3>${__("Add Asset")}</h3>
+    </td></tr>
+
   </table>
 </section>
     `)
+
+    this.target = target
 
     this.targets = target.childs.mirror(child => this.toTargetRow(child))
     this.selected = undefined
@@ -51,6 +60,18 @@ module.exports = class TargetsTable extends Gui {
       else if (a.mode === "remove" && b.mode !== "remove") return 1
       return b.value - a.value || a.asset.code.localeCompare(b.asset.code)
     })
+  }
+
+  async addAsset () {
+    const assets = this.target.portfolio.availableAssets().filter(a => a.show)
+    const assetPrompt = new AssetPrompt(assets)
+    assetPrompt.open()
+
+    const asset = await assetPrompt.answer
+    if (!asset) return
+
+    const target = this.target.addAsset(asset)
+    this.selected = target
   }
 }
 
