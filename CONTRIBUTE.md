@@ -18,7 +18,8 @@ Translations files are in the `locales` directory.
 
 ### New Translations
 
-1. Create a copy of the empty translation file at [locales/en.json].
+1. Create a copy of the empty translation file at
+   [locales/en.json](locales/en.json).
 2. Name the copy after your language code (e.g: `de.json` for German translation).
 3. Make sure to translate every string: partial translations will not be
    accepted.
