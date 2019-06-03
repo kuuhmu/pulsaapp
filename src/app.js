@@ -21,8 +21,8 @@ const PortfolioGui = require("./portfolio-gui")
 const SettingsGui = require("./settings-gui")
 const RebalanceGui = require("./rebalance-gui")
 
-const license = new Gui(require("./html/license.html"))
-const welcome = new Gui(require("./html/welcome.html"))
+const license = new Gui(require("../bundled/license.html"))
+const welcome = new Gui(require("../bundled/welcome.html"))
 
 require("./footer")
 
