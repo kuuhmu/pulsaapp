@@ -1,0 +1,47 @@
+/* Table */
+
+table
+{
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+}
+
+th, td
+{
+  padding: 0.5em 1em;
+  white-space: nowrap;
+}
+
+th
+{
+  height: 2.5em;
+  border-bottom: solid 1px hsl(240, 10%, 90%);
+  border-right: solid 1px hsl(240, 40%, 92.5%);
+  box-shadow: 0em 0.1em 0.2em hsl(240, 40%, 96%);
+  background: hsl(240, 40%, 95%);
+}
+
+td img
+{
+  height: 1.5em;
+  width: 1.5em;
+  margin-right: 0.75em;
+}
+
+tr:hover
+{
+  cursor: pointer;
+}
+
+
+tr:hover, tr.selected
+{
+  background: hsl(240, 40%, 97%);
+}
+
+td .footer
+{
+  font-weight: bold;
+}
+

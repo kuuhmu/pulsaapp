@@ -1,0 +1,56 @@
+/* Generic Tag Styling */
+
+a
+{
+  text-decoration: none;
+  color: hsl(0, 0%, 50%);
+  font-stretch: condensed;
+  transition: 0.2s all ease;
+
+  &:hover, &.selected { text-decoration: underline }
+  &:hover:not(.selected) { cursor: pointer; }
+}
+
+
+p {
+  line-height: 1.4em;
+  vertical-align: baseline;
+}
+
+nav
+{
+  float: right;
+  display: inline-block;
+  height: 1.45em;
+  line-height: 1.45em;
+  text-align: right;
+
+  a {
+    display: inline-block;
+    margin: 0 1rem;
+  }
+}
+
+h2
+{
+  margin: 1rem;
+  font-size: 1.25em;
+  font-weight: normal;
+  text-align: center;
+}
+
+h3
+{
+  margin: 0.5em;
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+}
+
+hr
+{
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), hsl(240, 10%, 90%), rgba(0, 0, 0, 0));
+}
+

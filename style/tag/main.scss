@@ -1,0 +1,26 @@
+/* Main Style */
+
+body > noscript,
+body > main
+{
+  padding: 0.5em;
+  overflow: hidden;
+
+  section p
+  {
+    padding: 0 1em;
+  }
+
+  #loading,
+  #loginForm,
+  section section
+  {
+    width: 100%;
+    margin: 1rem 0;
+    box-shadow: 0.1em 0.1em 0.2em hsl(0, 0%, 90%);
+    border: solid 1px hsl(240, 10%, 90%);
+    border-radius: 0.1em;
+    background: hsl(240, 40%, 99%);
+    overflow-x: auto;
+  }
+}

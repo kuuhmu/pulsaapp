@@ -1,0 +1,26 @@
+/* Spinner */
+
+.cosmiclib_loadingAnim,
+.cosmiclib_loader,
+.spinner
+{
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin: 0 0.1em;
+  vertical-align: middle;
+  border-radius: 100%;
+  background-color: grey;
+
+  animation: animate 1.0s infinite ease-in-out;
+}
+
+@keyframes animate {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1.0);
+    opacity: 0;
+  }
+}
