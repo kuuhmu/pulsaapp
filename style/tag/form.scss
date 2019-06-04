@@ -1,12 +1,40 @@
 /* Form styling */
 
+/* Blocks */
+
 form
 {
   position: relative;
   clear: both;
+
   padding: 0.3em 0.5em;
   text-align: center;
 }
+
+fieldset,
+form > label
+{
+  display: inline-block;
+  min-height: 2.4em;
+  width: 100%;
+  border: none;
+
+  text-align: right;
+
+  & > span:first-child,
+  & > legend:first-child
+  {
+    display: inline-block;
+    float: left;
+    line-height: 2.2em;
+    width: 20%;
+
+    text-align: left;
+    white-space: nowrap;
+  }
+}
+
+/* Elements */
 
 textarea,
 select,
@@ -19,8 +47,10 @@ label
   height: 1.8em;
   max-width: 35em;
   margin: 0.2em 0;
+
   padding: 0 0.2em;
   overflow: hidden;
+
   transition: all 0.2s ease;
 }
 
@@ -31,54 +61,114 @@ input
 {
   border: solid 0.05em hsl(240, 10%, 85%);
   border-radius: 0.1em;
+
   background: hsl(240, 40%, 98%);
+
+  [type="number"]
+  {
+    text-align: right;
+  }
+
+  &[readonly]
+  {
+    color: hsl(0, 0%, 40%);
+  }
+
+  &:enabled:focus
+  {
+    outline: 0;
+    box-shadow: 0em 0em 0.2em hsl(240, 10%, 60%);
+  }
+
+  &:enabled:hover
+  {
+    border: solid 0.05em hsl(240, 10%, 70%);
+  }
+
 }
+
+textarea[readonly],
+input[readonly],
+select
+{
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 
 [type="button"],
 [type="submit"],
 button
 {
   background: hsl(240, 40%, 96%);
-}
 
-fieldset
-{
-  border: none;
-  min-height: 2.4em;
-  text-align: right;
-}
-
-
-label
-{
-  display: inline-block;
-  width: 100%;
-  height: 2.4em;
-
-  img {
-    height: 100%;
-    width: auto;
-    float: left;
-    padding: 0.1em;
+  &:enabled:hover
+  {
+    cursor: pointer;
+    background: hsl(240, 40%, 95%);
   }
 }
 
-form > label span,
-fieldset legend
+[type="checkbox"],
+[type="radio"]
 {
-  display: inline-block;
-  width: 20%;
-  text-align: left;
-  white-space: nowrap;
+  display: none;
+
+  & + label::before { line-height: 1.4em; }
+  &[type="checkbox"] + label::before { content: "✘ "; }
+  &[type="checkbox"]:checked + label::before { content: "✔ "; }
+
+  & + label,
+  {
+    width: 38%;
+    min-width: 9.9em;
+    border-radius: 0.1em;
+
+    padding: 0.2em;
+    line-height: 1.4em;
+    white-space: nowrap;
+    font-style: italic;
+    text-align: center;
+    color: hsl(0, 0%, 40%);
+
+    img {
+      height: 100%;
+      width: auto;
+      float: left;
+
+      padding: 0.1em;
+    }
+  }
+
+  &:checked + label {
+    color: black;
+    font-style: normal;
+  }
+
+  &:disabled:checked + label
+  {
+    box-shadow: inset 0 0 0.2em hsl(240, 10%, 60%);
+  }
+
+  &:enabled:checked + label
+  {
+    background-color: lightgreen;
+  }
+
+  &:enabled + label:hover
+  {
+    background: mediumseagreen;
+    color: black;
+    cursor: pointer;
+  }
 }
 
-fieldset legend
-{
-  float: left;
-  line-height: 2.2em;
-}
 
-label *
+/* Sizing */
+
+label > *,
+fieldset > *
 {
   width: 76%;
 }
@@ -95,101 +185,3 @@ fieldset .third,
   width: 25%;
 }
 
-textarea[readonly],
-input[readonly]
-{
-  color: hsl(0, 0%, 40%);
-}
-
-textarea:focus:enabled,
-select:focus:enabled,
-button:focus:enabled,
-input:focus:enabled
-{
-  outline: 0;
-  box-shadow: 0em 0em 0.2em hsl(240, 10%, 60%);
-}
-
-textarea:hover:enabled,
-select:hover:enabled,
-button:hover:enabled,
-input:hover:enabled
-{
-  border: solid 0.05em hsl(240, 10%, 70%);
-}
-
-[type="button"]:hover:enabled,
-[type="submit"]:hover:enabled,
-button:hover.enabled
-{
-  cursor: pointer;
-  background: hsl(240, 40%, 95%);
-}
-
-
-textarea[readonly]:hover,
-[type="text"][readonly]:hover,
-select:hover
-{
-  cursor: pointer;
-}
-
-[type="number"]
-{
-  text-align: right;
-}
-
-[type="checkbox"],
-[type="radio"]
-{
-  display: none;
-}
-
-[type="checkbox"] + label,
-[type="radio"] + label
-{
-  width: 38%;
-  min-width: 9.9em;
-  height: 1.8em;
-  border-radius: 0.1em;
-  padding: 0.2em;
-  line-height: 1.4em;
-  white-space: nowrap;
-  font-style: italic;
-  text-align: center;
-  color: hsl(0, 0%, 40%);
-}
-
-[type="checkbox"] + label::before
-{
-  content: "✘ ";
-}
-
-[type="checkbox"]:checked:disabled + label,
-[type="radio"]:checked:disabled + label
-{
-  box-shadow: inset 0 0 0.2em hsl(240, 10%, 60%);
-  color: black;
-  font-style: normal;
-}
-
-[type="checkbox"]:checked:enabled + label,
-[type="radio"]:checked:enabled + label
-{
-  background-color: lightgreen;
-  color: black;
-  font-style: normal;
-}
-
-[type="checkbox"]:checked + label::before
-{
-  content: "✔ ";
-}
-
-[type="checkbox"]:enabled + label:hover,
-[type="radio"]:enabled + label:hover
-{
-  background-color: mediumseagreen;
-  color: black;
-  cursor: pointer;
-}
