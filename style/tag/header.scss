@@ -4,24 +4,33 @@ body > header
 {
   box-shadow: 0.1em 0.1em 0.2em 0.1em hsl(0, 0%, 90%);
   background: white;
-  padding: 0.5em;
+  padding: 0 2%;
+  vertical-align: top;
   overflow: hidden;
 
-  a {
-    color: hsl(0, 0%, 70%);
+  line-height: 2.5em;
 
-    &:hover { text-decoration: none; }
-    &:hover, &.selected { color: burlywood; }
+  nav {
+    line-height: inherit;
+
+    a {
+      color: hsl(0, 0%, 70%);
+
+      &:not(.selected):hover { text-decoration: none; }
+      &:hover, &.selected { color: burlywood; }
+    }
   }
 
   select {
     float: right;
-    width: 50%;
-    height: 1.5em;
+    width: auto;
+    height: 2.5em;
     margin: 0;
+
     border: none!important;
     box-shadow: none!important;
     background: white;
+
     color: hsl(0, 0%, 40%);
     text-align-last: right;
   }
@@ -29,7 +38,7 @@ body > header
   h1
   {
     display: inline;
-    vertical-align: middle;
+
     font-size: 1.25em;
     font-style: italic;
     color: hsl(0, 0%, 40%);
