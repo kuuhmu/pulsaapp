@@ -97,11 +97,10 @@ const demoConfig = `{"childs":[{"mode":"percentage","size":12.5,"asset":"BTC"},"
 const links = new Gui(
   `
 <p>
-  <a target="_blank" rel="noopener" href="https://cosmic.plus">${__(
-    "A Cosmic.Plus Software"
-  )}</a>
+  <a target="_blank" rel="noopener" href="https://cosmic.plus">
+    ${__("By Cosmic.Plus")}
+  </a>
   − <a onclick=%displayDemo>${__("Demo")}</a>
-  − <a target="_blank" rel="noopener" href="https://nucleo.fi/leaderboard/top/?span=3m">Performance</a>
   − <a onclick=%displayLicense>${__("License")}</a>
   − <a onclick=%displayAbout>${__("About")}</a>
 </p>

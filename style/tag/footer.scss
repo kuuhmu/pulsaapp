@@ -4,21 +4,24 @@ body > footer
 {
   border-top: solid 1px hsl(0, 0%, 90%);
   background: white;
-  text-align: center;
+  padding: 0 1%;
+  overflow: hidden;
 
+  text-align: center;
   white-space: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
 
   .Icon {
     display: inline-block;
-    margin: 0.25em 0.75em 0 0.75em;
+    margin: 0.25em 1vw 0 1vw;
 
     svg {
-      height: 2.5em;
+      height: 2em;
+      max-width: 9vw;
+
       fill: hsl(0, 0%, 80%);
       transition: fill 0.2s ease
     }
+
     &:hover svg {
       fill: hsl(0, 0%, 40%);
     }
