@@ -3,7 +3,7 @@
 body > noscript,
 body > main
 {
-  padding: 0.5em;
+  padding: 0.3em 1%;
   overflow: hidden;
 
   section p
@@ -17,10 +17,11 @@ body > main
   {
     width: 100%;
     margin: 1rem 0;
+
     box-shadow: 0.1em 0.1em 0.2em hsl(0, 0%, 90%);
-    border: solid 1px hsl(240, 10%, 90%);
     border-radius: 0.1em;
-    background: hsl(240, 40%, 99%);
+    background: hsl(240, 40%, 99.5%);
     overflow-x: auto;
+    overflow-y: hidden;
   }
 }

@@ -32,7 +32,7 @@ module.exports = class AssetPriceChart extends Gui {
   drawChart (data) {
     this.chart = Highstock.stockChart(this.container, {
       rangeSelector: { selected: 2 },
-      chart: { backgroundColor: "#fbfbfd" },
+      chart: { backgroundColor: "#fdfdfe" },
       yAxis: [
         { labels: { align: "left" }, height: "80%", resize: { enabled: true } },
         { labels: { align: "left" }, top: "80%", height: "20%", offset: 0 }

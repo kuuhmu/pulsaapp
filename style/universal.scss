@@ -7,4 +7,7 @@
 *, *:before, *:after {
   box-sizing: inherit;
   vertical-align: inherit;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
