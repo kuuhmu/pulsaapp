@@ -1,0 +1,14 @@
+/* Modal Style */
+
+.Modal {
+    max-height: 95%;
+    width: 40em;
+    max-width: 95%;
+
+    box-shadow: 0.1em 0.1em 0.2em grey;
+    border-radius: 0.1em;
+    background: white;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+

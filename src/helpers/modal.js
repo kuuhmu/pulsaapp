@@ -82,10 +82,6 @@ Modal.styleParams = [
 Modal.style = {
   zIndex: 1000,
   position: "fixed",
-  maxWidth: "100%",
-  maxHeight: "100%",
-  overflow: "auto",
-  background: "white"
 }
 
 Modal.shadow = new ClickWall({

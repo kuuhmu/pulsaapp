@@ -14,7 +14,7 @@ const Modal = require("../helpers/modal")
 
 module.exports = class AssetPrompt extends Modal {
   constructor (assets) {
-    super({ width: "40em" })
+    super()
 
     // Interaction.
     const assetSelector = new AssetSelector(assets)
