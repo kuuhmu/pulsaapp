@@ -6,7 +6,14 @@
 const Highcharts = require("highcharts")
 
 Highcharts.theme = {
-  chart: { backgroundColor: "#fdfdfe" },
+  chart: {
+    backgroundColor: "#fdfdfe",
+    style: {
+      fontFamily: "arial",
+      color: "#111"
+    }
+  },
+
   tooltip: { style: { fontSize: "14px" } },
   credits: { enabled: false },
 
