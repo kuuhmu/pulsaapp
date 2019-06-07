@@ -64,7 +64,7 @@ class AssetGroup extends Gui {
 class AssetRadio extends Gui {
   constructor (asset, onselect) {
     super(`
-<span class="AssetRadio">
+<span class="AssetRadio half">
   <input -ref=%radio type="radio" name="asset-selector-group" %onchange>
   <label -ref=%label for=%radio>
     <img src=%image>

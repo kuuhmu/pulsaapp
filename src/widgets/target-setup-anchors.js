@@ -53,7 +53,7 @@ class AnchorCheckbox extends Gui {
     const { getState, callback } = params
 
     super(`
-<span class="AnchorCheckbox">
+<span class="AnchorCheckbox half">
   <input -ref=%checkbox type="checkbox" %checked>
   <label -ref=%label %onclick>%name</label>
 </span>

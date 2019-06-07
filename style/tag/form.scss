@@ -4,10 +4,8 @@
 
 form
 {
-  position: relative;
-  clear: both;
-
-  padding: 0.3em 0.5em;
+  margin: 1em 0;
+  padding: 0 1em;
   text-align: center;
 }
 
@@ -15,9 +13,11 @@ fieldset,
 form > label
 {
   display: inline-block;
-  min-height: 2.4em;
   width: 100%;
+  max-width: 40em;
   border: none;
+  padding: 0.2em 0;
+  margin: auto;
 
   text-align: right;
 
@@ -27,7 +27,7 @@ form > label
     display: inline-block;
     float: left;
     line-height: 2.2em;
-    width: 20%;
+    min-width: 20%;
 
     text-align: left;
     white-space: nowrap;
@@ -40,7 +40,8 @@ textarea,
 select,
 button,
 input,
-label
+[type="checkbox"] + label,
+[type="radio"] + label
 {
   display: inline-block;
   width: 100%;
@@ -121,8 +122,6 @@ button
 
   & + label,
   {
-    width: 38%;
-    min-width: 9.9em;
     border-radius: 0.1em;
 
     padding: 0.2em;
@@ -164,24 +163,25 @@ button
   }
 }
 
-
 /* Sizing */
 
-label > *,
-fieldset > *
+form > label > :not(span),
+form > fieldset > :not(legend)
 {
   width: 76%;
 }
 
-label .half,
-fieldset .half
+form .half,
+form .half label
 {
   width: 38%;
+  min-width: 9em;
 }
 
-label .third,
-fieldset .third,
+form .third,
+form .third label
 {
   width: 25%;
+  min-width: 6em;
 }
 
