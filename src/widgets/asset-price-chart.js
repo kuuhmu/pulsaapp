@@ -3,6 +3,7 @@
  * Asset Price Chart
  */
 const Highstock = require("highcharts/highstock")
+require("./helpers/highstock-theme")
 
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
@@ -33,14 +34,6 @@ module.exports = class AssetPriceChart extends Gui {
     this.chart = Highstock.stockChart(this.container, {
       rangeSelector: { selected: 2 },
 
-      chart: {
-        backgroundColor: "#fdfdfe",
-        style: {
-          fontFamily: "arial",
-          color: "#111"
-        }
-      },
-
       yAxis: [
         { labels: { align: "left" }, height: "80%", resize: { enabled: true } },
         { labels: { align: "left" }, top: "80%", height: "20%", offset: 0 }
@@ -57,8 +50,7 @@ module.exports = class AssetPriceChart extends Gui {
           data: data.map(x => [x.time, x.volume]),
           yAxis: 1
         }
-      ],
-      credits: { enabled: false }
+      ]
     })
   }
 }

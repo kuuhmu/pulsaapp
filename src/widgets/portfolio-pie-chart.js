@@ -2,8 +2,8 @@
 /**
  * Portfolio Pie Chart
  */
-const Highcharts = require("highcharts")
-require("./helpers/highcharts-theme")
+const Highstock = require("highcharts/highstock")
+require("./helpers/highstock-theme")
 
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
@@ -31,7 +31,10 @@ module.exports = class PortfolioPieChart extends Gui {
   draw () {
     if (this.chart) this.chart.destroy()
 
-    this.chart = Highcharts.chart(this.container, {
+    this.chart = Highstock.chart(this.container, {
+      colors: Highstock.pieColors,
+      responsive: Highstock.pieResponsive,
+
       title: "",
       legend: { enabled: false },
       chart: { type: "pie" },

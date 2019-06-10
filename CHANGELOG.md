@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Use Highstock for all charts (saves 224Kb).
+
 ## 0.9.1 - 2019-06-08
 
 ### Changed
