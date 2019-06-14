@@ -12,7 +12,6 @@ const { __ } = require("@cosmic-plus/i18n")
 const Asset = require("./asset")
 const Balance = require("./balance")
 const global = require("./global")
-// const History = require("./portfolio-history")
 const Offers = require("./offers")
 
 const {
