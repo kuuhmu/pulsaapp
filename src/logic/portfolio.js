@@ -15,7 +15,12 @@ const global = require("./global")
 // const History = require("./portfolio-history")
 const Offers = require("./offers")
 
-const { arraySum, arrayOnlyInFirst } = require("../helpers/misc")
+const {
+  arrayContains,
+  arrayRemove,
+  arraySum,
+  arrayOnlyInFirst
+} = require("../helpers/misc")
 /**
  * Class
  */
@@ -86,16 +91,7 @@ class Portfolio extends Projectable {
 
     for (let index in account.balances) {
       const balance = Balance.ingest(account.balances[index])
-      const asset = balance.asset
-
-      if (this.assets.indexOf(asset) === -1) {
-        this.assets.push(asset)
-        this.balances.push(balance)
-        asset.watch(this, "total", () => asset.compute("share"))
-        asset.getInfo()
-      } else if (this.balances.indexOf(balance) === -1) {
-        this.balances.push(balance)
-      }
+      this.maybeAddBalance(balance)
     }
 
     if (this.new) {
@@ -106,6 +102,34 @@ class Portfolio extends Projectable {
       this.trigger("open")
       Asset.getAllInfo()
     }
+  }
+
+  maybeAddBalance (balance) {
+    if (!arrayContains(this.balances, balance)) {
+      this.balances.push(balance)
+      balance.asset.maybeAddBalance(balance)
+    }
+    this.maybeAddAsset(balance.asset)
+  }
+
+  maybeAddAsset (asset) {
+    if (arrayContains(this.assets, asset)) return
+
+    this.assets.push(asset)
+    asset.watch(this, "total", () => asset.compute("share"))
+    asset.getInfo()
+  }
+
+  maybeRemoveBalance (balance) {
+    arrayRemove(this.balances, balance)
+    balance.asset.maybeRemoveBalance(balance)
+    this.maybeRemoveAsset(balance.asset)
+  }
+
+  maybeRemoveAsset (asset) {
+    if (asset.balances.length) return
+    // TODO: unwatch
+    arrayRemove(this.assets, asset)
   }
 }
 

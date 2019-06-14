@@ -18,9 +18,6 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
     const orderbook = new Orderbook({ balance, quote })
     orderbook.streamOffers()
 
-    balance.orderbook = orderbook
-    balance.asset.addOrderbook(orderbook)
-
     return orderbook
   }
 

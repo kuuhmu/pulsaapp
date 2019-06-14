@@ -48,19 +48,10 @@ class Balance extends Projectable {
       this.asset = Asset.resolve(this.id)
       this.known = false
     }
-    this.asset.balances.push(this)
 
     // Set updatable properties.
     this.update(params)
     this.offers = new Mirrorable()
-
-    // Dynamic price definition.
-    if (this.code === "XLM") {
-      this.asset.project("price", this)
-    } else {
-      this.orderbook = Orderbook.forBalance(this, Asset.resolve("XLM"))
-      this.orderbook.project("price", this)
-    }
   }
 
   update (params) {
@@ -68,6 +59,18 @@ class Balance extends Projectable {
     this.amount = amount || 0
     this.buying = buying || 0
     this.selling = selling || 0
+  }
+
+  streamPrice () {
+    if (this.orderbook) return
+
+    if (this.id === "XLM") {
+      this.asset.project("price", this)
+    } else {
+      this.orderbook = Orderbook.forBalance(this, Asset.resolve("XLM"))
+      this.orderbook.project("price", this)
+      this.asset.orderbook.addChild(this.orderbook)
+    }
   }
 }
 

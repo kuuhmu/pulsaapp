@@ -8,6 +8,11 @@ All notable changes to this project will be documented in this file.
 
 - Use Highstock for all charts (saves 224Kb).
 
+### Fixed
+
+- Properly fetch the orderbook for assets with code "XLM" which are not native
+  lumens.
+
 ## 0.9.1 - 2019-06-08
 
 ### Changed

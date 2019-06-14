@@ -137,7 +137,6 @@ Target.prototype.addAsset = function (asset) {
   target.parent = this
   asset.anchors.forEach(anchor => target.addAnchor(anchor))
   this.childs.push(target)
-  this.root.portfolio.assets.push(asset)
 
   // Default setup.
   target.mode = "weight"
@@ -158,7 +157,7 @@ Target.prototype.addAnchor = function (anchor) {
     arrayRemove(this.closing, issuer)
     balance.action = null
   } else {
-    this.root.portfolio.balances.push(balance)
+    this.root.portfolio.maybeAddBalance(balance)
     this.opening.push(issuer)
     balance.action = "opening"
   }
@@ -176,8 +175,7 @@ Target.prototype.removeAnchor = function (anchor) {
   const balance = Balance.resolve(code, issuer)
 
   if (balance.action === "opening") {
-    arrayRemove(this.root.portfolio.balances, balance)
-    arrayRemove(this.asset.balances, this)
+    this.root.portfolio.maybeRemoveBalance(balance)
     arrayRemove(this.opening, issuer)
     balance.action = null
   } else {

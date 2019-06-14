@@ -14,7 +14,12 @@ const Projectable = require("@cosmic-plus/jsutils/es5/projectable")
 
 const marketData = require("./market-data")
 const Orderbook = require("./orderbook")
-const { fixed7, arraySum } = require("../helpers/misc")
+const {
+  fixed7,
+  arrayContains,
+  arrayRemove,
+  arraySum
+} = require("../helpers/misc")
 
 /**
  * Class
@@ -70,16 +75,22 @@ const Asset = module.exports = class Asset extends Projectable {
     this.watch(this.orderbook, "price", () => this.compute("price"))
   }
 
+  maybeAddBalance (balance) {
+    if (arrayContains(this.balances, balance)) return
+    this.balances.push(balance)
+    if (!balance.orderbook) balance.streamPrice()
+  }
+
+  maybeRemoveBalance (balance) {
+    arrayRemove(this.balances, balance)
+  }
+
   async getInfo () {
     // Happens once & only for cryptos.
     if (this.name || this.type !== "crypto") return
     this.info = await marketData.crypto.info(this)
     this.name = this.info.name
     this.image = this.info.image.small
-  }
-
-  addOrderbook (orderbook) {
-    this.orderbook.addChild(orderbook)
   }
 }
 
