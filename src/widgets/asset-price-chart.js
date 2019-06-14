@@ -10,7 +10,6 @@ const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("../logic/global")
-const marketData = require("../logic/market-data")
 
 /**
  * Class
@@ -25,8 +24,8 @@ module.exports = class AssetPriceChart extends Gui {
     `)
 
     this.asset = asset
-    marketData.assetHistory(asset).then(data => this.drawChart(data))
 
+    asset.getHistoricPrice().then(data => this.drawChart(data))
     this.listen("destroy", () => this.chart && this.chart.destroy())
   }
 

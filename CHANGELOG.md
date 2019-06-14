@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Use Highstock for all charts (saves 224Kb).
+- Keep historical prices in memory once downloaded to avoid re-downloading them
+  later.
 
 ### Fixed
 

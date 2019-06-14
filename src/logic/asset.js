@@ -92,6 +92,21 @@ const Asset = module.exports = class Asset extends Projectable {
     this.name = this.info.name
     this.image = this.info.image.small
   }
+
+  async getHistoricPrice () {
+    if (this.historicPrice) return this.historicPrice
+
+    this.historicPrice = await marketData.assetHistory(this)
+    if (!this.historicPrice) return
+
+    // Keep today's price in sync.
+    this.trap("price", () => {
+      const dailyData = this.historicPrice[this.historicPrice.length - 1]
+      dailyData.price = this.price
+    })
+
+    return this.historicPrice
+  }
 }
 
 Asset.define("amount", "balances", function () {
