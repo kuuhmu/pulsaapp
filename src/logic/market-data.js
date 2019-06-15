@@ -165,6 +165,11 @@ marketData.fiat.history = async function (asset, limit = 1000) {
   today.setDate(today.getDate() - limit)
   const start_at = today.toISOString().slice(0, 10)
 
+  // Exchangeratesapi doesn't returns EUR/EUR rate.
+  if (global.currency === "EUR" && asset.id === "EUR") {
+    return [{ time: History.today(), price: 1 }]
+  }
+
   // Get history.
   const response = await exchangeratesCall("history", asset.code, {
     start_at,
