@@ -8,15 +8,38 @@ const marketData = exports
 
 const axios = require("@cosmic-plus/base/es5/axios")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
-const { day } = require("@cosmic-plus/jsutils/es5/misc")
 
 const global = require("./global")
+const History = require("./history")
 
 /**
  * Generic price/history
  */
 
-marketData.assetHistory = function (asset, limit = 1000) {
+marketData.assetHistory = async function (asset, limit = 1000) {
+  // Remove old prices cache from version <= 0.9.1
+  // REMOVAL: 2020-07 (one year)
+  delete localStorage[`prices.${asset.code}`]
+
+  const cache = History.getCache(asset.id)
+
+  if (cache) {
+    const missing = History.missingDays(cache)
+    if (!missing) return cache
+    if (cache.length) limit = missing + 1
+  }
+
+  const newData = await getPriceHistory(asset, limit)
+  if (!newData) return
+
+  const history = cache ? History.join(cache, newData) : newData
+  History.cut(history, 1000)
+
+  History.setCache(asset.id, history)
+  return history
+}
+
+function getPriceHistory (asset, limit) {
   if (asset.type === "crypto") return marketData.crypto.history(asset, limit)
   else if (asset.type === "fiat") return marketData.fiat.history(asset, limit)
 }
@@ -76,8 +99,9 @@ marketData.crypto.prices = async function (assets) {
 marketData.crypto.history = async function (asset, limit = 1000) {
   const response = await coingeckoCall(`coins/${asset.apiId}/market_chart`, {
     vs_currency: global.currency,
-    days: limit
+    days: Math.max(limit, 100)
   })
+
   const data = response.data.prices.map((record, index) => {
     return {
       time: record[0],
@@ -87,11 +111,15 @@ marketData.crypto.history = async function (asset, limit = 1000) {
     }
   })
 
-  // Normalize last day timestamp.
-  const oneDay = 24 * 60 * 60 * 1000
-  data[data.length - 1].time = data[data.length - 2].time + oneDay
+  // Work around end of serie inconsistencies.
+  const today = History.today()
+  if (data[data.length - 2].time === today) {
+    data.length = data.length - 1
+  } else {
+    History.latest(data).time = today
+  }
 
-  setHistoryLatestPrice(asset, data)
+  if (limit < 100) History.cut(data, limit)
   return data
 }
 
@@ -132,49 +160,34 @@ marketData.fiat.prices = async function (assets) {
 }
 
 marketData.fiat.history = async function (asset, limit = 1000) {
-  const cached = cachedHistory(asset)
-  if (cached) return cached
-
   const end_at = new Date().toISOString().slice(0, 10)
   const today = new Date(end_at)
   today.setDate(today.getDate() - limit)
   const start_at = today.toISOString().slice(0, 10)
+
+  // Get history.
   const response = await exchangeratesCall("history", asset.code, {
     start_at,
     end_at
   })
 
+  // Format data.
   const data = Object.keys(response.data.rates)
     .sort()
     .map(date => {
       return {
-        time: new Date(date).getTime(),
+        time: History.time(date),
         price: +nice(1 / response.data.rates[date][asset.code], 8)
       }
     })
-  cacheHistory(asset, data)
+
+  // Add today's entry.
+  if (History.latest(data).time !== History.today()) {
+    data.push({
+      time: History.today(),
+      price: History.latest(data).price
+    })
+  }
+
   return data
-}
-
-/**
- * Helpers
- */
-
-function cacheHistory (asset, data) {
-  localStorage[`prices.${asset.code}`] = JSON.stringify([day(), data])
-}
-
-function cachedHistory (asset) {
-  const json = localStorage[`prices.${asset.code}`]
-  if (!json) return
-
-  const [date, data] = JSON.parse(json)
-  if (date !== day()) return
-
-  setHistoryLatestPrice(asset, data)
-  return data
-}
-
-function setHistoryLatestPrice (asset, data) {
-  data[data.length - 1].price = asset.price
 }

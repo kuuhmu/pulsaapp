@@ -6,14 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Dramatically improve historic prices caching & performance.
 - Use Highstock for all charts (saves 224Kb).
-- Keep historical prices in memory once downloaded to avoid re-downloading them
-  later.
 
 ### Fixed
 
 - Properly fetch the orderbook for assets with code "XLM" which are not native
   lumens.
+- Fix a case in which the price graph printed a value one day in the future.
 
 ## 0.9.1 - 2019-06-08
 
