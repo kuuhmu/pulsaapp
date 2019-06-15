@@ -8,6 +8,11 @@ All notable changes to this project will be documented in this file.
 
 - Add the portfolio history chart.
 
+### Removed
+
+- Removed pricing in fiat currencies that were not fully supported: BGN, HRK,
+  ISK, RON.
+
 ### Changed
 
 - Dramatically improve historic prices caching & performance.

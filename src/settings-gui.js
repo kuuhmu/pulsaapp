@@ -21,7 +21,6 @@ const languages = {
  */
 const currencies = [
   "AUD",
-  "BGN",
   "BRL",
   "CAD",
   "CHF",
@@ -31,12 +30,10 @@ const currencies = [
   "EUR",
   "GBP",
   "HKD",
-  "HRK",
   "HUF",
   "IDR",
   "ILS",
   "INR",
-  "ISK",
   "JPY",
   "KRW",
   "MXN",
@@ -45,7 +42,6 @@ const currencies = [
   "NZD",
   "PHP",
   "PLN",
-  "RON",
   "RUB",
   "SEK",
   "SGD",
