@@ -14,6 +14,8 @@ const Balance = require("./balance")
 const global = require("./global")
 const Offers = require("./offers")
 
+const portfolioHistoricValue = require("./portfolio-historic-value")
+
 const {
   arrayContains,
   arrayRemove,
@@ -142,6 +144,14 @@ class Portfolio extends Projectable {
 Portfolio.prototype.availableAssets = function () {
   const allAssets = Object.values(Asset.table)
   return arrayOnlyInFirst(allAssets, this.assets)
+}
+
+/**
+ * Download & compute portfolio history.
+ */
+Portfolio.prototype.getHistory = async function () {
+  if (!this.history) this.history = await portfolioHistoricValue(this)
+  return this.history
 }
 
 /**

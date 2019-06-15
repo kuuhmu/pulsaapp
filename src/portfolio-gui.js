@@ -9,6 +9,7 @@ const { __ } = require("@cosmic-plus/i18n")
 
 const AssetPriceChart = require("./widgets/asset-price-chart")
 const PortfolioPieChart = require("./widgets/portfolio-pie-chart")
+const PortfolioHistoricValueChart = require("./widgets/portfolio-historic-value-chart")
 const PortfolioTable = require("./widgets/portfolio-table")
 
 const global = require("./logic/global")
@@ -54,14 +55,19 @@ module.exports = class PortfolioGui extends Gui {
 
     this.trap("selected", () => this.maybeDrawPriceChart())
 
+    // Create history chart.
+    this.historyChart = new PortfolioHistoricValueChart(portfolio)
+
     // Create overview.
     const overview = new Tabs()
-    overview.add("table", __("Table"), this.table)
-    overview.add("chart", __("Chart"), this.pieChart)
+    overview.add("table", __("Balances"), this.table)
+    overview.add("chart", __("Repartition"), this.pieChart)
+    overview.add("history", __("History"), this.historyChart)
 
     overview.project(["nav", "view"], this)
     overview.listen("select", id => {
       if (id === "chart") this.pieChart.reflow()
+      if (id === "history") this.historyChart.reflow()
     })
 
     // Save & load last selected tab.

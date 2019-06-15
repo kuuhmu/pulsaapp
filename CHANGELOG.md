@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Add the portfolio history chart.
+
 ### Changed
 
 - Dramatically improve historic prices caching & performance.

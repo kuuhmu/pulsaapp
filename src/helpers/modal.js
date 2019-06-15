@@ -81,7 +81,7 @@ Modal.styleParams = [
 
 Modal.style = {
   zIndex: 1000,
-  position: "fixed",
+  position: "fixed"
 }
 
 Modal.shadow = new ClickWall({
