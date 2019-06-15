@@ -30,7 +30,16 @@ module.exports = class PortfolioHistoryChart extends Gui {
   }
 
   reflow () {
-    if (this.chart) this.chart.reflow()
+    if (this.chart) {
+      // Work around a rangeSelector position bug.
+      if (!this.hasBeenReflown) {
+        setTimeout(() =>
+          this.chart.update({ rangeSelector: { enabled: true } })
+        )
+      }
+      this.chart.reflow()
+    }
+    this.hasBeenReflown = true
   }
 
   drawChart (history) {
@@ -74,6 +83,11 @@ module.exports = class PortfolioHistoryChart extends Gui {
       series,
       colors: Highstock.pieColors
     })
+
+    // Work around a rangeSelector position bug.
+    if (!this.hasBeenReflown) {
+      this.chart.update({ rangeSelector: { enabled: false } })
+    }
   }
 
   historyToSeries (history) {
