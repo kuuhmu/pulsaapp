@@ -11,7 +11,11 @@ const global = require("./logic/global")
 
 async function init () {
   // Service worker
-  if (navigator.serviceWorker) navigator.serviceWorker.register("worker.js")
+  const worker = navigator.serviceWorker
+  if (worker) {
+    worker.register("worker.js")
+    worker.addEventListener("controllerchange", () => location.reload())
+  }
 
   // Internationalization
   i18n.addTranslation("fr", require("../locales/fr.json"))

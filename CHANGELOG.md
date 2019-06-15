@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 
 - Dramatically improve historic prices caching & performance.
 - Use Highstock for all charts (saves 224Kb).
+- Automatically reload the application once an update get installed.
 
 ### Fixed
 
