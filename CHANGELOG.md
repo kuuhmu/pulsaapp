@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 0.10.0 - 2019-06-15
 
 ### Added
 
@@ -11,13 +11,13 @@ All notable changes to this project will be documented in this file.
 ### Removed
 
 - Removed pricing in fiat currencies that were not fully supported: BGN, HRK,
-  ISK, RON.
+  ISK & RON.
 
 ### Changed
 
-- Dramatically improve historic prices caching & performance.
+- Dramatically improve historical prices caching & performance.
 - Use Highstock for all charts (saves 224Kb).
-- Automatically reload the application once an update get installed.
+- Automatically reload the application once an update gets installed.
 
 ### Fixed
 
