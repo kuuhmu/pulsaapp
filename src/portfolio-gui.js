@@ -59,21 +59,24 @@ module.exports = class PortfolioGui extends Gui {
     this.historyChart = new PortfolioHistoricValueChart(portfolio)
 
     // Create overview.
-    const overview = new Tabs()
+    const overview = this.overview = new Tabs()
     overview.add("table", __("Balances"), this.table)
     overview.add("chart", __("Repartition"), this.pieChart)
     overview.add("history", __("History"), this.historyChart)
 
     overview.project(["nav", "view"], this)
-    overview.listen("select", id => {
-      if (id === "chart") this.pieChart.reflow()
-      if (id === "history") this.historyChart.reflow()
-    })
+    overview.listen("select", () => this.reflow())
 
     // Save & load last selected tab.
     overview.listen("select", id => localStorage["PortfolioSummary.tab"] = id)
     overview.select(localStorage["PortfolioSummary.tab"])
     if (!overview.selected) overview.select("table")
+  }
+
+  reflow () {
+    if (!this.overview.selected) return
+    const content = this.overview.selected.content
+    if (content.reflow) content.reflow()
   }
 
   maybeDrawPriceChart () {

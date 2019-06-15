@@ -139,11 +139,10 @@ function initGui () {
   tabs.fitScreen()
 
   // Fix portfolio pie chart positioning.
-  tabs.listen("select", id => {
-    if (id === "#portfolio") {
-      tabs.selected.content.pieChart.reflow()
-      tabs.selected.content.historyChart.reflow()
-    }
+  tabs.listen("select", () => {
+    if (!tabs.selected) return
+    const content = tabs.selected.content
+    if (content.reflow) content.reflow()
   })
 
   tabs.select(selected)
