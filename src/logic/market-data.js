@@ -26,7 +26,7 @@ marketData.assetHistory = async function (asset, limit = 1000) {
   if (cache) {
     const missing = History.missingDays(cache)
     if (!missing) return cache
-    if (cache.length) limit = missing + 1
+    if (cache.length) limit = missing + 3
   }
 
   const newData = await getPriceHistory(asset, limit)
