@@ -1,6 +1,6 @@
 {
   "name": "equilibre.io",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "A portfolio balancer for Stellar Decentralized Exchange",
   "author": "MisterTicot",
   "repository": "github:cosmic-plus/webapp-equilibre-io",
@@ -41,7 +41,7 @@
     "@babel/preset-env": "^7.4.5",
     "@cosmic-plus/i18n-extractor": "^1.1.0",
     "autoprefixer-cli": "^1.0.0",
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
     "eslint": "^5.16.0",
     "live-server": "^1.2.1",
@@ -49,7 +49,7 @@
     "node-sass": "^4.12.0",
     "prettier": "^1.18.2",
     "raw-loader": "^1.0.0",
-    "webpack": "^4.34.0",
+    "webpack": "^4.35.0",
     "webpack-cli": "^3.3.4"
   },
   "dependencies": {
