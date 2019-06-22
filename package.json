@@ -54,14 +54,14 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.5",
-    "@cosmic-plus/base": "^2.0.2",
+    "@cosmic-plus/base": "^2.0.3",
     "@cosmic-plus/domutils": "^2.0.2",
     "@cosmic-plus/i18n": "^1.2.0",
     "@cosmic-plus/jsutils": "^2.0.1",
     "@cosmic-plus/ledger-wallet": "^0.3.2",
     "@cosmic-plus/loopcall": "^1.1.0",
     "@fortawesome/fontawesome-free": "^5.9.0",
-    "cosmic-lib": "^1.5.0",
+    "cosmic-lib": "^1.5.1",
     "highcharts": "^7.1.2",
     "normalize.css": "^8.0.1"
   }
