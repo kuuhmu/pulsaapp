@@ -23,6 +23,7 @@ const RebalanceGui = require("./rebalance-gui")
 
 const license = new Gui(require("../bundled/license.html"))
 const welcome = new Gui(require("../bundled/welcome.html"))
+const disclaimer = new Gui(require("../bundled/disclaimer.html"))
 
 require("./footer")
 
@@ -46,6 +47,7 @@ const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
 tabs.add("#welcome", __("Welcome"), welcome)
 tabs.add("#login", __("Login"), dom.loginTab)
 tabs.add("#license", null, license)
+tabs.add("#disclaimer", null, disclaimer)
 tabs.add("#about", null, welcome)
 dom.demoLink.onclick = displayDemo
 html.show(dom.loginTab)

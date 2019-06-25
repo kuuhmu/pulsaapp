@@ -86,15 +86,14 @@ const icons = [
 const links = new Gui(
   `
 <p>
-  <a target="_blank" rel="noopener" href="https://cosmic.plus">
-    ${__("By Cosmic.Plus")}
-  </a>
-  − <a onclick=%displayLicense>${__("License")}</a>
+  <a onclick=%displayLicense>${__("License")}</a>
+  − <a onclick=%displayDisclaimer>${__("Disclaimer")}</a>
   − <a onclick=%displayAbout>${__("About")}</a>
 </p>
 `,
   {
     displayLicense: () => global.tabs.select("#license"),
+    displayDisclaimer: () => global.tabs.select("#disclaimer"),
     displayAbout: () => global.tabs.select("#about")
   }
 )
