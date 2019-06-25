@@ -81,17 +81,6 @@ const icons = [
 ]
 
 /**
- * Demo Page
- */
-const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"
-function displayDemo () {
-  localStorage[`target:${MYPUBKEY}`] = demoConfig
-  location.href = `?address=${MYPUBKEY}`
-}
-
-const demoConfig = `{"childs":[{"mode":"percentage","size":12.5,"asset":"BTC"},"CNY",{"mode":"percentage","size":12.5,"asset":"ETH"},"EUR",{"mode":"percentage","size":1.5625,"asset":"FRAS"},{"mode":"percentage","size":1.5625,"asset":"MOBI"},{"mode":"percentage","size":1.5625,"asset":"PEDI"},{"mode":"percentage","size":1.5625,"asset":"REPO"},{"mode":"percentage","size":1.5625,"asset":"RMT"},{"mode":"percentage","size":1.5625,"asset":"SHX"},{"mode":"percentage","size":1.5625,"asset":"SLT"},{"mode":"percentage","size":1.5625,"asset":"TERN"},"USD",{"mode":"percentage","size":12.5,"asset":"XLM"}]}`
-
-/**
  * Links
  */
 const links = new Gui(
@@ -100,13 +89,11 @@ const links = new Gui(
   <a target="_blank" rel="noopener" href="https://cosmic.plus">
     ${__("By Cosmic.Plus")}
   </a>
-  − <a onclick=%displayDemo>${__("Demo")}</a>
   − <a onclick=%displayLicense>${__("License")}</a>
   − <a onclick=%displayAbout>${__("About")}</a>
 </p>
 `,
   {
-    displayDemo,
     displayLicense: () => global.tabs.select("#license"),
     displayAbout: () => global.tabs.select("#about")
   }

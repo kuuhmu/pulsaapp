@@ -44,9 +44,11 @@ Anchor.register(require("./data/anchors.json"))
 
 const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
 tabs.add("#welcome", __("Welcome"), welcome)
-tabs.add("#login", __("Login"), dom.loginForm)
+tabs.add("#login", __("Login"), dom.loginTab)
 tabs.add("#license", null, license)
 tabs.add("#about", null, welcome)
+dom.demoLink.onclick = displayDemo
+html.show(dom.loginTab)
 
 tabs.select(location.hash)
 if (!tabs.selected) tabs.select("#welcome")
@@ -58,7 +60,7 @@ tabs.fitScreen = function () {
 }
 tabs.fitScreen()
 
-const loginForm = new Form(dom.loginForm, { hidden: false, onsubmit: login })
+const loginForm = new Form(dom.loginForm, { onsubmit: login })
 loginForm.dom.loginWithLedger.onclick = loginWithLedgerWallet
 
 if (params.address) {
@@ -148,6 +150,17 @@ function initGui () {
   tabs.select(selected)
   if (!tabs.selected) tabs.select("#portfolio")
 }
+
+/**
+ * Demo Page
+ */
+const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"
+function displayDemo () {
+  localStorage[`target:${MYPUBKEY}`] = demoConfig
+  location.href = `?address=${MYPUBKEY}`
+}
+
+const demoConfig = `{"childs":[{"mode":"percentage","size":12.5,"asset":"BTC"},"CNY",{"mode":"percentage","size":12.5,"asset":"ETH"},"EUR",{"mode":"percentage","size":1.5625,"asset":"FRAS"},{"mode":"percentage","size":1.5625,"asset":"MOBI"},{"mode":"percentage","size":1.5625,"asset":"PEDI"},{"mode":"percentage","size":1.5625,"asset":"REPO"},{"mode":"percentage","size":1.5625,"asset":"RMT"},{"mode":"percentage","size":1.5625,"asset":"SHX"},{"mode":"percentage","size":1.5625,"asset":"SLT"},{"mode":"percentage","size":1.5625,"asset":"TERN"},"USD",{"mode":"percentage","size":12.5,"asset":"XLM"}]}`
 
 /**
  * Module loading
