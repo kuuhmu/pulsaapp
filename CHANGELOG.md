@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - Rewrite 'Welcome' page.
 - Easier access to the demo account & the related article.
+- Tiny theme tweaks.
 
 ## 0.10.2 - 2019-06-22
 
