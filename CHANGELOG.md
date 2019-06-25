@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Rewrite 'Welcome' page.
+
 ## 0.10.2 - 2019-06-22
 
 ### Changed
