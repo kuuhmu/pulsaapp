@@ -65,7 +65,17 @@ module.exports = class PortfolioHistoryChart extends Gui {
         footerFormat: `<b>Total: {point.total} ${global.currency}</b>`
       },
 
-      yAxis: [{ labels: { align: "left" }, resize: { enabled: true } }],
+      yAxis: [
+        {
+          labels: {
+            align: "left",
+            formatter: function () {
+              return `${this.value} ${global.currency}`
+            }
+          },
+          resize: { enabled: true }
+        }
+      ],
 
       plotOptions: {
         series: {},
