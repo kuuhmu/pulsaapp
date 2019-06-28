@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.11.1 - 2019-06-28
+
+### Changed
+
+- Make demonstration
+
 ## 0.11.0 - 2019-06-25
 
 ### Added

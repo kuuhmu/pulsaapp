@@ -25,57 +25,6 @@ const license = new Gui(require("../bundled/license.html"))
 const welcome = new Gui(require("../bundled/welcome.html"))
 const disclaimer = new Gui(require("../bundled/disclaimer.html"))
 
-require("./footer")
-
-/**
- * Init
- */
-
-// Load known assets.
-const Asset = require("./logic/asset")
-const knownAssets = require("./data/assets.json")
-Asset.register(knownAssets.fiat, { type: "fiat", isTether: true })
-Asset.register(knownAssets.foreign, { type: "crypto", isTether: true })
-Asset.register(knownAssets.native, { type: "crypto", isTether: false })
-Asset.resolve(global.currency, { type: "fiat", isTether: true })
-
-// Load known anchors.
-const Anchor = require("./logic/anchor")
-Anchor.register(require("./data/anchors.json"))
-
-const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
-tabs.add("#welcome", __("Welcome"), welcome)
-tabs.add("#login", __("Login"), dom.loginTab)
-tabs.add("#license", null, license)
-tabs.add("#disclaimer", null, disclaimer)
-tabs.add("#about", null, welcome)
-dom.demoLink.onclick = displayDemo
-html.show(dom.loginTab)
-
-tabs.select(location.hash)
-if (!tabs.selected) tabs.select("#welcome")
-
-tabs.fitScreen = function () {
-  if (isOverflowing(dom.header)) {
-    html.replace(tabs.nav.domNode, tabs.selector.domNode)
-  }
-}
-tabs.fitScreen()
-
-const loginForm = new Form(dom.loginForm, { onsubmit: login })
-loginForm.dom.loginWithLedger.onclick = loginWithLedgerWallet
-
-if (params.address) {
-  tabs.select("#login")
-  loginForm["stellar-public-key"] = params.address
-  login()
-}
-
-tabs.listen("select", page => {
-  location.hash = page
-  window.scrollTo(0, 0)
-})
-
 /**
  * Functions
  */
@@ -133,6 +82,7 @@ function initGui () {
   const selected = location.hash
   tabs.remove("#welcome")
   tabs.remove("#login")
+  tabs.remove("#demo")
   tabs.add("#portfolio", __("Portfolio"), new PortfolioGui(portfolio))
   tabs.add("#rebalance", __("Rebalance"), new RebalanceGui(portfolio))
   tabs.add("#activity", __("Activity"), new ActivityGui(portfolio))
@@ -173,3 +123,62 @@ function getLedgerModule () {
     /* webpackChunkName: "ledger" */ "@cosmic-plus/ledger-wallet"
   ).then(ledger => ledger.default)
 }
+
+/**
+ * Init
+ */
+
+// Load known assets.
+const Asset = require("./logic/asset")
+const knownAssets = require("./data/assets.json")
+Asset.register(knownAssets.fiat, { type: "fiat", isTether: true })
+Asset.register(knownAssets.foreign, { type: "crypto", isTether: true })
+Asset.register(knownAssets.native, { type: "crypto", isTether: false })
+Asset.resolve(global.currency, { type: "fiat", isTether: true })
+
+// Load known anchors.
+const Anchor = require("./logic/anchor")
+Anchor.register(require("./data/anchors.json"))
+
+// Load footer.
+require("./footer")
+
+// Init navigation.
+const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
+tabs.add("#welcome", __("Welcome"), welcome)
+tabs.add("#demo", __("Demo"), displayDemo)
+tabs.add("#login", __("Login"), dom.loginTab)
+tabs.add("#license", null, license)
+tabs.add("#disclaimer", null, disclaimer)
+tabs.add("#about", null, welcome)
+dom.demoLink.onclick = displayDemo
+html.show(dom.loginTab)
+
+tabs.select(location.hash)
+if (!tabs.selected) {
+  if (!localStorage["PortfolioSummary.tab"]) tabs.select("#welcome")
+  else tabs.select("#login")
+}
+
+tabs.fitScreen = function () {
+  if (isOverflowing(dom.header)) {
+    html.replace(tabs.nav.domNode, tabs.selector.domNode)
+  }
+}
+tabs.fitScreen()
+
+// Init login.
+const loginForm = new Form(dom.loginForm, { onsubmit: login })
+loginForm.dom.loginWithLedger.onclick = loginWithLedgerWallet
+
+if (params.address) {
+  tabs.select("#login")
+  loginForm["stellar-public-key"] = params.address
+  login()
+}
+
+// Scrollup on navigation.
+tabs.listen("select", page => {
+  location.hash = page
+  window.scrollTo(0, 0)
+})
