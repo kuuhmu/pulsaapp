@@ -17,11 +17,11 @@ module.exports = class ActiveOffersTable extends Gui {
 <section class="ActiveOffersTable">
   <table>
     <tr>
-      <th>${__("Date")}</th>
-      <th>${__("Asset")}</th>
-      <th>${__("Direction")}</th>
-      <th>${__("Amount")}</th>
-      <th>${__("Price")} (%globalCurrency)</th>
+      <th class="name">${__("Name")}</th>
+      <th align="left">${__("Anchor")}</th>
+      <th align="left">${__("Direction")}</th>
+      <th align="right">${__("Amount")}</th>
+      <th align="right">${__("Price")} (%globalCurrency)</th>
     </tr>
     %toOfferRow:offers...
     <tr><td colspan="5" align="center" onclick=%cancelOffers>
@@ -67,11 +67,11 @@ class OfferRow extends Gui {
   constructor (offer) {
     super(`
 <tr>
-  <td>%toDate:last_modified_time</td>
   <td>
     <img src=%image alt="">
-    <span>%name / %anchor</span>
+    <span>%name</span>
   </td>
+  <td>%anchor</td>
   <td>%side</td>
   <td align="right">%nice:amount</td>
   <td align="right">%nice:price</td>
@@ -79,9 +79,9 @@ class OfferRow extends Gui {
     `)
 
     this.offer = offer
-    offer.project(["last_modified_time", "amount", "price"], this)
+    offer.project(["amount", "price"], this)
 
-    this.name = offer.asset.code
+    this.name = offer.balance.code
     this.side = offer.side === "buy" ? __("Buy") : __("Sell")
     this.anchor = offer.balance.anchor.name
     offer.asset.link("image", this)
@@ -89,10 +89,5 @@ class OfferRow extends Gui {
 
   nice (number) {
     return nice(number)
-  }
-
-  toDate (value) {
-    const date = value ? new Date(value) : new Date()
-    return date.toLocaleDateString()
   }
 }

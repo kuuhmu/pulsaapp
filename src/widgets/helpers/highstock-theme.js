@@ -10,9 +10,9 @@ const Highstock = require("highcharts/highstock")
 
 Highstock.theme = {
   chart: {
-    backgroundColor: "#fdfdfe",
+    backgroundColor: "#fefefe",
     style: {
-      fontFamily: "arial",
+      fontFamily: "'Source Sans Pro', arial, sans-serif",
       color: "#111"
     }
   },

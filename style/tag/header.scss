@@ -2,52 +2,55 @@
 
 body > header
 {
-  box-shadow: 0.1em 0.1em 0.2em 0.1em hsl(0, 0%, 90%);
+  box-shadow: 0.1em 0.1em 0.2em 0.1em $grey-light;
   background: white;
   padding: 0 2%;
   vertical-align: top;
   overflow: hidden;
 
-  line-height: 2.5em;
+  line-height: 3rem;
 
   nav {
     line-height: inherit;
+    font-size: 1.05em;
 
     a {
-      color: hsl(0, 0%, 70%);
-
-      &:not(.selected):hover { text-decoration: none; }
-      &:hover, &.selected { color: burlywood; }
+      margin-top: 0.3rem;
+      line-height: 2.4rem;
     }
   }
 
   select {
     float: right;
     width: auto;
-    height: 2.5em;
+    height: 3rem;
     margin: 0;
+    font-size: 1.05em;
 
     border: none!important;
     box-shadow: none!important;
     background: white;
 
-    color: hsl(0, 0%, 40%);
+    color: $grey-dark;
     text-align-last: right;
   }
 
   h1
   {
-    display: inline;
+    display: inline-block;
+    margin: 0.75rem 0;
 
-    font-size: 1.25em;
+    line-height: 1.5rem;
+    font-size: 1.5em;
     font-style: italic;
-    color: hsl(0, 0%, 40%);
+    color: $grey-darker;
+    font-weight: bolder;
 
     svg {
-      height: 1.1em;
-      fill: hsl(0, 0%, 40%);
+      display: inline-block;
+      height: 1em;
+      fill: $grey-darker;
       transform: skewX(-12deg);
-      vertical-align: text-top;
     }
   }
 }

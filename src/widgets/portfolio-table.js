@@ -15,11 +15,11 @@ module.exports = class PortfolioTable extends Gui {
     super(`
 <table class="PortfolioTable">
   <tr>
-    <th>${__("Name")}</th>
-    <th>${__("Anchor")}</th>
-    <th>${__("Amount")}</th>
-    <th>${__("Price")}</th>
-    <th>${__("Value")}</th>
+    <th class="name">${__("Name")}</th>
+    <th align="left">${__("Anchor")}</th>
+    <th align="right">${__("Amount")}</th>
+    <th align="right">${__("Price")}</th>
+    <th align="right">${__("Value")}</th>
   </tr>
   %rows...
 </table>

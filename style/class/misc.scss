@@ -1,19 +1,19 @@
 .info
 {
   font-weight: bold;
-  color: mediumseagreen;
+  color: $color-info;
 }
 
 .error
 {
   font-weight: bold;
-  color: tomato;
+  color: $color-error;
 }
 
 .note {
   width: 90%;
   margin: 1em auto;
-  color: hsl(0, 0%, 50%);
+  color: $grey-darker;
   font-style: italic;
 }
 

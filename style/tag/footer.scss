@@ -2,7 +2,7 @@
 
 body > footer
 {
-  border-top: solid 1px hsl(0, 0%, 90%);
+  border-top: solid 1px $grey-light;
   background: white;
   padding: 0 1%;
   overflow: hidden;
@@ -18,23 +18,23 @@ body > footer
       height: 2em;
       max-width: 9vw;
 
-      fill: hsl(0, 0%, 80%);
+      fill: $grey-medium;
       transition: fill 0.2s ease
     }
 
     &:hover svg {
-      fill: hsl(0, 0%, 40%);
+      fill: $highlight;
     }
   }
 
   p {
     line-height: 2em;
     margin: 0;
-    color: hsl(0, 0%, 40%);
+    color: $grey-darker;
   }
 
   a {
-    color: hsl(0, 0%, 40%);
+    color: $grey-darker;
   }
 }
 

@@ -19,10 +19,10 @@ module.exports = class TargetsTable extends Gui {
 <section class="TargetsTable">
   <table>
     <tr>
-      <th>${__("Name")}</th>
-      <th>${__("Goal")}</th>
-      <th>${__("Divergence")}</th>
-      <th>${__("Operation")}</th>
+      <th class="name">${__("Name")}</th>
+      <th align="right">${__("Goal")}</th>
+      <th align="right">${__("Divergence")}</th>
+      <th align="right">${__("Operation")}</th>
     </tr>
 
     %targets...

@@ -1,5 +1,9 @@
 /* Form styling */
 
+$bg-color: scale-color($color1, $lightness: 90%, $saturation: -50%);
+$button-color: scale-color($color1, $lightness: 80%, $saturation: -60%);
+$border-color: scale-color($color1, $lightness: 60%, $saturation: -80%);
+
 /* Blocks */
 
 form
@@ -60,10 +64,10 @@ select,
 button,
 input
 {
-  border: solid 0.05em hsl(240, 10%, 85%);
+  border: solid 0.05em $border-color;
   border-radius: 0.1em;
 
-  background: hsl(240, 40%, 98%);
+  background: $bg-color;
 
   [type="number"]
   {
@@ -72,18 +76,18 @@ input
 
   &[readonly]
   {
-    color: hsl(0, 0%, 40%);
+    color: $grey-dark;
   }
 
   &:enabled:focus
   {
     outline: 0;
-    box-shadow: 0em 0em 0.2em hsl(240, 10%, 60%);
+    box-shadow: 0em 0em 0.1em $highlight;
   }
 
   &:enabled:hover
   {
-    border: solid 0.05em hsl(240, 10%, 70%);
+    border: solid 0.05em $highlight;
   }
 
 }
@@ -102,12 +106,12 @@ select
 [type="submit"],
 button
 {
-  background: hsl(240, 40%, 96%);
+  background: $button-color;
 
   &:enabled:hover
   {
     cursor: pointer;
-    background: hsl(240, 40%, 95%);
+    background: $border-color;
   }
 }
 
@@ -129,7 +133,7 @@ button
     white-space: nowrap;
     font-style: italic;
     text-align: center;
-    color: hsl(0, 0%, 40%);
+    color: $grey-darker;
 
     img {
       height: 100%;
@@ -141,13 +145,13 @@ button
   }
 
   &:checked + label {
-    color: black;
+    color: $black;
     font-style: normal;
   }
 
   &:disabled:checked + label
   {
-    box-shadow: inset 0 0 0.2em hsl(240, 10%, 60%);
+    box-shadow: inset 0 0 0.1em $grey-medium;
   }
 
   &:enabled:checked + label

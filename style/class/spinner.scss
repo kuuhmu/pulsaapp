@@ -7,10 +7,10 @@
   display: inline-block;
   width: 1em;
   height: 1em;
-  margin: 0 0.1em;
+  margin: 0 0.5em;
   vertical-align: middle;
   border-radius: 100%;
-  background-color: grey;
+  background-color: $grey-darker;
 
   animation: animate 1.0s infinite ease-in-out;
 }

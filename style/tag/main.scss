@@ -6,6 +6,47 @@ body > main
   padding: 0.3em 1%;
   overflow: hidden;
 
+  section.landing {
+
+    @media screen and (max-width: 46em) {
+      display: block;
+      padding: 0 2em;
+      text-align: justify;
+
+      h3 {
+        text-align: left;
+      }
+    }
+
+    @media screen and (min-width: 46em) {
+      display: flex;
+
+      h3 {
+        width: 10em;
+        text-align: right;
+      }
+    }
+
+     h3 {
+       border-bottom: 1px solid $highlight;
+       padding-bottom: 1.2em;
+
+       font-size: 1.2em;
+       color: scale-color($highlight, $lightness: -20%, $saturation: -20%);
+
+       align-self: flex-start;
+    }
+
+    div {
+      flex-basis: 80%;
+      margin: 0.45em;
+    }
+  }
+
+  section section a {
+    color: scale-color($highlight, $lightness: -20%, $saturation: -20%);
+  }
+
   section p
   {
     padding: 0 1em;
@@ -16,10 +57,10 @@ body > main
   {
     width: 100%;
     margin: 2rem 0;
-
-    box-shadow: 0.1em 0.1em 0.2em hsl(0, 0%, 90%);
     border-radius: 0.1em;
-    background: hsl(240, 40%, 99.5%);
+
+    box-shadow: 0.1em 0.1em 0.2em $grey-light;
+    background: $grey-lighter;
     overflow-x: auto;
     overflow-y: hidden;
   }
