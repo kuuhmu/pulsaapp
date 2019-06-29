@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.11.2 - 2019-06-28
+
+### Fixed
+
+- Adjust text size on small screen devices.
+
 ## 0.11.1 - 2019-06-28
 
 ### Changed

@@ -13,8 +13,10 @@ body
 {
   height: 100%;
   background: linear-gradient(scale-color($color1, $lightness: 90%), scale-color($color2, $lightness: 90%));
+
   padding: 3rem 0 4.65em 0;
   font-family: "Source Sans Pro", Arial, sans-serif;
+  text-size-adjust: none;
   color: #111;
 }
 
