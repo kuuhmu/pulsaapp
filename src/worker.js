@@ -17,7 +17,7 @@ new ServiceWorker(pkg.name, pkg.version, "verbose")
     "vendors~ledger.js",
 
     // Fonts
-    "fonts/SourceProSans-Regular.ttf",
+    "fonts/SourceSansPro-Regular.ttf",
     "fonts/RobotoSlab-Regular.ttf",
 
     // Images

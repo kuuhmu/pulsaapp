@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Adjust text size on small screen devices.
+- Fix Source Sans Pro font path.
 
 ## 0.11.1 - 2019-06-28
 
