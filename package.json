@@ -1,6 +1,6 @@
 {
   "name": "equilibre.io",
-  "version": "0.11.0",
+  "version": "0.11.2",
   "description": "A portfolio balancer for Stellar Decentralized Exchange",
   "author": "MisterTicot",
   "repository": "github:cosmic-plus/webapp-equilibre-io",
