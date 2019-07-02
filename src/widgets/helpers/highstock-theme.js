@@ -5,27 +5,79 @@
 const Highstock = require("highcharts/highstock")
 
 /**
+ * Theme Colors
+ */
+const backgroundLight = "#edf2f9"
+const black = "#111"
+const formBackground = "#f8f9fb"
+const greyLighter = "#fefefe"
+const greyLight = "#e6e6e6"
+const greyMedium = "#cccccc"
+const greyDarker = "#666"
+const highlight = "#7799d5"
+
+/**
  * Main Theme
  */
 
 Highstock.theme = {
-  chart: {
-    backgroundColor: "#fefefe",
-    style: {
-      fontFamily: "'Source Sans Pro', arial, sans-serif",
-      color: "#111"
+  rangeSelector: {
+    selected: 2,
+    inputBoxBorderColor: greyLight,
+    buttonTheme: {
+      fill: formBackground,
+      states: {
+        hover: { fill: backgroundLight },
+        select: { fill: highlight, style: { color: greyLighter } }
+      }
     }
   },
 
+  chart: {
+    backgroundColor: greyLighter,
+    style: {
+      fontFamily: "'Source Sans Pro', arial, sans-serif",
+      color: black
+    }
+  },
+
+  xAxis: {
+    lineColor: greyLight,
+    tickColor: greyLight
+  },
+
+  yAxis: {
+    lineColor: greyLight,
+    tickColor: greyLight
+  },
+
+  navigator: {
+    maskFill: "rgba(119, 153, 213, 0.07)",
+    outlineColor: greyMedium,
+    xAxis: { gridLineColor: greyLight },
+    series: { color: highlight }
+  },
+
   tooltip: { style: { fontSize: "14px" } },
+  scrollbar: { enabled: false },
   credits: { enabled: false },
 
   plotOptions: {
+    column: {
+      color: greyDarker,
+      dataGrouping: { enabled: false }
+    },
+
     pie: {
       allowPointSelect: true,
       animation: false,
       cursor: "pointer",
       dataLabels: { style: { fontSize: "14px" } }
+    },
+
+    spline: {
+      color: highlight,
+      dataGrouping: { enabled: false }
     }
   }
 }

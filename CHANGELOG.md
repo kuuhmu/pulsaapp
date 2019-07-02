@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Theme Highstock according to new Equilibre.io colors.
+
 ## 0.11.2 - 2019-06-28
 
 ### Fixed
@@ -14,7 +20,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Complete interface re-design. (Thanks Alris Can)
-- Make demo easier to stop.
+- Make demo easier to spot.
 
 ## 0.11.0 - 2019-06-25
 

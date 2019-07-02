@@ -47,7 +47,6 @@ module.exports = class PortfolioHistoryChart extends Gui {
 
     this.chart = Highstock.stockChart(this.domNode, {
       chart: { type: "area" },
-      rangeSelector: { selected: 2 },
 
       navigator: {
         series: {
