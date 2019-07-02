@@ -17,7 +17,13 @@ const global = require("../logic/global")
 
 module.exports = class PortfolioPieChart extends Gui {
   constructor (portfolio) {
-    super(`<div -ref=%container align="center"></div>`)
+    super(`
+<div class="PortfolioPieChart">
+  <h3>${__("Repartition by Asset")}</h3>
+
+  <div -ref=%container align="center"></div>
+</div>
+    `)
     this.portfolio = portfolio
 
     this.watch(this.portfolio, "total", () => this.draw())

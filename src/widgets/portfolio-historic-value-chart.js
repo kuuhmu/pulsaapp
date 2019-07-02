@@ -20,7 +20,19 @@ module.exports = class PortfolioHistoryChart extends Gui {
   constructor (portfolio) {
     super(`
 <div class="PortfolioHistoryChart">
-  <h3>Computing Portfolio History...<span class="spinner"></span></h3>
+  <h3>${__("Portfolio Historical Value")}</h3>
+
+  <div -ref=%container>
+    <p>
+      ${__("Computing portfolio history...")}
+      <span class="spinner"></span>
+    </p>
+    <p>
+      ${__(
+    "The very first time, it may take about a minute to download historical data."
+  )}
+  </div>
+
 </div>
     `)
 
@@ -45,7 +57,7 @@ module.exports = class PortfolioHistoryChart extends Gui {
   drawChart (history) {
     const series = this.historyToSeries(history)
 
-    this.chart = Highstock.stockChart(this.domNode, {
+    this.chart = Highstock.stockChart(this.container, {
       chart: { type: "area" },
 
       navigator: {
