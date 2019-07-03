@@ -7,7 +7,8 @@ const html = require("@cosmic-plus/domutils/es5/html")
 const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { __ } = require("@cosmic-plus/i18n")
 
-const AssetPrompt = require("./asset-prompt")
+const AssetSelector = require("./asset-selector")
+const Dialog = require("../helpers/dialog")
 
 /**
  * Definition
@@ -64,14 +65,17 @@ module.exports = class TargetsTable extends Gui {
 
   async addAsset () {
     const assets = this.target.portfolio.availableAssets().filter(a => a.show)
-    const assetPrompt = new AssetPrompt(assets)
-    assetPrompt.open()
 
-    const asset = await assetPrompt.answer
-    if (!asset) return
+    const assetSelector = new AssetSelector(assets)
+    const dialog = Dialog.confirm({
+      title: __("Pick an Asset"),
+      content: assetSelector
+    })
 
-    const target = this.target.addAsset(asset)
-    this.selected = target
+    if (await dialog && assetSelector.selected) {
+      const target = this.target.addAsset(assetSelector.selected)
+      this.selected = target
+    }
   }
 }
 

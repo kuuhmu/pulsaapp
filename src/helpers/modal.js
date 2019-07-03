@@ -62,6 +62,7 @@ class Modal extends Gui {
 
     Modal.clickWall.disable()
     this.trigger("close")
+    this.destroy()
   }
 }
 
