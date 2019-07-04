@@ -3,35 +3,36 @@
  * Target Setup Form
  */
 const Gui = require("@cosmic-plus/domutils/es5/gui")
-const { __ } = require("@cosmic-plus/i18n")
 
+const Anchor = require("../logic/anchor")
 const TargetSetupAnchors = require("./target-setup-anchors")
 const TargetSetupSize = require("./target-setup-size")
+const { arrayOnlyInFirst } = require("../helpers/misc")
 
 /** Definition **/
 
 module.exports = class TargetSetup extends Gui {
   constructor (target) {
     super(`
-<section class="TargetSetup">
-  <form onsubmit="return false">
+<div class="TargetSetup">
+  <h3>%name</h3>
+  <hr>
 
-    <h3>%name</h3>
-    <hr>
+  %sizeSetup
+  %anchorsSetup
 
-    %sizeSetup
-    %anchorsSetup
-
-    <hr>
-    <input type="submit" onclick=%close value="${__("Close")}">
-
-  </form>
-</section>
+</div>
     `)
 
     this.target = target
-    this.name = target.asset.name
+    this.backup = {
+      size: target.size,
+      mode: target.mode,
+      opening: target.opening.slice(),
+      closing: target.closing.slice()
+    }
 
+    this.name = target.asset.name
     this.sizeSetup = new TargetSetupSize(target)
 
     if (this.target.asset.anchors.length > 1) {
@@ -39,9 +40,36 @@ module.exports = class TargetSetup extends Gui {
     }
   }
 
-  close () {
+  confirm () {
     this.sizeSetup.maybeSwitchMode()
-    this.trigger("close")
+    this.close()
+  }
+
+  cancel () {
+    this.target.size = this.backup.size
+    this.target.mode = this.backup.mode
+
+    const opened = arrayOnlyInFirst(
+      this.target.opening,
+      this.backup.opening
+    ).concat(arrayOnlyInFirst(this.backup.closing, this.target.closing))
+    opened
+      .map(Anchor.resolve)
+      .forEach(anchor => this.target.removeAnchor(anchor))
+
+    const closed = arrayOnlyInFirst(
+      this.target.closing,
+      this.backup.closing
+    ).concat(arrayOnlyInFirst(this.backup.opening, this.target.opening))
+    closed.map(Anchor.resolve).forEach(anchor => this.target.addAnchor(anchor))
+
+    this.close()
+  }
+
+  close () {
+    document.activeElement.blur()
+    this.sizeSetup.destroy()
+    if (this.anchorsSetup) this.anchorsSetup.destroy()
     this.destroy()
   }
 }

@@ -73,8 +73,7 @@ module.exports = class TargetsTable extends Gui {
     })
 
     if (await dialog && assetSelector.selected) {
-      const target = this.target.addAsset(assetSelector.selected)
-      this.selected = target
+      this.target.addAsset(assetSelector.selected)
     }
   }
 }

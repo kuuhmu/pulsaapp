@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Theme Highstock according to new Equilibre.io colors.
+- Target configuration form appears in a modal box.
 - Add a title to each card.
 
 ## 0.11.2 - 2019-06-28

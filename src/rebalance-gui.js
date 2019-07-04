@@ -5,6 +5,7 @@
 const Gui = require("@cosmic-plus/domutils/es5/gui")
 const { __ } = require("@cosmic-plus/i18n")
 
+const Dialog = require("./helpers/dialog")
 const Target = require("./logic/target")
 const TargetSetup = require("./widgets/target-setup")
 const TargetsControls = require("./widgets/targets-controls")
@@ -42,14 +43,21 @@ module.exports = class RebalanceGui extends Gui {
     this.project("selected", this.table)
 
     // Controls.
+    this.controls = new TargetsControls(this.target)
+
     this.trap("selected", () => {
-      if (this.controls) this.controls.destroy()
-      if (this.selected) {
-        this.controls = new TargetSetup(this.selected)
-        this.controls.listen("close", () => this.selected = null)
-      } else {
-        this.controls = new TargetsControls(this.target)
-      }
+      if (this.selected) this.showTargetSetup(this.selected)
     })
+  }
+
+  async showTargetSetup (target) {
+    const setup = new TargetSetup(target)
+    const dialog = Dialog.confirm({ content: setup })
+
+    if (await dialog) setup.confirm()
+    else setup.cancel()
+
+    this.selected = null
+    target.computeAll()
   }
 }
