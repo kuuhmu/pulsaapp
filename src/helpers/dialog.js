@@ -57,7 +57,7 @@ Dialog.alert = function (params = {}) {
 
   modal.open()
   return new Promise(resolve => modal.listen("close", resolve))
- }
+}
 
 Dialog.confirm = function (params = {}) {
   const dialog = new Dialog(params)
@@ -66,13 +66,16 @@ Dialog.confirm = function (params = {}) {
   const promise = new Promise(resolve => {
     modal.listen("close", () => resolve(false))
     dialog.actions = [
-      [__("Ok"), () => resolve(true)],
+      [__("Ok"), () => resolve(true), "submit"],
       [__("Cancel"), () => resolve(false)]
     ]
   })
   promise.finally(() => modal.close())
 
   modal.open()
+  const el = dialog.domNode.querySelector("[autofocus]")
+  if (el) el.focus()
+
   return promise
 }
 
@@ -80,4 +83,3 @@ Dialog.confirm = function (params = {}) {
  * Export
  */
 module.exports = Dialog
-  

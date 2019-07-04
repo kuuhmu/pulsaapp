@@ -15,8 +15,8 @@ module.exports = class TargetSetupSize extends Gui {
 <fieldset class="TargetSetupSize">
   <legend>${__("Size")}:</legend>
 
-  <input class="half" type="number" step="any" min="0" %max value=%size
-    placeholder=%share onchange=%maybeSwitchMode>
+  <input autofocus class="half" type="number" step="any" min="0" %max
+    value=%size placeholder=%share onchange=%maybeSwitchMode>
 
   <select class="half" onchange=%setMode value=%mode>
     <option value="weight">${__("Weight")}</option>
