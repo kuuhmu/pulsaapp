@@ -161,7 +161,7 @@ if (!tabs.selected) {
 }
 
 tabs.fitScreen = function () {
-  if (isOverflowing(dom.header)) {
+  if (tabs.nav.domNode.parentNode && isOverflowing(dom.header)) {
     html.replace(tabs.nav.domNode, tabs.selector.domNode)
   }
 }

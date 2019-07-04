@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 - Target configuration form appears in a modal box.
 - Add a title to each card.
 
+### Fixed
+
+- Fixed a bug that could lock the app on very low width display.
+
 ## 0.11.2 - 2019-06-28
 
 ### Fixed
