@@ -42,7 +42,7 @@ module.exports = class TargetSetupSize extends Gui {
   }
 
   maybeSwitchMode () {
-    if (this.size === 0) {
+    if (this.size == 0) {
       this.mode = "amount"
     } else if (!this.size) {
       if (this.mode !== "remove") this.mode = "ignore"

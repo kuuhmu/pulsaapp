@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed a bug that could lock the app on very low width display.
 - Lower font size on wider screens. (Thanks [@Pselden] & Damian)
+- Fix a case in which allocation check limits were bypassed.
 
 ## 0.11.2 - 2019-06-28
 
