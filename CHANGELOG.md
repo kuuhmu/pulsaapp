@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed a bug that could lock the app on very low width display.
+- Lower font size on wider screens. (Thanks [@Pselden] & Damian)
 
 ## 0.11.2 - 2019-06-28
 
@@ -331,3 +332,4 @@ Beta 1 release
 [pwa]: https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Introduction
 [@ddombrowsy]: https://github.com/ddombrowsky
 [@pawelfus]: https://github.com/pawelfus
+[@Pselden]: https://github.com/pselden
