@@ -37,13 +37,15 @@ strategy.apply = function (target) {
 }
 
 function checkAllocationLimits (allocated, available, checkUnderFlag) {
-  if (allocated > available) {
+  const margin = global.misallocationTolerance
+
+  if (allocated > available * (1 + margin)) {
     const over = +nice(allocated - available, 2)
     const overP = +nice(100 * over / available, 2)
     let msg = __("Rebalance setup is over portfolio value by")
     msg += ` ${over} ${global.currency} (${overP}%) `
     throw new Error(msg)
-  } else if (!checkUnderFlag && allocated < available) {
+  } else if (!checkUnderFlag && allocated < available * (1 - margin)) {
     const under = +nice(available - allocated, 2)
     const underP = +nice(100 * under / available, 2)
     let msg = __("Rebalance setup is under portfolio value by")

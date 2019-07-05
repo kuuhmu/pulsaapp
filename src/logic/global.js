@@ -40,5 +40,10 @@ global.spreadTightening = 0.01
 // (percentage of offer amount).
 global.skipMarginalOffers = 0.1
 
+// When the total value of a rebalancing setup differs from the total value of
+// the portfolio by more than this, raise an error (percentage of portfolio
+// total value).
+global.misallocationTolerance = 0.001
+
 /// Main navigation
 global.tabs = null

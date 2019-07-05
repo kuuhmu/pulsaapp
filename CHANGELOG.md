@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Theme Highstock according to new Equilibre.io colors.
 - Target configuration form appears in a modal box.
 - Add a title to each card.
+- Don't raise an error anymore when rebalancing target is over/under portfolio
+  total value by less than 1‰.
 
 ### Fixed
 
@@ -332,4 +334,4 @@ Beta 1 release
 [pwa]: https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Introduction
 [@ddombrowsy]: https://github.com/ddombrowsky
 [@pawelfus]: https://github.com/pawelfus
-[@Pselden]: https://github.com/pselden
+[@pselden]: https://github.com/pselden
