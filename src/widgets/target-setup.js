@@ -42,6 +42,14 @@ module.exports = class TargetSetup extends Gui {
 
   confirm () {
     this.sizeSetup.maybeSwitchMode()
+
+    if (this.target.asset.id === "XLM") {
+      if (this.target.amount < this.target.min) {
+        this.target.mode = "amount"
+        this.target.size = this.target.min
+      }
+    }
+
     this.close()
   }
 

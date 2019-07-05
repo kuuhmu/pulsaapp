@@ -134,9 +134,28 @@ class Portfolio extends Projectable {
   }
 }
 
+Portfolio.define("minimumBalance", ["account"], function () {
+  return Portfolio.accountMinimumBalance(this.account)
+})
+
 /**
  * Utilities
  */
+
+/**
+ * Returns the minimum XLM balance for an account. It includes the mandatory
+ * network reserve, plus the required sum to support 1 open offer for each
+ * trustline.
+ */
+Portfolio.accountMinimumBalance = function (account) {
+  const baseReserve = 0.5
+
+  let entries = (account.balances.length - 1) * 2 // Reserve an offer entry
+  entries += Object.keys(account.data_attr).length
+  entries += account.signers.length - 1
+
+  return (2 + entries) * baseReserve
+}
 
 /**
  * List known assets for which account doesn't have any trustline.

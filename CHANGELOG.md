@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Lock a mimimum XLM balance to pay for network reserve & offers.
+
 ### Changed
 
 - Theme Highstock according to new Equilibre.io colors.
