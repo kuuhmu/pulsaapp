@@ -8,7 +8,7 @@ const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { __ } = require("@cosmic-plus/i18n")
 
 const global = require("./global")
-const { fixed7, positive } = require("../helpers/misc")
+const { arraySum, fixed7, positive } = require("../helpers/misc")
 
 /**
  * Applicator
@@ -34,6 +34,7 @@ strategy.apply = function (target) {
   delayed.forEach(child => strategy.weight(child, remains, weights))
 
   checkAllocationLimits(sum, target.value, delayed.length)
+  maybeThrottleTargetAmounts(target)
 }
 
 function checkAllocationLimits (allocated, available, checkUnderFlag) {
@@ -52,6 +53,37 @@ function checkAllocationLimits (allocated, available, checkUnderFlag) {
     msg += ` ${under} ${global.currency} (${underP}%) `
     throw new Error(msg)
   }
+}
+
+/**
+ * When not enough Lumens are available to fully rebalance the portfolio,
+ * harmoniously reduce traded amounts in order to reach target in several steps
+ * in a risk-managed way.
+ */
+function maybeThrottleTargetAmounts (target) {
+  // Check if `target.amount` throttling is required.
+  const Asset = require("./asset")
+  const XLM = Asset.resolve("XLM")
+  const liquidity = XLM.value - XLM.target.min * XLM.price
+
+  const buyTargets = target.childs.filter(c => c.valueDiff > 0)
+  const buyValue = arraySum(buyTargets, "valueDiff")
+  const misliquidity = positive(buyValue - liquidity)
+
+  if (!misliquidity) return
+
+  // Throttle `target.amount`.
+  const sellTargets = target.childs.filter(c => c.valueDiff < 0)
+  const sellValue = -arraySum(sellTargets, "valueDiff")
+  const throttleRatio = 1 - positive((sellValue - misliquidity) / sellValue)
+
+  if (!positive(throttleRatio)) {
+    throw new Error(__("Not enough Lumens to trade"))
+  }
+
+  target.childs.forEach(child => {
+    child.amount = fixed7(child.amount - child.amountDiff * throttleRatio)
+  })
 }
 
 /**

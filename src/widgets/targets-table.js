@@ -111,7 +111,7 @@ class TargetRow extends Gui {
     case "remove":
       return __("Remove")
     case "amount":
-      return `${target.amount} ${target.asset.code}`
+      return `${target.size} ${target.asset.code}`
     case "weight":
       return `${target.size} − ${this.toPercent(target.share)}`
     case "percentage":

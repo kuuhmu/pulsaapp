@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Deal with cases where there's not enough XLM to rebalance the portfolio in one
+  step.
 - Lock a mimimum XLM balance to pay for network reserve & offers.
 
 ### Changed

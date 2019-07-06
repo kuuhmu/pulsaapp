@@ -43,8 +43,10 @@ module.exports = class TargetSetup extends Gui {
   confirm () {
     this.sizeSetup.maybeSwitchMode()
 
-    if (this.target.asset.id === "XLM") {
-      if (this.target.amount < this.target.min) {
+    const asset = this.target.asset
+    if (asset.id === "XLM") {
+      // Use `target.value` as `target.amount` gets modified in throttle mode.
+      if (this.target.value < this.target.min * asset.price) {
         this.target.mode = "amount"
         this.target.size = this.target.min
       }

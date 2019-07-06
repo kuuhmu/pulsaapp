@@ -144,8 +144,9 @@ Portfolio.define("minimumBalance", ["account"], function () {
 
 /**
  * Returns the minimum XLM balance for an account. It includes the mandatory
- * network reserve, plus the required sum to support 1 open offer for each
- * trustline.
+ * network reserve, the required amount to support 1 open offer for each
+ * trustline, and an additional 0.5 Lumens to cover for fees & algorithm
+ * rounding issues.
  */
 Portfolio.accountMinimumBalance = function (account) {
   const baseReserve = 0.5
@@ -154,7 +155,7 @@ Portfolio.accountMinimumBalance = function (account) {
   entries += Object.keys(account.data_attr).length
   entries += account.signers.length - 1
 
-  return (2 + entries) * baseReserve
+  return (3 + entries) * baseReserve
 }
 
 /**
