@@ -93,6 +93,10 @@ class Portfolio extends Projectable {
     for (let index in account.balances) {
       const balance = Balance.ingest(account.balances[index])
       this.maybeAddBalance(balance)
+
+      if (balance.id === "XLM") {
+        balance.asset.amountMin = Portfolio.accountMinimumBalance(account)
+      }
     }
 
     if (this.new) {
@@ -133,10 +137,6 @@ class Portfolio extends Projectable {
     arrayRemove(this.assets, asset)
   }
 }
-
-Portfolio.define("minimumBalance", ["account"], function () {
-  return Portfolio.accountMinimumBalance(this.account)
-})
 
 /**
  * Utilities

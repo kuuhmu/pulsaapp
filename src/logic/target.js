@@ -209,10 +209,6 @@ Target.forPortfolio = function (portfolio, json) {
   target.portfolio = portfolio
 
   portfolio.target = target
-  const XLM = Asset.resolve("XLM")
-  target.watch(portfolio, "minimumBalance", () => {
-    XLM.target.min = portfolio.minimumBalance
-  })
   target.watch(portfolio, "total", () => target.computeAll())
 
   // Add/Remove assets after trustline change.

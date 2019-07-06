@@ -64,7 +64,7 @@ function maybeThrottleTargetAmounts (target) {
   // Check if `target.amount` throttling is required.
   const Asset = require("./asset")
   const XLM = Asset.resolve("XLM")
-  const liquidity = XLM.value - XLM.target.min * XLM.price
+  const liquidity = XLM.value - XLM.amountMin * XLM.price
 
   const buyTargets = target.childs.filter(c => c.valueDiff > 0)
   const buyValue = arraySum(buyTargets, "valueDiff")
