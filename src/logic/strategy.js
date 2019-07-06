@@ -78,7 +78,7 @@ function maybeThrottleTargetAmounts (target) {
   const throttleRatio = 1 - positive((sellValue - misliquidity) / sellValue)
 
   if (!positive(throttleRatio)) {
-    throw new Error(__("Not enough Lumens to trade"))
+    throw new Error(__("The XLM share is too low"))
   }
 
   target.childs.forEach(child => {

@@ -24,13 +24,11 @@ module.exports = class PortfolioHistoryChart extends Gui {
 
   <div -ref=%container>
     <p>
-      ${__("Computing portfolio history...")}
+      ${__("Downloading historical data...")}
       <span class="spinner"></span>
     </p>
     <p>
-      ${__(
-    "The very first time, it may take about a minute to download historical data."
-  )}
+      ${__("The very first time, it may take about a minute.")}
   </div>
 
 </div>

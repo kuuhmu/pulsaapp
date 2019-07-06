@@ -66,7 +66,7 @@ Dialog.confirm = function (params = {}) {
   const promise = new Promise(resolve => {
     modal.listen("close", () => resolve(false))
     dialog.actions = [
-      [__("Ok"), () => resolve(true), "submit"],
+      [__("OK"), () => resolve(true), "submit"],
       [__("Cancel"), () => resolve(false)]
     ]
   })
