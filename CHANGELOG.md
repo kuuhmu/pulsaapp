@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.1 - 2019-07-11
+
+### Fixed
+
+- Fix a bug that sometime caused rebalancing transactions to be invalid. (Thanks
+  m4dpr0ph3ss0r)
+
 ## 1.0.0 - 2019-07-06
 
 ### Added
