@@ -1,5 +1,9 @@
 /* Screen-size handling */
 
+@-ms-viewport{
+  width: device-width;
+}
+
 @media screen and (min-width: 46em), screen and (min-height: 36.5em)
 {
   html { font-size: 1.1em; }

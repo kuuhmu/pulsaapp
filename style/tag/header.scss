@@ -8,9 +8,12 @@ body > header
   vertical-align: top;
   overflow: hidden;
 
-  line-height: 3rem;
+  line-height: $header-height;
 
   nav {
+    display: none;
+    @media screen and (min-width: 46em) { display: unset; }
+
     line-height: inherit;
     font-size: 1.05em;
 
@@ -21,9 +24,11 @@ body > header
   }
 
   select {
+    @media screen and (min-width: 46em) { display:none; }
+
     float: right;
     width: auto;
-    height: 3rem;
+    height: $header-height;
     margin: 0;
     font-size: 1.05em;
 

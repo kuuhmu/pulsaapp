@@ -14,7 +14,6 @@ const Portfolio = require("./logic/portfolio")
 
 const ClickWall = require("./helpers/click-wall")
 const Form = require("./helpers/form")
-const { isOverflowing } = require("./helpers/dom")
 
 const ActivityGui = require("./activity-gui")
 const PortfolioGui = require("./portfolio-gui")
@@ -90,7 +89,6 @@ function initGui () {
   tabs.add("#logout", __("Logout"), () => {
     location.replace(location.href.replace(/\?.*$/, "#login"))
   })
-  tabs.fitScreen()
 
   // Fix portfolio pie chart positioning.
   tabs.listen("select", () => {
@@ -144,7 +142,11 @@ Anchor.register(require("./data/anchors.json"))
 require("./footer")
 
 // Init navigation.
-const tabs = global.tabs = new Tabs({ nav: dom.header, view: dom.main })
+const tabs = global.tabs = new Tabs({
+  nav: dom.header,
+  selector: dom.header,
+  view: dom.main
+})
 tabs.add("#welcome", __("Welcome"), welcome)
 tabs.add("#demo", __("Demo"), displayDemo)
 tabs.add("#login", __("Login"), dom.loginTab)
@@ -154,18 +156,12 @@ tabs.add("#about", null, welcome)
 dom.demoLink.onclick = displayDemo
 html.show(dom.loginTab)
 
+tabs.select(null)
 tabs.select(location.hash)
 if (!tabs.selected) {
   if (!localStorage["PortfolioSummary.tab"]) tabs.select("#welcome")
   else tabs.select("#login")
 }
-
-tabs.fitScreen = function () {
-  if (tabs.nav.domNode.parentNode && isOverflowing(dom.header)) {
-    html.replace(tabs.nav.domNode, tabs.selector.domNode)
-  }
-}
-tabs.fitScreen()
 
 // Init login.
 const loginForm = new Form(dom.loginForm, { onsubmit: login })

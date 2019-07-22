@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Improve mobile display.
+
 ## 1.0.1 - 2019-07-11
 
 ### Fixed
