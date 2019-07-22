@@ -99,7 +99,7 @@ class TargetRow extends Gui {
     this.watch(target, ["size", "mode", "share"], () => this.compute("command"))
 
     target.asset.project("image", this)
-    target.project("shareDiff", this)
+    target.project("shareDiff", this, x => -x)
 
     if (target.order) target.order.project("description", this)
   }

@@ -85,7 +85,7 @@ Target.define("modified", ["json"], function () {
   return this.hasChanged()
 })
 Target.define("valueDiff", ["value", "asset"], function () {
-  return this.asset && this.asset.value - this.value
+  return this.asset && this.value - this.asset.value
 })
 Target.define("valueDiffP", "valueDiff", function () {
   return this.value ? this.valueDiff / this.value : null
@@ -101,7 +101,7 @@ Target.define("share", null, function () {
   return this.value / this.root.portfolio.total
 })
 Target.define("shareDiff", ["share"], function () {
-  return this.asset.share - this.share
+  return this.share - this.asset.share
 })
 
 /**
