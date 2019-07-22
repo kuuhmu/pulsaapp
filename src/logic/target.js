@@ -370,17 +370,33 @@ Target.prototype.toCosmicLink = function () {
     throw new Error("Only root target can be converted to CosmicLink")
   }
 
-  // Generate CosmicLink.
+  // Create operations.
   const operations = this.toOperations()
-  const cosmicLink = Order.operationsToCosmicLink(operations)
 
   // Set outdated offers to be replaced.
   const outdated = this.portfolio.offers.listOutdated()
-  cosmicLink.tdesc.operations.forEach(odesc => {
-    if (outdated.length) odesc.offerId = outdated.pop().id
+  const remaining = []
+
+  operations.forEach(o => o.offer.id = null)
+  outdated.forEach(offer => {
+    const operation = operations.find(o => o.offer.balance === offer.balance)
+    if (operation) operation.offer.id = offer.id
+    else remaining.push(offer)
   })
-  outdated.forEach(remains => {
-    cosmicLink.addOperation("manageOffer", { offerId: remains.id, amount: 0 })
+
+  operations.forEach(operation => {
+    if (!operation.offer.id && remaining.length) {
+      operation.offer.id = remaining.pop().id
+    }
+  })
+
+  // Create CosmicLink.
+  const cosmicLink = Order.operationsToCosmicLink(operations)
+
+  // Close outdated offers which are not replaced.
+  remaining.forEach(offer => {
+    cosmicLink.tdesc.operations.unshift({})
+    cosmicLink.setOperation(0, "manageOffer", { offerId: offer.id, amount: 0 })
   })
 
   // Open/close trustlines.

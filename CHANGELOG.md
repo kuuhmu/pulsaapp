@@ -12,6 +12,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Ensure that outdated offers are replaced before new one are passed. This fixes
+  cases in which outdated offers prevented to pass new ones due to liability
+  threshold.
 - Fix a case in which clicking "Cancel" in the target setup dialog would not
   reset target setting to the previous state.
 - Fix several miscalculations related to balancing assets with multiple anchors
