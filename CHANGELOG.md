@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 - Improve mobile display.
 - Throw an error when a too low XLM allocation would cause rebalancing to take
   more than 20 steps.
+- Remove thewwallet.com WSD from new trustlines choice because it is unpegging
+  badly.
 
 ### Fixed
 

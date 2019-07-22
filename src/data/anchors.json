@@ -1,7 +1,8 @@
 {
   "GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S": {
     "alias": "tempo.eu.com",
-    "emit": [["EUR", "EURT"]]
+    "emit": [["EUR", "EURT"]],
+    "unpeg": true
   },
   "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX": {
     "alias": "ripplefox.com",
@@ -17,7 +18,8 @@
   },
   "GDSVWEA7XV6M5XNLODVTPCGMAJTNBLZBXOFNQD3BNPNYALEYBNT6CE2V": {
     "alias": "thewwallet.com",
-    "emit": [["USD", "WSD"]]
+    "emit": [["USD", "WSD"]],
+    "unpeg": true
   },
   "GDUKMGUGDZQK6YHYA5Z6AY2G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEX": {
     "alias": "anchorusd.com",

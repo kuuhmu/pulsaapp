@@ -17,7 +17,10 @@ module.exports = class TargetSetupAnchors extends Gui {
   `)
 
     this.target = target
-    this.anchors = target.asset.anchors
+    this.anchors = target.asset.anchors.filter(anchor => {
+      const portfolio = target.root.portfolio
+      return !anchor.unpeg || doesPortfolioUseAnchor(portfolio, anchor)
+    })
   }
 
   toAnchorCheckbox (anchor) {
@@ -34,6 +37,10 @@ module.exports = class TargetSetupAnchors extends Gui {
       this.target.removeAnchor(anchor)
     }
   }
+}
+
+function doesPortfolioUseAnchor (portfolio, anchor) {
+  return portfolio.balances.find(b => b.anchor === anchor)
 }
 
 function isTargetAnchorActive (target, anchor) {

@@ -135,7 +135,9 @@ Target.prototype.addAsset = function (asset) {
   // Add asset & target to current portfolio.
   const target = new Target(asset)
   target.parent = this
-  asset.anchors.forEach(anchor => target.addAnchor(anchor))
+  asset.anchors
+    .filter(anchor => !anchor.unpeg)
+    .forEach(anchor => target.addAnchor(anchor))
   this.childs.push(target)
 
   // Default setup.
