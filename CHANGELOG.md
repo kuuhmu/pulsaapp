@@ -8,6 +8,11 @@ All notable changes to this project will be documented in this file.
 
 - Improve mobile display.
 
+### Fixed
+
+- Fix a case in which clicking "Cancel" in the target setup dialog would not
+  reset target setting to the previous state.
+
 ## 1.0.1 - 2019-07-11
 
 ### Fixed

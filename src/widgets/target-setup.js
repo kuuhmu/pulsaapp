@@ -56,8 +56,8 @@ module.exports = class TargetSetup extends Gui {
   }
 
   cancel () {
-    this.target.size = this.backup.size
     this.target.mode = this.backup.mode
+    this.target.size = this.backup.size
 
     const opened = arrayOnlyInFirst(
       this.target.opening,
