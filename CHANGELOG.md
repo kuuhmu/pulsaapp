@@ -2,15 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 1.0.2 - 2019-07-22
 
 ### Changed
 
 - Improve mobile display.
 - Throw an error when a too low XLM allocation would cause rebalancing to take
   more than 20 steps.
-- Remove thewwallet.com WSD from new trustlines choice because it is unpegging
-  badly.
+- Remove thewwallet.com WSD from anchors choice because it has not enough volume
+  anymore.
 
 ### Fixed
 
@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Fix several miscalculations related to balancing assets with multiple anchors
   & liquidation. In some cases, those mistakes were preventing trades to be
   passed, or were causing trades to be passed with lower amount than expected.
+  (Thanks m4dpr0ph3ss0r)
 
 ## 1.0.1 - 2019-07-11
 
