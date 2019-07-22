@@ -340,7 +340,7 @@ function addMultipleOperations (target, size) {
   const misallocatedKey = positive(size) ? "underMin" : "overMax"
   if (tradeSize !== size) {
     const misallocated = balances.map(balance => {
-      return balance.action !== "closing" ? balance[misallocatedKey] : 0
+      return balance.action === "closing" ? 0 : -balance[misallocatedKey]
     })
     tradeSize = _addToTrade(trade, misallocated, size - tradeSize)
   }
@@ -348,7 +348,10 @@ function addMultipleOperations (target, size) {
   // 3. If this was not enough, trade balanced anchors.
   if (tradeSize !== size) {
     const sizeKey = positive(size) ? "sizeMax" : "sizeMin"
-    const tradable = balances.map(b => b[sizeKey] - b[misallocatedKey])
+    const tradable = balances.map(balance => {
+      if (balance.action === "closing") return 0
+      else return balance[sizeKey] - balance[misallocatedKey]
+    })
     _addToTrade(trade, tradable, size - tradeSize)
   }
 
@@ -368,7 +371,7 @@ function _addToTrade (trade, amounts, sizeMax) {
   const tradeSize = absoluteMin(sizeMax, amountsSum)
   const toBeAdded = arrayScale(amounts, tradeSize)
   toBeAdded.forEach((value, index) => trade[index] += value)
-  return arraySum(trade)
+  return +nice(arraySum(trade), 7)
 }
 
 /**

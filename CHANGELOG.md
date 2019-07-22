@@ -7,11 +7,16 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Improve mobile display.
+- Throw an error when a too low XLM allocation would cause rebalancing to take
+  more than 20 steps.
 
 ### Fixed
 
 - Fix a case in which clicking "Cancel" in the target setup dialog would not
   reset target setting to the previous state.
+- Fix several miscalculations related to balancing assets with multiple anchors
+  & liquidation. In some cases, those mistakes were preventing trades to be
+  passed, or were causing trades to be passed with lower amount than expected.
 
 ## 1.0.1 - 2019-07-11
 
