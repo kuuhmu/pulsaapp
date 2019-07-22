@@ -64,26 +64,28 @@ function maybeThrottleTargetAmounts (target) {
   // Check if `target.amount` throttling is required.
   const Asset = require("./asset")
   const XLM = Asset.resolve("XLM")
-  const liquidity = XLM.value - XLM.amountMin * XLM.price
+  const targets = target.childs.filter(t => t.asset !== XLM)
+  const liquidity = XLM.value - XLM.valueMin
 
-  const buyTargets = target.childs.filter(c => c.valueDiff > 0)
+  const buyTargets = targets.filter(t => t.valueDiff > 0)
   const buyValue = arraySum(buyTargets, "valueDiff")
-  const misliquidity = positive(buyValue - liquidity)
 
-  if (!misliquidity) return
+  if (liquidity > buyValue) return
 
   // Throttle `target.amount`.
-  const sellTargets = target.childs.filter(c => c.valueDiff < 0)
+  const sellTargets = targets.filter(t => t.valueDiff < 0)
   const sellValue = -arraySum(sellTargets, "valueDiff")
-  const throttleRatio = 1 - positive((sellValue - misliquidity) / sellValue)
 
-  if (!positive(throttleRatio)) {
-    throw new Error(__("The XLM share is too low"))
-  }
+  const canSell = XLM.target.value - XLM.valueMin
+  const throttleRatio = 1 - positive(canSell / sellValue)
 
-  target.childs.forEach(child => {
+  targets.forEach(child => {
     child.amount = fixed7(child.amount - child.amountDiff * throttleRatio)
   })
+
+  if (throttleRatio > 0.95) {
+    throw new Error(__("The XLM share is too low"))
+  }
 }
 
 /**

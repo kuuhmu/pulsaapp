@@ -117,6 +117,10 @@ Asset.define("value", ["amount", "price"], function () {
   return this.amount === 0 ? 0 : this.amount * this.price
 })
 
+Asset.define("valueMin", ["amountMin", "price"], function () {
+  return !this.amountMin ? 0 : this.amountMin * this.price
+})
+
 Asset.define("liabilities", ["balances", "price"], function () {
   if (this.balances) {
     const rawLiabilities = this.balances.reduce(
