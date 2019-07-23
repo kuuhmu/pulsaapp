@@ -61,7 +61,7 @@
     "@cosmic-plus/ledger-wallet": "^0.3.4",
     "@cosmic-plus/loopcall": "^1.1.2",
     "@fortawesome/fontawesome-free": "^5.9.0",
-    "cosmic-lib": "^1.5.3",
+    "cosmic-lib": "^1.5.4",
     "highcharts": "^7.1.2",
     "normalize.css": "^8.0.1"
   }
