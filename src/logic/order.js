@@ -99,6 +99,7 @@ Order.define("description", "operations", function () {
 Order.operationsToCosmicLink = function (operations = []) {
   // Create CosmicLink.
   const cosmicLink = new CosmicLink({
+    network: "public",
     memo: "Equilibre.io",
     maxTime: "+5",
     source: global.portfolio.accountId
