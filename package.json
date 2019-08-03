@@ -1,6 +1,6 @@
 {
   "name": "equilibre.io",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A portfolio balancer for Stellar Decentralized Exchange",
   "author": "MisterTicot",
   "repository": "github:cosmic-plus/webapp-equilibre-io",
@@ -32,7 +32,18 @@
     "watch-js": "webpack -d --watch",
     "watch-static": "cp -fl static/*.* web",
     "watch": "npm run watch-static && npm run watch-css & npm run watch-js",
-    "serve": "npm run watch & cd web && live-server --https=../node_modules/live-server-https --no-browser"
+    "serve": "npm run watch & cd web && live-server --https=../node_modules/live-server-https --no-browser",
+    "commit-web": "cd web && git ci -am \"$message\"",
+    "commit-main": "git ci -am \"$message\"",
+    "commit-all": "[ \"$version\" ] && npm run commit-web && npm run commit-main",
+    "commit-release": "export message=\"Release $version\" && npm run commit-all",
+    "tag-web": "cd web && git tag -s \"$version\" -m \"$message\"",
+    "tag-main": "git tag -s \"$version\" -m \"$message\"",
+    "tag-all": "[ \"$version\" -a \"$message\" ] && npm run tag-web && npm run tag-main",
+    "tag-release": "export version message=\"Release $version\" && npm run tag-all",
+    "push-release": "cd web && git push && git push --tags && cd .. && git push && git push --tags",
+    "make-release": "npm update && npm run build && npm run commit-release",
+    "publish-release": "npm run check && npm run tag-release && npm run push-release"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -49,19 +60,19 @@
     "node-sass": "^4.12.0",
     "prettier": "^1.18.2",
     "raw-loader": "^1.0.0",
-    "webpack": "^4.36.1",
+    "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
-    "@cosmic-plus/base": "^2.0.4",
+    "@cosmic-plus/base": "^2.0.5",
     "@cosmic-plus/domutils": "^2.0.2",
     "@cosmic-plus/i18n": "^1.2.0",
     "@cosmic-plus/jsutils": "^2.0.2",
-    "@cosmic-plus/ledger-wallet": "^0.3.4",
-    "@cosmic-plus/loopcall": "^1.1.2",
-    "@fortawesome/fontawesome-free": "^5.9.0",
-    "cosmic-lib": "^1.5.4",
+    "@cosmic-plus/ledger-wallet": "^0.3.6",
+    "@cosmic-plus/loopcall": "^1.1.4",
+    "@fortawesome/fontawesome-free": "^5.10.1",
+    "cosmic-lib": "^1.5.5",
     "highcharts": "^7.1.2",
     "normalize.css": "^8.0.1"
   }
