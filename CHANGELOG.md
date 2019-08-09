@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Fix spread percentage definition: `50*(bestAsk-bestBid)/(bestAsk+bestBid)`.
+
 ## 1.0.4 - 2019-08-03
 
 ### Changed

@@ -138,15 +138,18 @@ Orderbook.define("bestBid", "bids", function () {
 Orderbook.define("bestAsk", "asks", function () {
   return this.asks && this.asks[0] && this.asks[0].price
 })
-Orderbook.define("price", ["bestBid", "bestAsk"], function () {
-  if (this.base.globalPrice) return (this.bestBid + this.bestAsk) / 2
+Orderbook.define("midpoint", ["bestBid", "bestAsk"], function () {
+  return (this.bestBid + this.bestAsk) / 2
+})
+Orderbook.define("price", ["midpoint"], function () {
+  if (this.base.globalPrice) return this.midpoint
   else return this.marketPrice()
 })
 Orderbook.define("spread", ["bestBid", "bestAsk"], function () {
   return this.bestAsk - this.bestBid
 })
-Orderbook.define("spread%", ["spread", "bestAsk"], function () {
-  return 100 * this.spread / this.bestAsk
+Orderbook.define("spread%", ["spread", "midpoint"], function () {
+  return 100 * this.spread / this.midpoint
 })
 
 /**
