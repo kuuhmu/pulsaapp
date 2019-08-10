@@ -2,11 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+## 1.0.5 - 2019-08-10
 
 ### Fixed
 
-- Fix spread percentage definition: `50*(bestAsk-bestBid)/(bestAsk+bestBid)`.
+- Fix spread percentage definition: `100*(bestAsk-bestBid)/midpoint`.
 
 ## 1.0.4 - 2019-08-03
 
