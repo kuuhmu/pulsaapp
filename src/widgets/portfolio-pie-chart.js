@@ -46,8 +46,8 @@ module.exports = class PortfolioPieChart extends Gui {
       chart: { type: "pie" },
       tooltip: {
         pointFormat: `
-${__("Amount")}: {point.amount} {point.code}<br>
-${__("Price")}: {point.price} ${global.currency}<br>
+${__("Amount")}: {point.niceAmount} {point.code}<br>
+${__("Price")}: {point.nicePrice} ${global.currency}<br>
 <b>${__("Value")}: {point.y} ${global.currency}</b>
 `
       },
@@ -55,7 +55,8 @@ ${__("Price")}: {point.price} ${global.currency}<br>
       plotOptions: {
         pie: {
           dataLabels: {
-            format: "{point.amount} {point.code}<br>({point.percentage:.0f}%)"
+            format:
+              "{point.niceAmount} {point.code}<br>({point.percentage:.0f}%)"
           },
           point: {
             events: {
@@ -86,13 +87,9 @@ ${__("Price")}: {point.price} ${global.currency}<br>
  */
 
 function makePoint (asset) {
-  return {
-    name: asset.name,
-    code: asset.code,
-    asset: asset,
-    y: +nice(asset.value, 2),
-    amount: nice(asset.amount),
-    price: nice(asset.price),
-    percentage: asset.percentage
-  }
+  const point = Object.create(asset)
+  point.y = +nice(asset.value, 2)
+  point.niceAmount = +nice(asset.amount)
+  point.nicePrice = +nice(asset.price)
+  return point
 }
