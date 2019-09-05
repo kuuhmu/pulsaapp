@@ -70,7 +70,7 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "@cosmic-plus/base": "^2.1.0",
-    "@cosmic-plus/domutils": "^2.0.2",
+    "@cosmic-plus/domutils": "^2.0.4",
     "@cosmic-plus/i18n": "^1.2.0",
     "@cosmic-plus/jsutils": "^2.0.2",
     "@cosmic-plus/ledger-wallet": "^0.3.6",
