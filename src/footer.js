@@ -38,46 +38,50 @@ class Footer extends Gui {
 
 const icons = [
   new Icon(
-    require("@fortawesome/fontawesome-free/svgs/brands/keybase.svg"),
-    "Keybase",
-    "https://keybase.io/team/cosmic_plus"
-  ),
-  new Icon(
-    require("@fortawesome/fontawesome-free/svgs/brands/telegram-plane.svg"),
-    "Telegram",
-    "https://t.me/cosmic_plus"
-  ),
-  new Icon(
-    require("@fortawesome/fontawesome-free/svgs/brands/reddit.svg"),
-    "Reddit",
-    "https://reddit.com/r/cosmic_plus"
-  ),
-  new Icon(
-    require("@fortawesome/fontawesome-free/svgs/brands/twitter.svg"),
-    "Twitter",
-    "https://twitter.com/cosmic_plus"
-  ),
-  new Icon(
-    require("@fortawesome/fontawesome-free/svgs/brands/medium.svg"),
-    "Medium",
-    "https://medium.com/cosmic-plus"
-  ),
-  new Icon(
-    require("@fortawesome/fontawesome-free/svgs/brands/github.svg"),
-    "GitHub",
-    "https://github.com/cosmic-plus/webapp-equilibre-io"
-  ),
-  new Icon(
-    require("@fortawesome/fontawesome-free/svgs/solid/globe.svg"),
-    __("Website"),
+    require("@cosmic-plus/assets/svg/cosmic-plus.svg"),
+    "by Cosmic.plus",
     "https://cosmic.plus"
   ),
   new Icon(
+    require("@fortawesome/fontawesome-free/svgs/brands/twitter.svg"),
+    "Follow on Twitter",
+    "https://twitter.com/cosmic_plus"
+  ),
+  new Icon(
+    require("@fortawesome/fontawesome-free/svgs/brands/reddit.svg"),
+    "Follow on Reddit",
+    "https://reddit.com/r/cosmic_plus"
+  ),
+  new Icon(
+    require("@fortawesome/fontawesome-free/svgs/brands/medium.svg"),
+    "Follow on Medium",
+    "https://medium.com/cosmic-plus"
+  ),
+  new Icon(
+    require("@fortawesome/fontawesome-free/svgs/brands/telegram-plane.svg"),
+    "Chat on Telegram",
+    "https://t.me/cosmic_plus"
+  ),
+  new Icon(
+    require("@fortawesome/fontawesome-free/svgs/brands/keybase.svg"),
+    "Chat on Keybase",
+    "https://keybase.io/team/cosmic_plus"
+  ),
+  new Icon(
+    require("@fortawesome/fontawesome-free/svgs/brands/github.svg"),
+    "GitHub Repository",
+    "https://git.cosmic.plus"
+  ),
+  new Icon(
     require("@fortawesome/fontawesome-free/svgs/solid/envelope.svg"),
-    __("Email"),
+    "Contact by Email",
     "mailto:mister.ticot@cosmic.plus"
   ),
-  new Icon(require("../bundled/donate.svg"), "Donate", donate)
+  new Icon(
+    require("@cosmic-plus/assets/svg/donate.svg"),
+    "Donate Lumens",
+    donate
+  )
 ]
 
 /**
