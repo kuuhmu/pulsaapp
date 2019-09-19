@@ -6,8 +6,6 @@ const Gui = require("@cosmic-plus/domutils/es5/gui")
 const html = require("@cosmic-plus/domutils/es5/html")
 const { __ } = require("@cosmic-plus/i18n")
 
-const SideFrame = require("../helpers/side-frame")
-
 /**
  * Class
  */
@@ -53,7 +51,7 @@ module.exports = class TargetsControls extends Gui {
     const cosmicLink = this.target.toCosmicLink()
 
     if (cosmicLink) {
-      const sideFrame = new SideFrame(cosmicLink.uri)
+      const sideFrame = cosmicLink.open()
       sideFrame.listen("destroy", () => {
         this.target.portfolio.getAccount()
         this.target.portfolio.offers.get()

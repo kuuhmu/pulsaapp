@@ -5,8 +5,6 @@
 const { CosmicLink } = require("cosmic-lib")
 const { __ } = require("@cosmic-plus/i18n")
 
-const SideFrame = require("./side-frame")
-
 const MYPUBKEY = "GC6Z477WPMLJDLMBJPSCTIJA33V7F5EB7ZH5OIKZEUQUBAWKJZH42JVW"
 
 module.exports = function promptDonation () {
@@ -33,5 +31,5 @@ function showDonateFrame (amount) {
     destination: MYPUBKEY
   })
 
-  new SideFrame(cosmicLink.uri)
+  cosmicLink.open()
 }

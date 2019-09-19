@@ -7,8 +7,6 @@ const nice = require("@cosmic-plus/jsutils/es5/nice")
 const { CosmicLink } = require("cosmic-lib")
 const { __ } = require("@cosmic-plus/i18n")
 
-const SideFrame = require("../helpers/side-frame")
-
 const global = require("../logic/global")
 
 module.exports = class ActiveOffersTable extends Gui {
@@ -55,7 +53,7 @@ module.exports = class ActiveOffersTable extends Gui {
       cosmicLink.addOperation("manageOffer", { offerId: offer.id, amount: 0 })
     })
 
-    const sideFrame = new SideFrame(cosmicLink.uri)
+    const sideFrame = cosmicLink.open()
     sideFrame.listen("destroy", () => {
       this.portfolio.getAccount()
       this.portfolio.offers.get()
