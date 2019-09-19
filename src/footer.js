@@ -39,47 +39,47 @@ class Footer extends Gui {
 const icons = [
   new Icon(
     require("@cosmic-plus/assets/svg/cosmic-plus.svg"),
-    "by Cosmic.plus",
+    __("by Cosmic.plus"),
     "https://cosmic.plus"
   ),
   new Icon(
     require("@fortawesome/fontawesome-free/svgs/brands/twitter.svg"),
-    "Follow on Twitter",
+    __("Follow on Twitter"),
     "https://twitter.com/cosmic_plus"
   ),
   new Icon(
     require("@fortawesome/fontawesome-free/svgs/brands/reddit.svg"),
-    "Follow on Reddit",
+    __("Follow on Reddit"),
     "https://reddit.com/r/cosmic_plus"
   ),
   new Icon(
     require("@fortawesome/fontawesome-free/svgs/brands/medium.svg"),
-    "Follow on Medium",
+    __("Follow on Medium"),
     "https://medium.com/cosmic-plus"
   ),
   new Icon(
     require("@fortawesome/fontawesome-free/svgs/brands/telegram-plane.svg"),
-    "Chat on Telegram",
+    __("Chat on Telegram"),
     "https://t.me/cosmic_plus"
   ),
   new Icon(
     require("@fortawesome/fontawesome-free/svgs/brands/keybase.svg"),
-    "Chat on Keybase",
+    __("Chat on Keybase"),
     "https://keybase.io/team/cosmic_plus"
   ),
   new Icon(
     require("@fortawesome/fontawesome-free/svgs/brands/github.svg"),
-    "GitHub Repository",
+    __("GitHub Repository"),
     "https://git.cosmic.plus"
   ),
   new Icon(
     require("@fortawesome/fontawesome-free/svgs/solid/envelope.svg"),
-    "Contact by Email",
+    __("Contact by Email"),
     "mailto:mister.ticot@cosmic.plus"
   ),
   new Icon(
     require("@cosmic-plus/assets/svg/donate.svg"),
-    "Donate Lumens",
+    __("Donate Lumens"),
     donate
   )
 ]
