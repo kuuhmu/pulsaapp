@@ -7,7 +7,7 @@ const { __ } = require("@cosmic-plus/i18n")
 
 const SideFrame = require("./side-frame")
 
-const MYPUBKEY = "GAWO2C52D57XBT7SQL6YB3XPHFLFD2J4Z5RN7HPFZSHXJMXH72HRXNV3"
+const MYPUBKEY = "GC6Z477WPMLJDLMBJPSCTIJA33V7F5EB7ZH5OIKZEUQUBAWKJZH42JVW"
 
 module.exports = function promptDonation () {
   const amount = prompt(`\
@@ -26,7 +26,7 @@ ${__("Enter an amount (in Lumens)")}:\
 }
 
 function showDonateFrame (amount) {
-  const memo = __("Donation to Equilibre.io")
+  const memo = __("Donation to Cosmic.plus")
   const network = "public"
   const cosmicLink = new CosmicLink({ memo, network }).addOperation("payment", {
     amount,
