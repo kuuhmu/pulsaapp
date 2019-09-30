@@ -30,6 +30,7 @@ const disclaimer = new Gui(require("../bundled/disclaimer.html"))
 
 let ledger
 async function loginWithLedgerWallet () {
+  disconnectHardwareWallets()
   loginForm["stellar-public-key"] = null
   ledger = await getLedgerModule()
   loginForm.info(__("Please open the Stellar App in your Ledger Wallet"))
@@ -42,10 +43,30 @@ async function loginWithLedgerWallet () {
   }
 }
 
+let trezor
+async function loginWithTrezorWallet () {
+  disconnectHardwareWallets()
+  loginForm["stellar-public-key"] = null
+  trezor = await getTrezorModule()
+  loginForm.info(__("Please import your Trezor public key"))
+  try {
+    await trezor.connect()
+    loginForm["stellar-public-key"] = trezor.publicKey
+    login()
+  } catch (error) {
+    loginForm.error(error)
+  }
+}
+
+function disconnectHardwareWallets () {
+  if (ledger) ledger.disconnect()
+  if (trezor) trezor.disconnect()
+}
+
 async function login () {
   const address = loginForm["stellar-public-key"]
   if (!address) loginForm.error(__("Please enter an address."))
-  if (ledger) ledger.disconnect()
+  disconnectHardwareWallets()
 
   loginForm.info(__("Connecting to your account..."))
   params.$set({ address })
@@ -122,6 +143,14 @@ function getLedgerModule () {
   ).then(ledger => ledger.default)
 }
 
+async function getTrezorModule () {
+  const trezor = await import(
+    /* webpackChunkName: "trezor" */ "@cosmic-plus/trezor-wallet"
+  ).then(trezor => trezor.default)
+  trezor.register("equilibre.io", "mister.ticot@cosmic.plus")
+  return trezor
+}
+
 /**
  * Init
  */
@@ -166,6 +195,7 @@ if (!tabs.selected) {
 // Init login.
 const loginForm = new Form(dom.loginForm, { onsubmit: login })
 loginForm.dom.loginWithLedger.onclick = loginWithLedgerWallet
+loginForm.dom.loginWithTrezor.onclick = loginWithTrezorWallet
 
 if (params.address) {
   tabs.select("#login")

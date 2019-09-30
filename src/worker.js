@@ -15,6 +15,7 @@ new ServiceWorker(pkg.name, pkg.version, "verbose")
     "stellar-sdk.js",
     "vendors~app.js",
     "vendors~ledger.js",
+    "vendors~trezor.js",
 
     // Fonts
     "fonts/SourceSansPro-Regular.ttf",
