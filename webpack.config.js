@@ -1,6 +1,10 @@
 module.exports = {
   entry: {
-    index: "./src/index.js",
+    index: [
+      // Fix https://github.com/babel/babel/issues/9873
+      "core-js/modules/es.array.iterator",
+      "./src/index.js"
+    ],
     worker: "./src/worker.js"
   },
   output: {
