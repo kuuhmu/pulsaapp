@@ -17,3 +17,13 @@
   font-style: italic;
 }
 
+.hardwareWallets button {
+  height: 3em;
+  width: 38%;
+  max-width: 17.4em;
+
+  svg {
+    height: 1.5em;
+    fill: $black;
+  }
+}
