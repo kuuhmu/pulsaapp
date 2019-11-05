@@ -29,12 +29,12 @@
 
     "FRAS": { "show": true, "apiId": "frasindo-rent" },
     "MOBI": { "show": true, "apiId": "mobius" },
-    "PEDI": { "show": true, "apiId": "pedity" },
     "RMT": { "show": true, "apiId": "sureremit" },
     "SHX": { "show": true, "apiId": "stronghold-token" },
     "SLT": { "show": true, "apiId": "smartlands" },
     "TERN": { "show": true, "apiId": "ternio" },
 
+    "PEDI": { "apiId": "pedity" },
     "REPO": { "apiId": "repo" }
   }
 }
