@@ -148,8 +148,8 @@ Orderbook.define("price", ["midpoint"], function () {
 Orderbook.define("spread", ["bestBid", "bestAsk"], function () {
   return this.bestAsk - this.bestBid
 })
-Orderbook.define("spread%", ["spread", "midpoint"], function () {
-  return 100 * this.spread / this.midpoint
+Orderbook.define("spread%", ["spread", "bestAsk"], function () {
+  return 100 * this.spread / this.bestAsk
 })
 
 /**
