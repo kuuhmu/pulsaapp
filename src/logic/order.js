@@ -305,7 +305,15 @@ function balanceTargetAnchors (
  */
 function isOneOperationEnough (target, size) {
   const balances = target.asset.balances
-  return !!balances.filter(b => b.sizeMin <= size && size <= b.sizeMax).length
+
+  const undersizedClosing = balances.filter(b => {
+    return b.action === "closing" && size < b.sizeMin
+  })
+  const canTakeTrade = balances.filter(b => {
+    return b.sizeMin <= size && size <= b.sizeMax
+  })
+
+  return !undersizedClosing.length && !!canTakeTrade.length
 }
 
 /**
