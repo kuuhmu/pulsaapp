@@ -14,7 +14,8 @@
   },
   "GDSRCV5VTM3U7Y3L6DFRP3PEGBNQMGOWSRTGSBWX6Z3H6C7JHRI4XFJP": {
     "alias": "x.token.io",
-    "emit": ["USD"]
+    "emit": ["USD"],
+    "unpeg": true
   },
   "GDSVWEA7XV6M5XNLODVTPCGMAJTNBLZBXOFNQD3BNPNYALEYBNT6CE2V": {
     "alias": "thewwallet.com",
