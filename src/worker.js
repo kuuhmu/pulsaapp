@@ -18,8 +18,10 @@ new ServiceWorker(pkg.name, pkg.version, "verbose")
     "vendors~trezor.js",
 
     // Fonts
-    "fonts/SourceSansPro-Regular.ttf",
-    "fonts/RobotoSlab-Regular.ttf",
+    "fonts/source-sans-pro.woff",
+    "fonts/source-sans-pro.woff2",
+    "fonts/roboto-slab.woff",
+    "fonts/roboto-slab.woff2",
 
     // Images
     "images/cosmic-link.svg",
