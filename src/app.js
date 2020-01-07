@@ -131,7 +131,7 @@ function displayDemo () {
   location.href = `?address=${MYPUBKEY}`
 }
 
-const demoConfig = `{"childs":[{"mode":"percentage","size":12.5,"asset":"BTC"},"CNY",{"mode":"percentage","size":12.5,"asset":"ETH"},"EUR",{"mode":"percentage","size":1.5625,"asset":"FRAS"},{"mode":"percentage","size":1.5625,"asset":"MOBI"},{"mode":"percentage","size":1.5625,"asset":"PEDI"},{"mode":"percentage","size":1.5625,"asset":"REPO"},{"mode":"percentage","size":1.5625,"asset":"RMT"},{"mode":"percentage","size":1.5625,"asset":"SHX"},{"mode":"percentage","size":1.5625,"asset":"SLT"},{"mode":"percentage","size":1.5625,"asset":"TERN"},"USD",{"mode":"percentage","size":12.5,"asset":"XLM"}]}`
+const demoConfig = `{"childs":[{"mode":"percentage","size":12.5,"asset":"BTC"},{"mode":"percentage","size":25,"asset":"CNY"},{"mode":"percentage","size":12.5,"asset":"ETH"},{"size":2,"asset":"LTC"},"MOBI","RMT","SHX","TERN",{"mode":"percentage","size":25,"asset":"USD"},{"mode":"percentage","size":12.5,"asset":"XLM"},{"size":2,"asset":"XRP"}]}`
 
 /**
  * Module loading
