@@ -27,13 +27,13 @@
   "native": {
     "XLM": { "show": true, "apiId": "stellar" },
 
-    "FRAS": { "show": true, "apiId": "frasindo-rent" },
     "MOBI": { "show": true, "apiId": "mobius" },
     "RMT": { "show": true, "apiId": "sureremit" },
     "SHX": { "show": true, "apiId": "stronghold-token" },
     "SLT": { "show": true, "apiId": "smartlands" },
     "TERN": { "show": true, "apiId": "ternio" },
 
+    "FRAS": { "apiId": "frasindo-rent" },
     "PEDI": { "apiId": "pedity" },
     "REPO": { "apiId": "repo" }
   }
