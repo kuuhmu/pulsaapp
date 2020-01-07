@@ -53,8 +53,8 @@ releases, please check this changelog before upgrading.
   with Equilibre.io requirements anymore. (volume is too low, spread is at 60%)
 
 - UI: Fix spread percentage formula.
-  - spread  = ask - bid
-  - spread% = 100 * spread / ask
+  - spread = ask - bid
+  - spread% = 100 \* spread / ask
 
 ## 1.4.0 - 2019-10-05
 
