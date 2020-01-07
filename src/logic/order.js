@@ -84,6 +84,8 @@ const Order = module.exports = class Order extends Projectable {
     operation.amount = fixed7(amount)
     operation.cost = amount * offer.price
     operation.offer = offer
+    operation.isDust =
+      operation.amount > 0 && operation.amount * offer.basePrice < 1e-7
     this.operations.trigger("update")
   }
 }
@@ -107,7 +109,20 @@ Order.operationsToCosmicLink = function (operations = []) {
 
   // Set operations.
   operations.forEach(operation => {
-    cosmicLink.addOperation("manageOffer", operationToOdesc(operation))
+    if (operation.isDust) {
+      // Burn dust.
+      const balance = operation.offer.balance
+      const emitter = balance.anchor.pubkey
+      const asset = `${balance.code}:${emitter}`
+      cosmicLink.addOperation("payment", {
+        amount: operation.amount,
+        asset,
+        destination: emitter
+      })
+      cosmicLink.addOperation("changeTrust", { asset, limit: 0 })
+    } else {
+      cosmicLink.addOperation("manageOffer", operationToOdesc(operation))
+    }
   })
 
   return cosmicLink
@@ -122,10 +137,16 @@ ${__("Buy")} ${nice(op.amount)} ${op.offer.balance.code} ${__("at")} \
 ${nice(op.offer.price)} ${global.currency}
       `)
     } else {
-      desc.push(`
+      if (op.isDust) {
+        desc.push(`
+${__("Burn dust")} (${nice(op.amount)} ${op.offer.balance.code})
+        `)
+      } else {
+        desc.push(`
 ${__("Sell")} ${nice(op.amount)} ${op.offer.balance.code} ${__("at")} \
 ${nice(op.offer.price)} ${global.currency}
       `)
+      }
     }
   })
   return desc
