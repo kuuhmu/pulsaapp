@@ -395,14 +395,6 @@ Target.prototype.toCosmicLink = function () {
   // Create CosmicLink.
   const cosmicLink = Order.operationsToCosmicLink(operations)
 
-  // Close outdated offers which are not replaced.
-  remaining.forEach(offer => {
-    cosmicLink.insertOperation(0, "manageOffer", {
-      offerId: offer.id,
-      amount: 0
-    })
-  })
-
   // Open/close trustlines.
   this.portfolio.balances
     .filter(b => b.asset.target)
@@ -417,6 +409,14 @@ Target.prototype.toCosmicLink = function () {
         })
       }
     })
+
+  // Close outdated offers which are not replaced.
+  remaining.forEach(offer => {
+    cosmicLink.insertOperation(0, "manageOffer", {
+      offerId: offer.id,
+      amount: 0
+    })
+  })
 
   return cosmicLink.tdesc.operations.length ? cosmicLink : null
 }
