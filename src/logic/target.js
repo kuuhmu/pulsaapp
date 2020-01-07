@@ -397,8 +397,10 @@ Target.prototype.toCosmicLink = function () {
 
   // Close outdated offers which are not replaced.
   remaining.forEach(offer => {
-    cosmicLink.tdesc.operations.unshift({})
-    cosmicLink.setOperation(0, "manageOffer", { offerId: offer.id, amount: 0 })
+    cosmicLink.insertOperation(0, "manageOffer", {
+      offerId: offer.id,
+      amount: 0
+    })
   })
 
   // Open/close trustlines.
@@ -406,12 +408,10 @@ Target.prototype.toCosmicLink = function () {
     .filter(b => b.asset.target)
     .forEach(balance => {
       if (shouldOpenTrustline(balance)) {
-        cosmicLink.tdesc.operations.unshift({})
-        cosmicLink.setOperation(0, "changeTrust", { asset: balance.id })
+        cosmicLink.insertOperation(0, "changeTrust", { asset: balance.id })
       }
       if (shouldCloseTrustline(balance)) {
-        cosmicLink.tdesc.operations.unshift({})
-        cosmicLink.setOperation(0, "changeTrust", {
+        cosmicLink.insertOperation(0, "changeTrust", {
           asset: balance.id,
           limit: 0
         })
