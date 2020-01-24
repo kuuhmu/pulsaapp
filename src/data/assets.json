@@ -31,6 +31,7 @@
     "SHX": { "show": true, "apiId": "stronghold-token" },
     "SLT": { "show": true, "apiId": "smartlands" },
     "TERN": { "show": true, "apiId": "ternio" },
+    "WXT": { "show": true, "apiId": "wirex" },
 
     "FRAS": { "apiId": "frasindo-rent" },
     "PEDI": { "apiId": "pedity" },
