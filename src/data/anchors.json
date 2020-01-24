@@ -1,8 +1,7 @@
 {
   "GAP5LETOV6YIE62YAM56STDANPRDO7ZFDBGSNHJQIYGGKSMOZAHOOS2S": {
     "alias": "tempo.eu.com",
-    "emit": [["EUR", "EURT"]],
-    "unpeg": true
+    "emit": [["EUR", "EURT"]]
   },
   "GAREELUB43IRHWEASCFBLKHURCGMHE5IF6XSE7EXDLACYHGRHM43RFOX": {
     "alias": "ripplefox.com",

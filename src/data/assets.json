@@ -2,8 +2,7 @@
   "fiat": {
     "USD": { "show": true, "name": "US Dollar" },
     "CNY": { "show": true, "name": "Renminbi" },
-
-    "EUR": { "name": "Euro" }
+    "EUR": { "show": true, "name": "Euro" }
   },
 
   "foreign": {
