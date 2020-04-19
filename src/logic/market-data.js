@@ -113,7 +113,8 @@ marketData.crypto.history = async function (asset, limit = 1000) {
 
   // Work around end of serie inconsistencies.
   const today = History.today()
-  if (data[data.length - 2].time === today) {
+  const twoEntriesBefore = data[data.length - 2]
+  if (twoEntriesBefore && twoEntriesBefore.time === today) {
     data.length = data.length - 1
   } else {
     History.latest(data).time = today
