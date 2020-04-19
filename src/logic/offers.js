@@ -35,7 +35,7 @@ class Offers extends Mirrorable {
 
   static callBuilder (accountId) {
     const server = cosmicLib.resolve.server()
-    return server.offers("accounts", accountId)
+    return server.offers().forAccount(accountId)
   }
 
   async stream (delay = 15000) {
