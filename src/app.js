@@ -131,7 +131,7 @@ function displayDemo () {
   location.href = `?address=${MYPUBKEY}`
 }
 
-const demoConfig = `{"childs":[{"mode":"percentage","size":12.5,"asset":"BTC"},{"mode":"percentage","size":25,"asset":"CNY"},{"mode":"percentage","size":12.5,"asset":"ETH"},{"size":2,"asset":"LTC"},"MOBI","RMT","SHX","TERN",{"mode":"percentage","size":25,"asset":"USD"},{"mode":"percentage","size":12.5,"asset":"XLM"},{"size":2,"asset":"XRP"}]}`
+const demoConfig = `{"childs":[{"size":24,"asset":"BTC","closing":["GCNSGHUCG5VMGLT5RIYYZSO7VQULQKAJ62QA33DBC5PPBSO57LFWVV6P"]},{"size":32,"asset":"CNY"},{"size":24,"asset":"ETH"},{"size":32,"asset":"EUR"},{"size":6,"asset":"LTC"},{"size":3,"asset":"MOBI"},{"size":3,"asset":"RMT"},{"size":3,"asset":"SHX"},{"size":3,"asset":"TERN"},{"size":32,"asset":"USD","closing":["GDSRCV5VTM3U7Y3L6DFRP3PEGBNQMGOWSRTGSBWX6Z3H6C7JHRI4XFJP"]},{"size":24,"asset":"XLM"},{"size":6,"asset":"XRP"}]}`
 
 /**
  * Module loading
