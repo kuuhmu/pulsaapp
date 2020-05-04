@@ -13,7 +13,7 @@
   },
   "GCQTGZQQ5G4PTM2GL7CDIFKUBIPEC52BROAQIAPW53XBRJVN6ZJVTG6V": {
     "alias": "apay.io",
-    "emit": ["USDT"],
+    "emit": [["USD", "USDT"]],
     "unpeg": true
   },
   "GDSRCV5VTM3U7Y3L6DFRP3PEGBNQMGOWSRTGSBWX6Z3H6C7JHRI4XFJP": {
