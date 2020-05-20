@@ -5,12 +5,9 @@
 const { CosmicLink } = require("cosmic-lib")
 const { __ } = require("@cosmic-plus/i18n")
 
-const MYPUBKEY = "GC6Z477WPMLJDLMBJPSCTIJA33V7F5EB7ZH5OIKZEUQUBAWKJZH42JVW"
-
 module.exports = function promptDonation () {
   const amount = prompt(`\
-${__("Equilibre.io runs on donation.")} \
-${__("Each contribution matters to me.")} \
+${__("Donations are put to good use.")} \
 ${__("Thank you!")}
 
 ${__("Enter an amount (in Lumens)")}:\
@@ -26,9 +23,10 @@ ${__("Enter an amount (in Lumens)")}:\
 function showDonateFrame (amount) {
   const memo = __("Donation to Cosmic.plus")
   const network = "public"
+  const destination = "tips*cosmic.plus"
   const cosmicLink = new CosmicLink({ memo, network }).addOperation("payment", {
     amount,
-    destination: MYPUBKEY
+    destination
   })
 
   cosmicLink.open()
