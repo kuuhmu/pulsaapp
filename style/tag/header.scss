@@ -2,8 +2,9 @@
 
 body > header
 {
-  box-shadow: 0.1em 0.1em 0.2em 0.1em $grey-light;
-  background: white;
+  @include elevation(2)
+
+  background: $white;
   padding: 0 2%;
   vertical-align: top;
   overflow: hidden;
@@ -36,7 +37,7 @@ body > header
     box-shadow: none!important;
     background: white;
 
-    color: $grey-dark;
+    color: grey(6);
     text-align-last: right;
   }
 
@@ -48,13 +49,13 @@ body > header
     line-height: 1.5rem;
     font-size: 1.5em;
     font-style: italic;
-    color: $grey-darker;
+    color: grey(6);
     font-weight: bolder;
 
     svg {
       display: inline-block;
       height: 1em;
-      fill: $grey-darker;
+      fill: grey(6);
       transform: skewX(-12deg);
     }
   }

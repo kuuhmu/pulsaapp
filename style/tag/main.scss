@@ -7,61 +7,38 @@ body > main
   overflow: hidden;
 
   section.landing {
+    img {
+      float: right;
+      width: 40%;
+      margin: 0.2em 1em 0.6em 1em;
 
-    @media screen and (max-width: 46em) {
-      display: block;
-      padding: 0 2em;
-      text-align: justify;
-
-      h3 {
-        text-align: left;
-      }
+      border-radius: 0.5em;
+      border: thin solid grey(4);
+      background: $white;
     }
 
-    @media screen and (min-width: 46em) {
-      display: flex;
-
-      h3 {
-        width: 10em;
-        text-align: right;
-      }
-    }
-
-     h3 {
-       border-bottom: 1px solid $highlight;
-       padding-bottom: 1.2em;
-
-       font-size: 1.2em;
-       color: scale-color($highlight, $lightness: -20%, $saturation: -20%);
-
-       align-self: flex-start;
-    }
-
-    div {
-      flex-basis: 80%;
-      margin: 0.45em;
+    &:nth-child(2n+1) {
+      img { float: left; }
     }
   }
 
-  section section a {
-    color: scale-color($highlight, $lightness: -20%, $saturation: -20%);
-  }
-
-  section p
-  {
+  section p {
     padding: 0 1em;
   }
 
   #loading,
   section section
   {
+    @include elevation(1)
+
     width: 100%;
     margin: 2rem 0;
     border-radius: 0.1em;
 
-    box-shadow: 0.1em 0.1em 0.2em $grey-light;
-    background: $grey-lighter;
+    background: $white;
     overflow-x: auto;
     overflow-y: hidden;
+
+    a { color: primary(6); }
   }
 }

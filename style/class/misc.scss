@@ -13,8 +13,10 @@
 .note {
   width: 90%;
   margin: 1em auto;
-  color: $grey-darker;
+  color: grey(7);
   font-style: italic;
+
+  a { text-decoration: underline; }
 }
 
 .hardwareWallets button {

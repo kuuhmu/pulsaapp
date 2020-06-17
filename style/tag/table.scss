@@ -16,13 +16,12 @@ th, td
 
 th
 {
-  height: 3rem;
+  height: 2.8rem;
   font-size: 1.05em;
-  background: scale-color($color1, $lightness: 80%);
-  border-bottom: 1px solid scale-color($color1, $lightness: 70%);
+  background: primary(3);
 
   // Fix Chrome subpixel padding.
-  box-shadow: 2px 0px 1px scale-color($color1, $lightness: 80%);
+  box-shadow: 2px 0px 1px primary(3);
   
   &.name {
     text-align: left;
@@ -42,9 +41,9 @@ tr {
   &:hover { cursor: pointer; }
 
   &:hover, &.selected {
-    background: scale-color($highlight, $lightness: 93%);
+    background: primary(2);
     // Fix Chrome subpixel padding.
-    box-shadow: 2px 0px 1px scale-color($highlight, $lightness: 93%);
+    box-shadow: 2px 0px 1px primary(2);
   }
 
   .footer { font-weight: bold; }

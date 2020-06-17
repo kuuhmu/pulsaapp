@@ -60,7 +60,6 @@ class SettingsGui extends Gui {
     super(`
       <section><h2>${__("Settings")}</h2>
         <section><h3>${__("General Settings")}</h3>
-          <hr>
           %general
         </section>
       </section>

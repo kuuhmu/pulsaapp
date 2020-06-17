@@ -1,8 +1,8 @@
 /* Form styling */
 
-$bg-color: scale-color($color1, $lightness: 90%, $saturation: -50%);
-$button-color: scale-color($color1, $lightness: 80%, $saturation: -60%);
-$border-color: scale-color($color1, $lightness: 60%, $saturation: -80%);
+$bg-color: grey(1);
+$button-color: grey(2);
+$border-color: grey(4);
 
 /* Blocks */
 
@@ -79,17 +79,14 @@ input
     color: $grey-dark;
   }
 
-  &:enabled:focus
-  {
-    outline: 0;
-    box-shadow: 0em 0em 0.1em $highlight;
-  }
-
+  &:enabled:focus,
   &:enabled:hover
   {
-    border: solid 0.05em $highlight;
+    outline: 0;
+    box-shadow: 0em 0em 0.1em primary(6);
+    background: primary(1);
+    border: solid 0.05em primary(4);
   }
-
 }
 
 textarea[readonly],
@@ -108,10 +105,11 @@ button
 {
   background: $button-color;
 
-  &:enabled:hover
+  &:enabled:hover,
+  &:enabled:focus
   {
     cursor: pointer;
-    background: $border-color;
+    background: primary(3);
   }
 }
 

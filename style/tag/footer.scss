@@ -2,8 +2,9 @@
 
 body > footer
 {
-  border-top: solid 1px $grey-light;
-  background: white;
+  @include elevation(2)
+
+  background: $white;
   padding: 0 1%;
   overflow: hidden;
 
@@ -18,27 +19,22 @@ body > footer
       height: 2em;
       max-width: 9vw;
 
-      fill: $grey-medium;
+      fill: grey(4);
       transition: fill 0.2s ease
     }
 
     &[href="https://cosmic.plus"] svg {
-      fill: #607492;
+      fill: primary(7);
     }
 
     &:hover svg {
-      fill: $highlight;
+      fill: primary(3);
     }
   }
 
   p {
     line-height: 2em;
     margin: 0;
-    color: $grey-darker;
-  }
-
-  a {
-    color: $grey-darker;
   }
 }
 
