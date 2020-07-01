@@ -7,14 +7,13 @@ const Highstock = require("highcharts/highstock")
 /**
  * Theme Colors
  */
-const backgroundLight = "#edf2f9"
-const black = "#111"
-const formBackground = "#f8f9fb"
-const greyLighter = "#fefefe"
-const greyLight = "#e6e6e6"
-const greyMedium = "#cccccc"
-const greyDarker = "#666"
-const highlight = "#7799d5"
+const primaryLight = "#daeeff"
+const primaryDark = "#003f90"
+const white = "#fff"
+const black = "#292929"
+const greyLight = "#eaeaea"
+const greyMedium = "#a9a9a9"
+const greyDark = "#545454"
 
 /**
  * Main Theme
@@ -23,18 +22,18 @@ const highlight = "#7799d5"
 Highstock.theme = {
   rangeSelector: {
     selected: 2,
-    inputBoxBorderColor: greyLight,
+    inputBoxBorderColor: greyMedium,
     buttonTheme: {
-      fill: formBackground,
+      fill: greyLight,
       states: {
-        hover: { fill: backgroundLight },
-        select: { fill: highlight, style: { color: greyLighter } }
+        hover: { fill: primaryLight },
+        select: { fill: primaryDark, style: { color: white } }
       }
     }
   },
 
   chart: {
-    backgroundColor: greyLighter,
+    backgroundColor: white,
     style: {
       fontFamily: "'Source Sans Pro', arial, sans-serif",
       color: black
@@ -42,29 +41,29 @@ Highstock.theme = {
   },
 
   xAxis: {
-    lineColor: greyLight,
-    tickColor: greyLight
+    lineColor: greyMedium,
+    tickColor: greyMedium
   },
 
   yAxis: {
-    lineColor: greyLight,
-    tickColor: greyLight
+    lineColor: greyMedium,
+    tickColor: greyMedium
   },
 
   navigator: {
     maskFill: "rgba(119, 153, 213, 0.07)",
     outlineColor: greyMedium,
-    xAxis: { gridLineColor: greyLight },
-    series: { color: highlight }
+    xAxis: { gridLineColor: greyMedium },
+    series: { color: primaryDark }
   },
 
-  tooltip: { style: { fontSize: "14px" } },
+  tooltip: { style: { fontSize: "16px" } },
   scrollbar: { enabled: false },
   credits: { enabled: false },
 
   plotOptions: {
     column: {
-      color: greyDarker,
+      color: greyDark,
       dataGrouping: { enabled: false }
     },
 
@@ -72,11 +71,11 @@ Highstock.theme = {
       allowPointSelect: true,
       animation: false,
       cursor: "pointer",
-      dataLabels: { style: { fontSize: "14px" } }
+      dataLabels: { style: { fontSize: "16px" } }
     },
 
     spline: {
-      color: highlight,
+      color: primaryDark,
       dataGrouping: { enabled: false }
     }
   }
