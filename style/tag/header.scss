@@ -33,12 +33,11 @@ body > header
     margin: 0;
     font-size: 1.05em;
 
-    border: none!important;
-    box-shadow: none!important;
+    border: solid thin transparent;
     background: white;
 
     color: grey(6);
-    text-align-last: right;
+    text-align-last: center;
   }
 
   h1
