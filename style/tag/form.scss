@@ -69,7 +69,7 @@ input,
   max-width: 35em;
   margin: 0.2em 0;
 
-  padding: 0 0.2em;
+  padding: 0 0.4em;
   overflow: hidden;
 
   transition: all 0.2s ease;
@@ -81,7 +81,7 @@ textarea,
 select,
 button,
 input {
-  border: solid 0.05em $border-color;
+  border: solid thin $border-color;
   border-radius: 0.1em;
 
   background-color: grey(1);
@@ -99,7 +99,7 @@ input {
     outline: 0;
     box-shadow: 0em 0em 0.1em primary(6);
     background-color: primary(1);
-    border: solid 0.05em primary(4);
+    border: solid thin primary(4);
   }
 }
 
