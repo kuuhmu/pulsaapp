@@ -83,7 +83,7 @@ input {
   border: solid 0.05em $border-color;
   border-radius: 0.1em;
 
-  background: $bg-color;
+  background-color: grey(1);
 
   [type="number"] {
     text-align: right;
@@ -97,7 +97,7 @@ input {
   &:enabled:hover {
     outline: 0;
     box-shadow: 0em 0em 0.1em primary(6);
-    background: primary(1);
+    background-color: primary(1);
     border: solid 0.05em primary(4);
   }
 }
@@ -122,6 +122,18 @@ button {
     cursor: pointer;
     background: primary(3);
   }
+}
+
+// Select element //
+
+$select-arrow: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 50" fill="%23292929"><polygon points="0,0 60,0 30,50"/></svg>';
+
+select {
+  appearance: none;
+  background-image: url($select-arrow);
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: 1em;
 }
 
 // Checkable elements //
