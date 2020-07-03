@@ -14,11 +14,11 @@ module.exports = class TargetsControls extends Gui {
   constructor (target) {
     super(`
 <section class="TargetControls">
-  <form onsubmit="return false" hidden=%hideRebalance>
+  <form %onsubmit hidden=%hideRebalance>
     <button onclick=%rebalance disabled=%invalid>${__("Rebalance")}</button>
   </form>
 
-  <form onsubmit="return false" hidden=%hideSave>
+  <form %onsubmit hidden=%hideSave>
     <button onclick=%save disabled=%invalid>${__("Save")}</button>
     <button onclick=%cancel>${__("Cancel")}</button>
   </form>
@@ -37,6 +37,10 @@ module.exports = class TargetsControls extends Gui {
 
   toParagraph (error) {
     if (error) return html.create("p", ".error", error)
+  }
+
+  onsubmit () {
+    return false
   }
 
   cancel () {
