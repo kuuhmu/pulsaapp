@@ -24,7 +24,12 @@ new ServiceWorker(pkg.name, pkg.version, "verbose")
     "fonts/roboto-slab.woff2",
 
     // Images
+    "images/activity.png",
+    "images/balances.png",
     "images/cosmic-link.svg",
+    "images/history.png",
+    "images/repartition.png",
+    "images/side-frame.png",
 
     // Vendor configuration
     "browserconfig.xml",
