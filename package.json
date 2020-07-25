@@ -1,6 +1,6 @@
 {
   "name": "equilibre.io",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "description": "A portfolio balancer for Stellar Decentralized Exchange",
   "author": "MisterTicot <mister.ticot@cosmic.plus>",
   "homepage": "https://equilibre.io",
@@ -64,7 +64,7 @@
     "node-sass": "^4.14.0",
     "prettier": "^1.19.1",
     "raw-loader": "^1.0.0",
-    "webpack": "^4.43.0",
+    "webpack": "^4.44.0",
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
@@ -75,7 +75,7 @@
     "@cosmic-plus/i18n": "^1.2.0",
     "@cosmic-plus/jsutils": "^2.0.2",
     "@cosmic-plus/ledger-wallet": "^2.4.0",
-    "@cosmic-plus/loopcall": "^1.4.1",
+    "@cosmic-plus/loopcall": "^1.5.0",
     "@cosmic-plus/trezor-wallet": "^1.2.0",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "core-js": "^3.6.5",
