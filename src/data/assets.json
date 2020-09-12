@@ -35,7 +35,6 @@
 
     "FRAS": { "apiId": "frasindo-rent" },
     "GNT": { "apiId": "glitzkoin" },
-    "PEDI": { "apiId": "pedity" },
     "REPO": { "apiId": "repo" },
     "WLO": { "apiId": "wollo" }
   }
