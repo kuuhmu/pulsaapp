@@ -38,7 +38,7 @@ module.exports = class TargetsTable extends Gui {
 
     this.target = target
 
-    this.targets = target.childs.mirror(child => this.toTargetRow(child))
+    this.targets = target.childs.mirror((child) => this.toTargetRow(child))
     this.selected = undefined
 
     target.listen("update", () => this.sortTargets())
@@ -64,7 +64,7 @@ module.exports = class TargetsTable extends Gui {
   }
 
   async addAsset () {
-    const assets = this.target.portfolio.availableAssets().filter(a => a.show)
+    const assets = this.target.portfolio.availableAssets().filter((a) => a.show)
 
     const assetSelector = new AssetSelector(assets)
     const dialog = Dialog.confirm({
@@ -99,7 +99,7 @@ class TargetRow extends Gui {
     this.watch(target, ["size", "mode", "share"], () => this.compute("command"))
 
     target.asset.project("image", this)
-    target.project("shareDiff", this, x => -x)
+    target.project("shareDiff", this, (x) => -x)
 
     if (target.order) target.order.project("description", this)
   }

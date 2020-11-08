@@ -56,14 +56,14 @@ Dialog.alert = function (params = {}) {
   dialog.actions = [[__("OK"), () => modal.close()]]
 
   modal.open()
-  return new Promise(resolve => modal.listen("close", resolve))
+  return new Promise((resolve) => modal.listen("close", resolve))
 }
 
 Dialog.confirm = function (params = {}) {
   const dialog = new Dialog(params)
   const modal = new Modal({ content: dialog })
 
-  const promise = new Promise(resolve => {
+  const promise = new Promise((resolve) => {
     modal.listen("close", () => resolve(false))
     dialog.actions = [
       [__("OK"), () => resolve(true), "submit"],

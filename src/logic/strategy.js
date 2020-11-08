@@ -19,7 +19,7 @@ strategy.apply = function (target) {
   let sum = 0,
     weights = 0
 
-  target.childs.forEach(child => {
+  target.childs.forEach((child) => {
     const mode = child.mode
     if (mode === "weight") {
       delayed.push(child)
@@ -31,7 +31,7 @@ strategy.apply = function (target) {
   })
 
   const remains = positive(target.value - sum)
-  delayed.forEach(child => strategy.weight(child, remains, weights))
+  delayed.forEach((child) => strategy.weight(child, remains, weights))
 
   checkAllocationLimits(sum, target.value, delayed.length)
   maybeThrottleTargetAmounts(target)
@@ -64,22 +64,22 @@ function maybeThrottleTargetAmounts (target) {
   // Check if `target.amount` throttling is required.
   const Asset = require("./asset")
   const XLM = Asset.resolve("XLM")
-  const targets = target.childs.filter(t => t.asset !== XLM)
+  const targets = target.childs.filter((t) => t.asset !== XLM)
   const liquidity = XLM.value - XLM.valueMin
 
-  const buyTargets = targets.filter(t => t.valueDiff > 0)
+  const buyTargets = targets.filter((t) => t.valueDiff > 0)
   const buyValue = arraySum(buyTargets, "valueDiff")
 
   if (liquidity > buyValue) return
 
   // Throttle `target.amount`.
-  const sellTargets = targets.filter(t => t.valueDiff < 0)
+  const sellTargets = targets.filter((t) => t.valueDiff < 0)
   const sellValue = -arraySum(sellTargets, "valueDiff")
 
   const canSell = XLM.target.value - XLM.valueMin
   const throttleRatio = 1 - positive(canSell / sellValue)
 
-  targets.forEach(child => {
+  targets.forEach((child) => {
     child.amount = fixed7(child.amount - child.amountDiff * throttleRatio)
   })
 

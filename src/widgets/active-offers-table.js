@@ -49,7 +49,7 @@ module.exports = class ActiveOffersTable extends Gui {
     }
 
     const cosmicLink = new CosmicLink(txParams)
-    this.offers.forEach(offer => {
+    this.offers.forEach((offer) => {
       cosmicLink.addOperation("manageOffer", { offerId: offer.id, amount: 0 })
     })
 

@@ -53,8 +53,10 @@ class Offers extends Mirrorable {
   }
 
   ingest (records) {
-    this.forEach(offer => offer.alive = false)
-    const offers = records.map(record => Offer.ingest(record)).filter(x => x)
+    this.forEach((offer) => offer.alive = false)
+    const offers = records
+      .map((record) => Offer.ingest(record))
+      .filter((x) => x)
     this.splice(0, 0, ...offers)
     this.clean()
   }
@@ -75,7 +77,7 @@ class Offers extends Mirrorable {
  */
 
 Offers.prototype.listOutdated = function () {
-  return this.filter(offer => offer.outdated)
+  return this.filter((offer) => offer.outdated)
 }
 
 /**

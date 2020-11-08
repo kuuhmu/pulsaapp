@@ -32,10 +32,10 @@ module.exports = class TargetSetupSize extends Gui {
     this.target = target
     this.targetIsXlm = target.asset.id === "XLM"
 
-    target.project("share", this, x => nice(100 * x, 2))
+    target.project("share", this, (x) => nice(100 * x, 2))
 
     target.project("size", this)
-    this.project("size", target, x => x != null ? Number(x) : null)
+    this.project("size", target, (x) => x != null ? Number(x) : null)
 
     target.project("mode", this)
     this.project("mode", target)

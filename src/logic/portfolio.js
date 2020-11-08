@@ -55,10 +55,10 @@ class Portfolio extends Projectable {
     this.accountCallBuilder = Portfolio.accountCallBuilder(accountId)
 
     this.define("total", "assets", () => {
-      const assets = this.assets.filter(asset => asset.isSupported)
+      const assets = this.assets.filter((asset) => asset.isSupported)
       return arraySum(assets, "value")
     })
-    this.assets.mirror(asset =>
+    this.assets.mirror((asset) =>
       this.watch(asset, ["value", "isSupported"], () => this.compute("total"))
     )
 

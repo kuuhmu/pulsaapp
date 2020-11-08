@@ -60,7 +60,7 @@ ${__("Price")}: {point.nicePrice} ${global.currency}<br>
           },
           point: {
             events: {
-              select: x => this.selected = x.target.options.asset,
+              select: (x) => this.selected = x.target.options.asset,
               legendItemClick: () => false
             }
           }
@@ -73,7 +73,7 @@ ${__("Price")}: {point.nicePrice} ${global.currency}<br>
           colorByPoint: true,
           ignoreHiddenPoint: true,
           data: this.portfolio.assets
-            .filter(asset => asset.value)
+            .filter((asset) => asset.value)
             .map(makePoint)
             .sort((a, b) => b.y - a.y)
         }

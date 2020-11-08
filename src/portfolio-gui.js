@@ -38,7 +38,7 @@ module.exports = class PortfolioGui extends Gui {
     this.portfolio = portfolio
 
     // Init.
-    portfolio.project("total", this, x => nice(x, 2))
+    portfolio.project("total", this, (x) => nice(x, 2))
     this.currency = global.currency
     this.coingecko = new Gui(
       `<a target="_blank" rel="noopener" href="https://coingecko.com">coingecko</a>`
@@ -68,7 +68,10 @@ module.exports = class PortfolioGui extends Gui {
     overview.listen("select", () => this.reflow())
 
     // Save & load last selected tab.
-    overview.listen("select", id => localStorage["PortfolioSummary.tab"] = id)
+    overview.listen(
+      "select",
+      (id) => localStorage["PortfolioSummary.tab"] = id
+    )
     overview.select(localStorage["PortfolioSummary.tab"])
     if (!overview.selected) overview.select("table")
   }

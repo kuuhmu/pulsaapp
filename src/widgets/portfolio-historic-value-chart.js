@@ -35,7 +35,7 @@ module.exports = class PortfolioHistoryChart extends Gui {
     `)
 
     this.portfolio = portfolio
-    this.portfolio.getHistory().then(history => this.drawChart(history))
+    this.portfolio.getHistory().then((history) => this.drawChart(history))
     this.listen("destroy", () => this.chart && this.chart.destroy())
   }
 
@@ -60,7 +60,7 @@ module.exports = class PortfolioHistoryChart extends Gui {
 
       navigator: {
         series: {
-          data: history.map(x => [x.time, +nice(x.total) || null])
+          data: history.map((x) => [x.time, +nice(x.total) || null])
         }
       },
 
@@ -112,13 +112,13 @@ module.exports = class PortfolioHistoryChart extends Gui {
   historyToSeries (history) {
     const series = []
 
-    const assets = Object.values(Asset.table).filter(a => a.hasBeenHeld)
+    const assets = Object.values(Asset.table).filter((a) => a.hasBeenHeld)
     assets.sort((a, b) => b.value - a.value)
 
     // Main assets historical values.
-    assets.forEach(asset => {
+    assets.forEach((asset) => {
       let isEmpty = true
-      const data = history.map(day => {
+      const data = history.map((day) => {
         const value = +nice(day.filtered[asset.id], 2) || null
         if (value) isEmpty = false
         return [day.time, value]
@@ -130,7 +130,7 @@ module.exports = class PortfolioHistoryChart extends Gui {
     series.push({
       name: __("Others"),
       color: "#DDD",
-      data: history.map(x => [x.time, +nice(x.filtered.others, 2)])
+      data: history.map((x) => [x.time, +nice(x.filtered.others, 2)])
     })
 
     return series

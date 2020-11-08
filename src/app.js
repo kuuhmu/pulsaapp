@@ -140,13 +140,13 @@ const demoConfig = `{"childs":[{"size":24,"asset":"BTC","closing":["GCNSGHUCG5VM
 function getLedgerModule () {
   return import(
     /* webpackChunkName: "ledger" */ "@cosmic-plus/ledger-wallet"
-  ).then(ledger => ledger.default)
+  ).then((ledger) => ledger.default)
 }
 
 async function getTrezorModule () {
   const trezor = await import(
     /* webpackChunkName: "trezor" */ "@cosmic-plus/trezor-wallet"
-  ).then(trezor => trezor.default)
+  ).then((trezor) => trezor.default)
   trezor.register("equilibre.io", "mister.ticot@cosmic.plus")
   return trezor
 }
@@ -204,7 +204,7 @@ if (params.address) {
 }
 
 // Scrollup on navigation.
-tabs.listen("select", page => {
+tabs.listen("select", (page) => {
   location.hash = page
   window.scrollTo(0, 0)
 })

@@ -57,7 +57,7 @@ function coingeckoCall (page, params) {
 marketData.crypto.list = async function () {
   const response = await coingeckoCall("coins/list")
   const list = {}
-  response.data.forEach(entry => {
+  response.data.forEach((entry) => {
     const symbol = entry.symbol.toUpperCase()
     list[symbol] = { apiId: entry.id, name: entry.name }
   })
@@ -66,7 +66,7 @@ marketData.crypto.list = async function () {
 
 marketData.crypto.stellarNative = async function () {
   const response = await coingeckoCall("exchanges/stellar_term")
-  return response.data.tickers.map(x => x.coin_id).filter(x => x)
+  return response.data.tickers.map((x) => x.coin_id).filter((x) => x)
 }
 
 marketData.crypto.info = async function (asset) {
@@ -82,14 +82,14 @@ marketData.crypto.info = async function (asset) {
 }
 
 marketData.crypto.prices = async function (assets) {
-  const ids = assets.map(asset => asset.apiId).join(",")
+  const ids = assets.map((asset) => asset.apiId).join(",")
   const quote = global.currency.toLowerCase()
   const response = await coingeckoCall("simple/price", {
     ids,
     vs_currencies: quote
   })
   const prices = {}
-  assets.forEach(asset => {
+  assets.forEach((asset) => {
     const assetData = response.data[asset.apiId]
     if (assetData) prices[asset.code] = assetData[quote]
   })
@@ -135,14 +135,14 @@ async function exchangeratesCall (page, symbols, params = {}) {
   if (typeof symbols === "string") {
     params.symbols = symbols
   } else {
-    if (global.currency === "EUR") symbols = symbols.filter(x => x !== "EUR")
+    if (global.currency === "EUR") symbols = symbols.filter((x) => x !== "EUR")
     params.symbols = symbols.join(",")
   }
   params.source = "equilibre.io"
 
   return axios
     .get(`https://api.exchangeratesapi.io/${page}`, { params })
-    .then(response => {
+    .then((response) => {
       if (global.currency === "EUR" && !response.data.start_at) {
         response.data.rates.EUR = 1
       }
@@ -151,7 +151,7 @@ async function exchangeratesCall (page, symbols, params = {}) {
 }
 
 marketData.fiat.prices = async function (assets) {
-  const symbols = assets.map(asset => asset.code)
+  const symbols = assets.map((asset) => asset.code)
   const response = await exchangeratesCall("latest", symbols)
   const data = response.data.rates
   for (let symbol in data) {
@@ -180,7 +180,7 @@ marketData.fiat.history = async function (asset, limit = 1000) {
   // Format data.
   const data = Object.keys(response.data.rates)
     .sort()
-    .map(date => {
+    .map((date) => {
       return {
         time: History.time(date),
         price: +nice(1 / response.data.rates[date][asset.code], 8)

@@ -30,7 +30,7 @@ class Anchor extends Projectable {
     this.assets = {}
 
     if (this.emit)
-      this.emit.forEach(entry => {
+      this.emit.forEach((entry) => {
         if (typeof entry !== "string") this.addAsset(entry[0], entry[1])
         else this.addAsset(entry)
       })

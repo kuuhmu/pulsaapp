@@ -15,7 +15,7 @@ module.exports = async function portfolioHistoricValue (portfolio) {
   const assets = markHeldAssets(history)
   const historicPrices = await getHistoricPrices(assets)
 
-  history.forEach(day => {
+  history.forEach((day) => {
     shrinkHistoricPrices(day.time, historicPrices)
     computeDayValues(day, historicPrices)
   })
@@ -27,12 +27,12 @@ module.exports = async function portfolioHistoricValue (portfolio) {
 
 function markHeldAssets (history) {
   const ids = {}
-  history.forEach(day => {
-    Object.keys(day.asset).forEach(key => ids[key] = true)
+  history.forEach((day) => {
+    Object.keys(day.asset).forEach((key) => ids[key] = true)
   })
 
   const assets = Object.keys(ids).map(Asset.resolve)
-  assets.forEach(asset => asset.hasBeenHeld = true)
+  assets.forEach((asset) => asset.hasBeenHeld = true)
   return assets
 }
 
@@ -42,10 +42,10 @@ function markHeldAssets (history) {
 async function getHistoricPrices (assets) {
   const historicPrices = {}
 
-  const promises = assets.map(asset => asset.getHistoricPrice())
+  const promises = assets.map((asset) => asset.getHistoricPrice())
   await Promise.all(promises)
 
-  assets.forEach(asset => {
+  assets.forEach((asset) => {
     if (asset.historicPrice) historicPrices[asset.id] = asset.historicPrice
   })
 
@@ -59,7 +59,7 @@ async function getHistoricPrices (assets) {
 function shrinkHistoricPrices (time, historicPrices) {
   for (let asset in historicPrices) {
     const prices = historicPrices[asset]
-    const index = prices.findIndex(entry => entry.time > time)
+    const index = prices.findIndex((entry) => entry.time > time)
     if (index > 1) historicPrices[asset] = prices.slice(index - 1)
     else if (index === -1) historicPrices[asset] = prices.slice(-1)
   }
@@ -96,7 +96,7 @@ function computeDayValues (day, historicPrices) {
   }
 
   if (marginals.length > 1) {
-    day.filtered.others = arraySum(marginals.map(asset => day.value[asset]))
-    marginals.forEach(asset => delete day.filtered[asset])
+    day.filtered.others = arraySum(marginals.map((asset) => day.value[asset]))
+    marginals.forEach((asset) => delete day.filtered[asset])
   }
 }

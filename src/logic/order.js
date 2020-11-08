@@ -65,7 +65,7 @@ const Order = module.exports = class Order extends Projectable {
 
   getOperation (offer, make) {
     const id = `${offer.balance.anchor.name}:${make ? offer.price : "take"}`
-    const operation = this.operations.find(x => x.id === id)
+    const operation = this.operations.find((x) => x.id === id)
     if (operation) {
       return operation
     } else {
@@ -108,7 +108,7 @@ Order.operationsToCosmicLink = function (operations = []) {
   })
 
   // Set operations.
-  operations.forEach(operation => {
+  operations.forEach((operation) => {
     if (operation.isDust) {
       // Burn dust.
       const balance = operation.offer.balance
@@ -130,7 +130,7 @@ Order.operationsToCosmicLink = function (operations = []) {
 
 Order.operationsToDescription = function (operations = []) {
   const desc = []
-  operations.forEach(op => {
+  operations.forEach((op) => {
     if (operationDirection(op) === "buy") {
       desc.push(`
 ${__("Buy")} ${nice(op.amount)} ${op.offer.balance.code} ${__("at")} \
@@ -204,7 +204,7 @@ Order.type.market = function (order, size) {
 
   const side = size > 0 ? "asks" : "bids"
   const amount = Math.abs(size)
-  const offer = order.orderbook.findOffer(side, offer => {
+  const offer = order.orderbook.findOffer(side, (offer) => {
     return offer.baseVolume > amount
   })
   order.addOperation(offer, amount)
@@ -236,7 +236,7 @@ Order.type.balance = function (order, target) {
   }
 
   if (asset.liabilities) {
-    const currentOffers = asset.offers.filter(offer => !offer.outdated)
+    const currentOffers = asset.offers.filter((offer) => !offer.outdated)
     if (currentOffers.length) {
       order.description = [__("Rebalancing...")]
       return
@@ -262,7 +262,7 @@ Order.type.balance = function (order, target) {
 function setBalancesTargets (target) {
   // Empty orderbooks cannot be traded.
   const balances = []
-  target.asset.balances.forEach(balance => {
+  target.asset.balances.forEach((balance) => {
     if (balance.orderbook.price == null || !balance.isActive) {
       balance.targetAmount = null
     } else {
@@ -279,7 +279,7 @@ function setBalancesTargets (target) {
 
   // Set each balance tradable amount.
   const targetAmount = fixed7(target.amount / balances.length)
-  balances.forEach(balance => balance.targetAmount = targetAmount)
+  balances.forEach((balance) => balance.targetAmount = targetAmount)
 }
 
 /**
@@ -327,10 +327,10 @@ function balanceTargetAnchors (
 function isOneOperationEnough (target, size) {
   const balances = target.asset.balances
 
-  const undersizedClosing = balances.filter(b => {
+  const undersizedClosing = balances.filter((b) => {
     return b.action === "closing" && size < b.sizeMin
   })
-  const canTakeTrade = balances.filter(b => {
+  const canTakeTrade = balances.filter((b) => {
     return b.sizeMin <= size && size <= b.sizeMax
   })
 
@@ -360,7 +360,7 @@ function addMultipleOperations (target, size) {
 
   // 1. Sell balances being closed.
   if (negative(size)) {
-    const liquidate = balances.map(balance => {
+    const liquidate = balances.map((balance) => {
       return balance.action === "closing" ? -balance.amount : 0
     })
     tradeSize = _addToTrade(trade, liquidate, size)
@@ -369,7 +369,7 @@ function addMultipleOperations (target, size) {
   // 2. If this was not enough, trade imbalanced anchors.
   const misallocatedKey = positive(size) ? "underMin" : "overMax"
   if (tradeSize !== size) {
-    const misallocated = balances.map(balance => {
+    const misallocated = balances.map((balance) => {
       return balance.action === "closing" ? 0 : -balance[misallocatedKey]
     })
     tradeSize = _addToTrade(trade, misallocated, size - tradeSize)
@@ -378,7 +378,7 @@ function addMultipleOperations (target, size) {
   // 3. If this was not enough, trade balanced anchors.
   if (tradeSize !== size) {
     const sizeKey = positive(size) ? "sizeMax" : "sizeMin"
-    const tradable = balances.map(balance => {
+    const tradable = balances.map((balance) => {
       if (balance.action === "closing") return 0
       else return balance[sizeKey] - balance[misallocatedKey]
     })
@@ -409,7 +409,7 @@ function _addToTrade (trade, amounts, sizeMax) {
  * `Orderbook.findOffer()`.
  */
 function makeOfferFilter (target, size) {
-  return offer => {
+  return (offer) => {
     return (
       size >= offer.balance.sizeMin
       && size <= offer.balance.sizeMax

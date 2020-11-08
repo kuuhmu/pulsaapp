@@ -115,7 +115,7 @@ const Orderbook = module.exports = class Orderbook extends Projectable {
       quoteVolume = 0
     this.set(
       side,
-      merged.sort(sortOffers).map(row => {
+      merged.sort(sortOffers).map((row) => {
         const mergedRow = Object.assign({}, row)
         mergedRow.volume = volume += fixed7(row.amount * row.price)
         mergedRow.baseVolume = baseVolume += +row.amount
@@ -212,7 +212,7 @@ Orderbook.prototype.findBid = function (filter) {
  * @return {Number} Offer price at requested depth
  */
 Orderbook.prototype.marketPrice = function (side = "bids", depth = 50) {
-  const offer = this.findOffer(side, offer => offer.quoteVolume > depth)
+  const offer = this.findOffer(side, (offer) => offer.quoteVolume > depth)
   return offer ? offer.price : 0
 }
 
@@ -231,7 +231,7 @@ function areOffersEquals (array1, array2) {
 }
 
 function normalizeOffers (offers, quote, balance, side) {
-  offers.forEach(row => {
+  offers.forEach((row) => {
     row.volume = undefined
     row.baseVolume = undefined
     row.basePrice = +row.price
@@ -247,7 +247,7 @@ function updateOffersPrices (offers, quote) {
   let volume = 0,
     quoteVolume = 0,
     baseVolume = 0
-  offers.forEach(row => {
+  offers.forEach((row) => {
     if (row.side === "asks") {
       row.quoteAmount = fixed7(row.amount * row.basePrice)
     } else {

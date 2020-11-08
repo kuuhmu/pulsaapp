@@ -65,13 +65,15 @@ module.exports = class TargetSetup extends Gui {
     ).concat(arrayOnlyInFirst(this.backup.closing, this.target.closing))
     opened
       .map(Anchor.resolve)
-      .forEach(anchor => this.target.removeAnchor(anchor))
+      .forEach((anchor) => this.target.removeAnchor(anchor))
 
     const closed = arrayOnlyInFirst(
       this.target.closing,
       this.backup.closing
     ).concat(arrayOnlyInFirst(this.backup.opening, this.target.opening))
-    closed.map(Anchor.resolve).forEach(anchor => this.target.addAnchor(anchor))
+    closed
+      .map(Anchor.resolve)
+      .forEach((anchor) => this.target.addAnchor(anchor))
 
     this.close()
   }

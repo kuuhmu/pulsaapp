@@ -40,14 +40,14 @@ module.exports = async function portfolioHistoricBalances (
 async function getPortfolioHistory (portfolio, limit = 100) {
   // Start from today...
   const day = { time: History.today(), asset: {}, balance: {} }
-  portfolio.balances.forEach(balance => {
+  portfolio.balances.forEach((balance) => {
     updateBalance(day, balance, +balance.amount)
   })
   const history = [day]
 
   const loopUntil = Date.now() - History.oneDay * limit
   await effectsLoopcall(portfolio.accountId, {
-    filter: record => ingestRecord(history, record),
+    filter: (record) => ingestRecord(history, record),
     breaker: () => history[0].time < loopUntil
   })
 
@@ -78,10 +78,7 @@ function ingestRecord (history, record) {
 
 function effectsLoopcall (accountId, { filter, breaker }) {
   const server = cosmicLib.resolve.server()
-  const callBuilder = server
-    .effects()
-    .forAccount(accountId)
-    .order("desc")
+  const callBuilder = server.effects().forAccount(accountId).order("desc")
   return loopcall(callBuilder, { filter, breaker })
 }
 

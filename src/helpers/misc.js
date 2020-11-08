@@ -60,7 +60,7 @@ misc.arrayRemove = function (array, item) {
  * Returns values that are in **array1** but not in **array2**.
  */
 misc.arrayOnlyInFirst = function (array1, array2) {
-  return array1.filter(item => !misc.arrayContains(array2, item))
+  return array1.filter((item) => !misc.arrayContains(array2, item))
 }
 
 /**
@@ -79,6 +79,6 @@ misc.arrayScale = function (array, targetSum, key) {
   const sum = misc.arraySum(array, key)
   if (!sum) return array.map(() => 0)
 
-  if (key) return array.map(obj => obj[key] * targetSum / sum)
-  else return array.map(x => x * targetSum / sum)
+  if (key) return array.map((obj) => obj[key] * targetSum / sum)
+  else return array.map((x) => x * targetSum / sum)
 }

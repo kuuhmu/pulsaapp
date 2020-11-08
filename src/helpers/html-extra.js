@@ -26,7 +26,7 @@ html.element = function (tag, ...params) {
  */
 html.walk = function (element, func, ...params) {
   func(element, ...params)
-  element.childNodes.forEach(child => html.walk(child, func, ...params))
+  element.childNodes.forEach((child) => html.walk(child, func, ...params))
 }
 
 /**

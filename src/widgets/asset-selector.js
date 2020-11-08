@@ -20,9 +20,9 @@ module.exports = class AssetSelector extends Gui {
 
     this.groups = new Mirrorable()
 
-    const fiats = assets.filter(a => a.type === "fiat")
-    const cryptos = assets.filter(a => a.type === "crypto" && a.isTether)
-    const natives = assets.filter(a => a.type === "crypto" && !a.isTether)
+    const fiats = assets.filter((a) => a.type === "fiat")
+    const cryptos = assets.filter((a) => a.type === "crypto" && a.isTether)
+    const natives = assets.filter((a) => a.type === "crypto" && !a.isTether)
 
     this.addGroup(__("Fiat Tethers"), fiats)
     this.addGroup(__("Crypto Tethers"), cryptos)
@@ -32,7 +32,7 @@ module.exports = class AssetSelector extends Gui {
   addGroup (name, assets) {
     if (!assets.length) return
 
-    const onselect = asset => this.selected = asset
+    const onselect = (asset) => this.selected = asset
     const group = new AssetGroup(name, assets, onselect)
     this.groups.push(group)
   }

@@ -61,7 +61,7 @@ const Asset = module.exports = class Asset extends Projectable {
     this.balances = new Mirrorable()
     this.offers = new Mirrorable()
 
-    this.balances.mirror(balance => {
+    this.balances.mirror((balance) => {
       this.watch(balance, "amount", () => this.compute("amount"))
       this.watch(balance, ["buying", "selling"], () => {
         this.compute("liabilities")
@@ -154,7 +154,7 @@ Asset.register = function (assets, defaults) {
  */
 Asset.getAllInfo = function () {
   const assets = Object.values(Asset.table)
-  assets.forEach(asset => asset.getInfo())
+  assets.forEach((asset) => asset.getInfo())
 }
 
 Asset.refreshPrices = async function (array) {
@@ -163,10 +163,12 @@ Asset.refreshPrices = async function (array) {
     await Asset.refreshFiatPrices()
   } else {
     await Asset.refreshCryptoPrices(
-      array.filter(asset => asset.type === "crypto").map(asset => asset.code)
+      array
+        .filter((asset) => asset.type === "crypto")
+        .map((asset) => asset.code)
     )
     await Asset.refreshFiatPrices(
-      array.filter(asset => asset.type === "fiat").map(asset => asset.code)
+      array.filter((asset) => asset.type === "fiat").map((asset) => asset.code)
     )
   }
 }
@@ -174,7 +176,7 @@ Asset.refreshPrices = async function (array) {
 Asset.refreshCryptoPrices = async function (assets = Asset.cryptos) {
   if (!assets.length) return
   const prices = await marketData.crypto.prices(assets)
-  assets.forEach(asset => {
+  assets.forEach((asset) => {
     if (asset.useGlobalPrice) asset.globalPrice = prices[asset.code]
   })
 }
@@ -182,7 +184,7 @@ Asset.refreshCryptoPrices = async function (assets = Asset.cryptos) {
 Asset.refreshFiatPrices = async function (fiats = Asset.fiats) {
   if (!fiats.length) return
   const prices = await marketData.fiat.prices(fiats)
-  fiats.forEach(asset => {
+  fiats.forEach((asset) => {
     if (asset.useGlobalPrice) asset.globalPrice = prices[asset.code]
   })
 }

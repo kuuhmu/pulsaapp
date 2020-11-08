@@ -26,7 +26,7 @@ module.exports = class PortfolioTable extends Gui {
 `)
 
     this.portfolio = portfolio
-    this.rows = portfolio.assets.mirror(asset => this.toAssetRow(asset))
+    this.rows = portfolio.assets.mirror((asset) => this.toAssetRow(asset))
     this.watch(portfolio, "total", () => this.sort())
     this.trap("selected", () => this.onselect(this.selected))
   }
@@ -46,7 +46,7 @@ module.exports = class PortfolioTable extends Gui {
 
   onselect (asset) {
     if (this.selectedRow) this.selectedRow.simpleView()
-    this.selectedRow = this.rows.find(row => row.asset === asset)
+    this.selectedRow = this.rows.find((row) => row.asset === asset)
     if (this.selectedRow) this.selectedRow.detailledView()
   }
 }
@@ -81,14 +81,16 @@ class AssetRow extends Gui {
     this.asset = asset
 
     this.name = asset.code
-    this.anchors = asset.balances.mirror(x => cell(x.anchor, "name"))
-    this.amounts = asset.balances.mirror(x => cell(x, "amount", nice))
-    this.prices = asset.balances.mirror(x => priceCell(x, "price", nice))
-    this.values = asset.balances.mirror(x => cell(x, "value", x => nice(x, 2)))
+    this.anchors = asset.balances.mirror((x) => cell(x.anchor, "name"))
+    this.amounts = asset.balances.mirror((x) => cell(x, "amount", nice))
+    this.prices = asset.balances.mirror((x) => priceCell(x, "price", nice))
+    this.values = asset.balances.mirror((x) =>
+      cell(x, "value", (x) => nice(x, 2))
+    )
     asset.link("image", this)
     asset.link("amount", this, "amountTotal", nice)
     asset.link("price", this, "priceTotal", nice)
-    asset.link("value", this, "valueTotal", x => nice(x, 2))
+    asset.link("value", this, "valueTotal", (x) => nice(x, 2))
     asset.balances.feed(this, "anchorHeader", anchorName)
 
     const orderbook = this.asset.orderbook

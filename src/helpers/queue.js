@@ -12,7 +12,7 @@ module.exports = class Queue extends Array {
   }
 
   async push (thunk) {
-    const trigger = new Promise(resolve => {
+    const trigger = new Promise((resolve) => {
       Array.prototype.push.call(this, resolve)
     })
     if (this.length === 1) this.next()

@@ -39,7 +39,7 @@ History.latest = function (history) {
 
 History.join = function (oldData, newData) {
   const start = newData[0].time
-  const index = oldData.findIndex(day => day.time === start)
+  const index = oldData.findIndex((day) => day.time === start)
   return oldData.slice(0, index).concat(newData)
 }
 

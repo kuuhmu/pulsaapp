@@ -21,8 +21,11 @@ class Modal extends Gui {
     this.content = params.content
 
     // Handle styling parameters.
-    this.trap(Modal.styleParams, event => this.style[event.key] = event.value)
-    Modal.styleParams.forEach(key => this[key] = params[key])
+    this.trap(
+      Modal.styleParams,
+      (event) => this.style[event.key] = event.value
+    )
+    Modal.styleParams.forEach((key) => this[key] = params[key])
 
     // Initialization.
     document.body.insertBefore(this.domNode, document.body.firstChild)

@@ -94,7 +94,7 @@ class Form extends Projectable {
 }
 
 // Automatically clean report on user input.
-Form.listen("change", event => event.report(null))
+Form.listen("change", (event) => event.report(null))
 
 /**
  * Binding
@@ -206,8 +206,10 @@ const inputTypes = [
   "week"
 ]
 
-inputTypes.forEach(type => Form[type] = params => Form.input(type, params))
-Form.datetime = params => Form.input("datetime-local", params)
+inputTypes.forEach(
+  (type) => Form[type] = (params) => Form.input(type, params)
+)
+Form.datetime = (params) => Form.input("datetime-local", params)
 
 /**
  * Elements Helpers
@@ -215,11 +217,11 @@ Form.datetime = params => Form.input("datetime-local", params)
 
 function makeOptions (object) {
   if (object instanceof Array) {
-    return object.map(value => {
+    return object.map((value) => {
       return html.element("option", { value }, value)
     })
   } else {
-    return Object.keys(object).map(value => {
+    return Object.keys(object).map((value) => {
       return html.element("option", { value }, object[value])
     })
   }

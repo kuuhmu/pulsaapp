@@ -58,7 +58,7 @@ class Target extends Projectable {
       }
     } else {
       this.childs = new Mirrorable()
-      this.childs.listen("add", child => child.parent = this)
+      this.childs.listen("add", (child) => child.parent = this)
       this.childs.listen("change", () => this.computeAll())
     }
 
@@ -136,8 +136,8 @@ Target.prototype.addAsset = function (asset) {
   const target = new Target(asset)
   target.parent = this
   asset.anchors
-    .filter(anchor => !anchor.unpeg)
-    .forEach(anchor => target.addAnchor(anchor))
+    .filter((anchor) => !anchor.unpeg)
+    .forEach((anchor) => target.addAnchor(anchor))
   this.childs.push(target)
 
   // Default setup.
@@ -214,25 +214,25 @@ Target.forPortfolio = function (portfolio, json) {
   target.watch(portfolio, "total", () => target.computeAll())
 
   // Add/Remove assets after trustline change.
-  portfolio.assets.forEach(asset => {
+  portfolio.assets.forEach((asset) => {
     if (
-      !target.childs.find(child => asset === child.asset)
+      !target.childs.find((child) => asset === child.asset)
       && asset.isSupported
     )
       target.childs.push(new Target(asset))
   })
   target.childs.forEach((child, index) => {
     if (
-      !portfolio.assets.find(asset => asset === child.asset)
+      !portfolio.assets.find((asset) => asset === child.asset)
       || !child.asset.isSupported
     )
       target.childs.splice(index, 1)
   })
-  portfolio.assets.listen("add", asset => {
+  portfolio.assets.listen("add", (asset) => {
     if (asset.isValid) target.childs.push(new Target(asset))
   })
-  portfolio.assets.listen("remove", asset => {
-    const index = target.childs.findIndex(child => child.asset === asset)
+  portfolio.assets.listen("remove", (asset) => {
+    const index = target.childs.findIndex((child) => child.asset === asset)
     target.childs.splice(index, 1)
   })
 
@@ -289,19 +289,19 @@ Target.fromObject = function (object) {
   // Group Target: Parse childs.
   if (object.childs) {
     target.group = object.group
-    const childs = object.childs.map(entry => Target.fromObject(entry))
+    const childs = object.childs.map((entry) => Target.fromObject(entry))
 
     // Conversion from versions <= 0.5 − REMOVAL: 2020-05 (one year).
     //
     // When there was no "equal" target, percentage targets whose sum is under
     // 100 would act like "weight".
-    const percentChilds = childs.filter(child => child.mode === "percentage")
+    const percentChilds = childs.filter((child) => child.mode === "percentage")
     if (
       percentChilds.length
-      && !childs.find(child => child.mode === "weight")
+      && !childs.find((child) => child.mode === "weight")
       && arraySum(percentChilds, "size") !== 100
     ) {
-      percentChilds.forEach(child => child.mode = "weight")
+      percentChilds.forEach((child) => child.mode = "weight")
     }
 
     target.childs.push(...childs)
@@ -311,7 +311,7 @@ Target.fromObject = function (object) {
     if (object.opening) target.opening = object.opening
     if (object.closing) target.closing = object.closing
 
-    balances.forEach(balance => {
+    balances.forEach((balance) => {
       const issuer = balance.anchor.pubkey
       if (arrayContains(target.closing, issuer)) {
         // Trustline is still not closed.
@@ -323,8 +323,8 @@ Target.fromObject = function (object) {
     })
 
     // Trustline has been closed.
-    target.closing.forEach(issuer => {
-      if (!balances.find(balance => balance.anchor.pubkey === issuer)) {
+    target.closing.forEach((issuer) => {
+      if (!balances.find((balance) => balance.anchor.pubkey === issuer)) {
         arrayRemove(target.closing, issuer)
       }
     })
@@ -357,7 +357,7 @@ Target.prototype.toObject = function () {
   } else if (this.childs) {
     object.group = this.group
     const childs = Target.sortChilds(this)
-    object.childs = childs.map(target => target.toObject()).filter(x => x)
+    object.childs = childs.map((target) => target.toObject()).filter((x) => x)
   }
 
   return object
@@ -379,14 +379,14 @@ Target.prototype.toCosmicLink = function () {
   const outdated = this.portfolio.offers.listOutdated()
   const remaining = []
 
-  operations.forEach(o => o.offer.id = null)
-  outdated.forEach(offer => {
-    const operation = operations.find(o => o.offer.balance === offer.balance)
+  operations.forEach((o) => o.offer.id = null)
+  outdated.forEach((offer) => {
+    const operation = operations.find((o) => o.offer.balance === offer.balance)
     if (operation) operation.offer.id = offer.id
     else remaining.push(offer)
   })
 
-  operations.forEach(operation => {
+  operations.forEach((operation) => {
     if (!operation.offer.id && remaining.length) {
       operation.offer.id = remaining.pop().id
     }
@@ -397,8 +397,8 @@ Target.prototype.toCosmicLink = function () {
 
   // Open/close trustlines.
   this.portfolio.balances
-    .filter(b => b.asset.target)
-    .forEach(balance => {
+    .filter((b) => b.asset.target)
+    .forEach((balance) => {
       if (shouldOpenTrustline(balance)) {
         cosmicLink.insertOperation(0, "changeTrust", { asset: balance.id })
       }
@@ -411,7 +411,7 @@ Target.prototype.toCosmicLink = function () {
     })
 
   // Close outdated offers which are not replaced.
-  remaining.forEach(offer => {
+  remaining.forEach((offer) => {
     cosmicLink.insertOperation(0, "manageOffer", {
       offerId: offer.id,
       amount: 0
@@ -440,7 +440,7 @@ function shouldCloseTrustline (balance) {
  */
 Target.prototype.toOperations = function () {
   if (this.childs) {
-    return [].concat(...this.childs.map(child => child.toOperations()))
+    return [].concat(...this.childs.map((child) => child.toOperations()))
   } else if (this.order) {
     return this.order.operations
   } else {

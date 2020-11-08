@@ -25,7 +25,7 @@ module.exports = class AssetPriceChart extends Gui {
 
     this.asset = asset
 
-    asset.getHistoricPrice().then(data => this.drawChart(data))
+    asset.getHistoricPrice().then((data) => this.drawChart(data))
     this.listen("destroy", () => this.chart && this.chart.destroy())
   }
 
@@ -39,12 +39,12 @@ module.exports = class AssetPriceChart extends Gui {
         {
           type: "spline",
           name: "Price",
-          data: data.map(x => [x.time, +nice(x.price)])
+          data: data.map((x) => [x.time, +nice(x.price)])
         },
         {
           type: "column",
           name: "Volume",
-          data: data.map(x => [x.time, x.volume]),
+          data: data.map((x) => [x.time, x.volume]),
           yAxis: 1
         }
       ]
