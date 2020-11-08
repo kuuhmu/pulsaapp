@@ -6,6 +6,7 @@
   "homepage": "https://equilibre.io",
   "repository": "github:cosmic-plus/webapp-equilibre.io",
   "license": "MIT",
+  "browserslist": "extends @kisbox/browserslist-config",
   "keywords": [
     "cryptocurrency",
     "stellar",
@@ -55,6 +56,7 @@
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
     "@cosmic-plus/i18n-extractor": "^1.1.0",
+    "@kisbox/browserslist-config": "^1.0.0-beta.17",
     "autoprefixer-cli": "^1.0.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
