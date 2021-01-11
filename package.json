@@ -75,16 +75,16 @@
   "dependencies": {
     "@babel/runtime": "^7.12.5",
     "@cosmic-plus/assets": "^1.6.0",
-    "@cosmic-plus/base": "^2.9.0",
+    "@cosmic-plus/base": "^2.10.0",
     "@cosmic-plus/domutils": "^2.1.0",
     "@cosmic-plus/i18n": "^1.2.0",
     "@cosmic-plus/jsutils": "^2.0.2",
-    "@cosmic-plus/ledger-wallet": "^2.6.0",
+    "@cosmic-plus/ledger-wallet": "^2.7.0",
     "@cosmic-plus/loopcall": "^1.5.0",
-    "@cosmic-plus/trezor-wallet": "^1.5.0",
+    "@cosmic-plus/trezor-wallet": "^1.6.0",
     "@fortawesome/fontawesome-free": "^5.15.1",
     "core-js": "^3.7.0",
-    "cosmic-lib": "^2.12.0",
+    "cosmic-lib": "^2.23.0",
     "highcharts": "^8.2.2"
   }
 }
