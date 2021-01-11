@@ -53,7 +53,8 @@
   },
   "GBVOL67TMUQBGL4TZYNMY3ZQ5WGQYFPFD5VJRWXR72VA33VFNL225PL5": {
     "alias": "stellarport.io",
-    "emit": ["BTC", "ETH", "XRP", "LTC"]
+    "emit": ["BTC", "ETH", "XRP", "LTC"],
+    "unpeg": true
   },
   "GC5LOR3BK6KIOK7GKAUD5EGHQCMFOGHJTC7I3ELB66PTDFXORC2VM5LP": {
     "alias": "apay.io",
