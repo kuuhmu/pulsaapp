@@ -139,6 +139,7 @@ async function exchangeratesCall (page, symbols, params = {}) {
     params.symbols = symbols.join(",")
   }
   params.source = "equilibre.io"
+  params.access_key = "a5d3fa27b0f3b3c7eec24aa9d0abaefa"
 
   return axios
     .get(`https://api.exchangeratesapi.io/${page}`, { params })
