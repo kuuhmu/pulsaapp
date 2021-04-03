@@ -138,11 +138,9 @@ async function exchangeratesCall (page, symbols, params = {}) {
     if (global.currency === "EUR") symbols = symbols.filter((x) => x !== "EUR")
     params.symbols = symbols.join(",")
   }
-  params.source = "equilibre.io"
-  params.access_key = "a5d3fa27b0f3b3c7eec24aa9d0abaefa"
 
   return axios
-    .get(`https://api.exchangeratesapi.io/${page}`, { params })
+    .get(`https://api.exchangerate.host/${page}`, { params })
     .then((response) => {
       if (global.currency === "EUR" && !response.data.start_at) {
         response.data.rates.EUR = 1
