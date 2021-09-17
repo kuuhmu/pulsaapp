@@ -26,6 +26,7 @@
   "native": {
     "XLM": { "show": true, "apiId": "stellar" },
 
+    "CSM": { "show": true, "apiId": "citystates-medieval" },
     "MOBI": { "show": true, "apiId": "mobius" },
     "RMT": { "show": true, "apiId": "sureremit" },
     "SHX": { "show": true, "apiId": "stronghold-token" },
