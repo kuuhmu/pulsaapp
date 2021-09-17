@@ -33,9 +33,7 @@
     "TERN": { "show": true, "apiId": "ternio" },
     "WXT": { "show": true, "apiId": "wirex" },
 
-    "FRAS": { "apiId": "frasindo-rent" },
     "GNT": { "apiId": "glitzkoin" },
-    "REPO": { "apiId": "repo" },
-    "WLO": { "apiId": "wollo" }
+    "REPO": { "apiId": "repo" }
   }
 }
