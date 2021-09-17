@@ -58,7 +58,6 @@
     "@cosmic-plus/i18n-extractor": "^1.2.0",
     "@kisbox/browserslist-config": "^1.0.0-beta.17",
     "autoprefixer": "^10.2.5",
-    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "cssnano": "^4.1.10",
     "eslint": "^7.23.0",
@@ -73,6 +72,7 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^7.15.4",
     "@babel/runtime": "^7.13.10",
     "@cosmic-plus/assets": "^1.6.0",
     "@cosmic-plus/base": "^2.10.0",
