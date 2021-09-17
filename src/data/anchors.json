@@ -30,6 +30,10 @@
     "alias": "anchorusd.com",
     "emit": ["USD"]
   },
+  "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN": {
+    "alias": "centre.io",
+    "emit": [["USD", "USDC"]]
+  },
 
   "GAEGOS7I6TYZSVHPSN76RSPIVL3SELATXZWLFO4DIAFYJF7MPAHFE7H4": {
     "alias": "apay.io",
